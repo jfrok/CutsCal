@@ -1,0 +1,487 @@
+<script lang="js">
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import {defineComponent, watch, getCurrentInstance} from "vue";
+import FullCalendar from "@fullcalendar/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import {eventDetails} from "@/Pages/Calendar/TestCalendar";
+import Modal from "@/Components/Modal.vue";
+import moment from 'moment';
+import InputError from "@/Components/InputError.vue";
+import FlatPickr from 'vue-flatpickr-component';
+import {Head} from "@inertiajs/vue3";
+import 'flatpickr/dist/flatpickr.css';
+
+let dataToRender = []
+export default defineComponent({
+    // layout: AuthenticatedLayout,
+    props: {
+        events: Object,
+    },
+    computed: {},
+    components: {
+        Head,
+        AuthenticatedLayout,
+        InputError,
+        FullCalendar,
+        useForm,
+        FlatPickr,
+        Modal
+    },
+
+    mounted() {
+        this.$nextTick(() => {
+            const {props} = usePage();
+            const date = props.date ?? new Date();
+            this.refs.calendar.getApi().gotoDate(date);
+            // Update the windowHeight data property with the initial window height
+            // You can also add an event listener to update the height when the window is resized
+
+        });
+        // let width = ref()
+
+        // let windowWidth = window.windowWidth;
+        window.addEventListener("resize", this.handleResize);
+
+        let calendarApi = this.$refs.calendar.getApi();
+        // if (windowWidth <= 400){
+
+        // calendarApi.changeView('timeGridWeek')
+        // }
+    },
+    // data() {
+    //     return {
+    //         flatpickrConfig: {
+    //             dateFormat: 'd-m-Y', // (01-12-2023)
+    //         },
+    //     }
+    // },
+    setup() {
+        const internalInstance = getCurrentInstance();
+
+        const handleEventDrop = (eventDropInfo) => {
+            const eventId = eventDropInfo.event.id;
+            const newStart = moment(eventDropInfo.event.start).format('YYYY-MM-DD')
+            const newEnd = moment(eventDropInfo.event.end).format('YYYY-MM-DD')
+                ? moment(eventDropInfo.event.end).format('YYYY-MM-DD')
+                : null;
+            form.color = eventDropInfo.event.backgroundColor;
+            form.title = eventDropInfo.event.title
+            form.timeFrom = eventDropInfo.event.extendedProps.timeFrom
+            form.timeTo = eventDropInfo.event.extendedProps.timeTo
+            form.dateFrom = newStart
+            form.dateTo = newEnd
+            form
+                .post(route('calendar.update', eventId), {
+                    preserveScroll: true
+                })
+        };
+
+        /// route's object
+        let routeName = {
+            route: null,
+            params: null
+        };
+
+        // Rest of the component setup...
+        let form = useForm({
+            title: '',
+            color: '',
+            timeFrom: '',
+            timeTo: '',
+            editMode: false,
+            resize: false,
+            remove: false,
+            dialog: false,
+            description: '',
+            dateFrom: eventDetails.value[0],
+            dateTo: eventDetails.value[1],
+        })
+        watch(() => eventDetails, ($eventDetails) => {
+            // console.log( moment($eventDetails.value[$eventDetails.value.length - 1].start).format('HH:mm'))
+            if (moment($eventDetails.value[$eventDetails.value.length - 1].start).format('HH:mm') !== '00:00') {
+                form.timeFrom = moment($eventDetails.value[$eventDetails.value.length - 1].start).format('HH:mm')
+                form.timeTo = moment($eventDetails.value[$eventDetails.value.length - 1].end).format('HH:mm')
+            } else {
+                form.timeFrom = ''
+                form.timeTo = ''
+            }
+            if (moment($eventDetails.value[$eventDetails.value.length - 1].end).subtract(1, "days").format('YYYY-MM-DD') == moment($eventDetails.value[$eventDetails.value.length - 1].start).format('YYYY-MM-DD')) {
+                form.dateFrom = moment($eventDetails.value[$eventDetails.value.length - 1].start).format('YYYY-MM-DD')
+                form.dateTo = null;
+            } else {
+                form.dateFrom = moment($eventDetails.value[$eventDetails.value.length - 1].start).format('YYYY-MM-DD')
+                form.dateTo = moment($eventDetails.value[$eventDetails.value.length - 1].end).format('YYYY-MM-DD')
+            }
+        }, {deep: true})
+
+        function updateCalendar() {
+            // Fetch updated events data from API or database
+            $.get('/calendar/events', (data) => {
+                dataToRender = data.events.map(x => {
+                    x.start = x.timeFrom ? `${x.dateFrom}T${x.timeFrom}` : x.dateFrom;
+                    x.end = x.timeTo ? `${x.dateTo}T${x.timeTo}` : x.dateTo;
+                    x.color = `${x.color}`;
+                    if (!x.timeFrom) {
+                        x.start = `${x.dateFrom}`
+                        x.end = `${x.dateTo}`;
+                        x.allDay = true
+                    }
+                    return x;
+                });
+                // Call success() to pass updated events data to the calendar
+                internalInstance.proxy.calendarOptions.events = (info, success, fail) => {
+                    success(dataToRender);
+                }
+
+                // Call updateEvents() on calendarApi object to update events on the calendar
+                let calendarApi = this.$refs.calendar.getApi(); // Get calendarApi object
+                calendarApi.refetchEvents(); // Update events on the calendar
+            });
+        }
+
+        // this.$nextTick(() => {
+        //     this.$refs.fullCalendar.calendar.gotoDate(new Date('2020-08-11'));
+        //
+        // });
+        let submit = async () => {
+            const routeToSave = form.editMode ? route(routeName.route, routeName.params) : route('calendar.add');
+            await form.post(form.remove ? route('calendar.remove', routeName.params) : routeToSave, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    form.dialog = false
+                    // $('#con-close-modal').modal('toggle')
+                    // form.reset('title')
+                    form.reset()
+                    updateCalendar();
+
+                },
+            });
+        };
+
+        let remove = async () => {
+            form.remove = true
+            submit()
+        }
+        return {remove, form, submit, updateCalendar, routeName, handleEventDrop}
+    },
+    data() {
+
+        // function testCalendar() {
+        let windowWidth = window.innerWidth;
+        let items = [
+            '1',
+            '2',
+            'Submit',
+        ]
+        return {
+            items,
+            // windowWidth,
+            config: {
+                wrap: false,
+                altFormat: 'M j, Y',
+                // altInput: true,
+                dateFormat: 'Y-m-d',
+                allowInput:true
+            },
+            calendarOptions: {
+                plugins: [
+                    // CustomViewCalendar,
+                    dayGridPlugin,
+                    timeGridPlugin,
+                    interactionPlugin // needed for dateClick
+                ],
+                headerToolbar: {
+                    left: 'prev,next today',
+                    //premium
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                //  locale: esLocale,
+                initialView: windowWidth <= 400 ? 'timeGridWeek' : 'dayGridMonth',
+
+                // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+                editable: true,
+                selectable: true,
+                selectMirror: true,
+                dayMaxEvents: true,
+                weekends: true,
+                select: this.handleDateSelect,
+                eventClick: this.handleEventClick,
+                eventDrop: this.handleEventDrop,
+                eventResize: this.handleEventResize,
+
+                // eventsSet: this.handleEvents
+                /* you can update a remote database when these fire:
+                eventAdd:
+                eventChange:
+                eventRemove:
+                */
+                // initialEvents: t,
+                // eventDidMount: function(info) {
+                //     $(info.el).find(".fc-event-title").prepend("<b style='display: block'>"+getRemainingDays(info.event.dateTo)+"</b>");
+                // },
+                events: (info, success, fail) => {
+                    $.get('/calendar/events', function (data) {
+                        let dataToRender = data.events.map(x => {
+                            x.start = x.timeFrom ? `${x.dateFrom}T${x.timeFrom}` : x.dateFrom;
+                            x.end = x.timeTo ? `${x.dateTo}T${x.timeTo}` : x.dateTo;
+                            x.color = `${x.color}`
+                            if (!x.timeFrom) {
+                                x.displayEventTime = false
+                                x.start = `${x.dateFrom}`
+                                x.end = `${x.dateTo}`;
+                                x.allDay = true
+                            }
+                            return x;
+                        });
+                        success(dataToRender);
+                    })
+                }
+
+            },
+
+        }
+
+    },
+
+    methods: {
+
+        updateWindowWidth() {
+            // Update the windowHeight data property when the window is resized
+            this.windowWidth = window.innerWidth;
+        },
+        beforeDestroy() {
+            // Remove the event listener when the component is destroyed to prevent memory leaks
+            window.removeEventListener("resize", this.handleResize);
+        },
+        handleEventRender(info) {
+            const event = info.event
+            // console.log(info)
+            // Check if the event's title is '12a'
+            if (event.timeTo === '23:59:00') {
+                event.setProp('displayEventTime', false)
+            }
+        },
+        getRemainingDays(dateTo) {
+            const start = new Date();
+            const end = moment(dateTo);
+            const duration = moment.duration(end.diff(start));
+
+            const days = duration.asDays();
+
+            return Math.ceil(days);
+
+        },
+
+        openAddEventModal() {
+            this.routeName.route = 'calendar.add'
+            this.form.title = '';
+            this.form.color = '';
+            this.form.timeFrom = '';
+            this.form.timeTo = '';
+            this.form.dateFrom = null;
+            this.form.dateTo = null;
+            this.form.editMode = false
+            this.form.dialog = true
+            // Open the add event modal
+            // $('#con-close-modal').modal('show');
+        },
+        handleWeekendsToggle() {
+            this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
+        },
+        handleDateSelect(selectInfo) {
+            eventDetails.value.push(selectInfo)
+            this.routeName.route = 'calendar.add'
+            this.form.title = '';
+            this.form.color = '';
+            // this.form.dateFrom = selectInfo[0];
+            // this.form.dateTo = selectInfo[1];
+            // this.form.timeFrom = '';
+            // this.form.timeTo = '';
+            this.form.dialog = true
+            this.form.editMode = false
+            // $('#con-close-modal').modal('show')
+        },
+
+        handleEventClick(clickInfo) {
+            // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+            this.form.dialog = true
+            this.form.editMode = true
+            this.routeName.route = 'calendar.update'
+            this.routeName.params = clickInfo.event.id
+            // eventEditDetails.value.push(clickInfo.event)
+            this.form.title = clickInfo.event.title;
+            this.form.color = clickInfo.event.backgroundColor;
+            this.form.description = clickInfo.event.extendedProps.description;
+            this.form.timeFrom = clickInfo.event.extendedProps.timeFrom;
+            this.form.timeTo = clickInfo.event.extendedProps.timeTo;
+            this.form.dateFrom = clickInfo.event.extendedProps.dateFrom;
+            this.form.dateTo = clickInfo.event.extendedProps.dateTo;
+            // }
+        },
+        handleEventResize(info) {
+            this.form.eId = info.event.id
+            this.form.title = info.event.title
+            this.form.color = info.event.backgroundColor;
+            this.form.timeFrom = info.event.extendedProps.timeFrom
+            this.form.timeTo = info.event.extendedProps.timeTo
+            this.form.dateFrom = info.event.extendedProps.dateFrom
+            this.form.dateTo = moment(info.event.end).format('YYYY-MM-DD')
+            this.form.post(route('calendar.update', info.event.id), {
+                preserveScroll: true,
+            })
+
+        },
+        handleEvents(events) {
+            // console.log(events)
+            this.currentEvents = events
+        },
+
+    }
+
+})
+
+</script>
+<template oncopy="return false" onpaste="return false" oncut="return false">
+    <AuthenticatedLayout>
+        <Head title="Calendar"/>
+
+        <button @click="openAddEventModal" type="button" class="btn btn-info waves-effect waves-light mt-1">
+            Add Event
+        </button>
+
+                        <v-row justify="center p-3">
+                            <v-dialog v-model="form.dialog" persistent width="1024">
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="text-h5">{{ form.editMode ? 'Edit Event' : 'Create Event' }}</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+
+                                                <!--                                                <v-col cols="12">-->
+                                                <v-text-field
+                                                    v-model="form.color"
+                                                    type="color"
+                                                    :label="$page.props.auth .user.lang == 'arabic'? 'الون' : 'Color'"
+                                                    variant="outlined"/>
+                                                <InputError :message="form.errors.color"/>
+                                                <!--                                                </v-col>-->
+
+                                                <v-col cols="12">
+                                                    <v-text-field
+                                                        :label="$page.props.auth .user.lang == 'arabic'? 'العنوان' : 'Title'"
+                                                        v-model="form.title" required/>
+                                                    <InputError :message="form.errors.title"/>
+                                                </v-col>
+
+                                                <v-col cols="6">
+                                                    <v-text-field type="time"
+                                                                  :label="$page.props.auth.user.lang == 'arabic'? 'الوقت من' : 'Time from'"
+                                                                  v-model="form.timeFrom" required/>
+                                                    <InputError :message="form.errors.timeFrom"/>
+                                                </v-col>
+                                                <v-col cols="6">
+                                                    <v-text-field type="time"
+                                                                  :label="$page.props.auth.user.lang == 'arabic'? 'الوقت الئ' : 'Time to'"
+                                                                  v-model="form.timeTo" required/>
+                                                    <InputError :message="form.errors.timeTo"/>
+                                                </v-col>
+                                                <v-col md="6">
+                                                    <flat-pickr :config="config" class="form-control"
+                                                                v-model="form.dateFrom"></flat-pickr>
+                                                    <InputError :message="form.errors.dateFrom"/>
+                                                </v-col>
+                                                <v-col md="6">
+                                                    <flat-pickr class="form-control" :config="config" v-model="form.dateTo"></flat-pickr>
+                                                    <InputError :message="form.errors.dateTo"/>
+                                                </v-col>
+                                                <!--                                                add color input-->
+                                                <v-container fluid>
+                                                    <v-textarea
+                                                        counter
+                                                        label="Note(s)"
+                                                        v-model="form.description"></v-textarea>
+                                                </v-container>
+                                            </v-row>
+                                        </v-container>
+                                        <!--                                        <small>*indicates required field</small>-->
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="blue-darken-1" variant="text" @click="form.dialog = false">
+                                            Close
+                                        </v-btn>
+                                        <v-btn v-if="form.editMode" color="blue-darken-1" variant="text"
+                                               @click="remove">
+                                            Delete
+                                        </v-btn>
+                                        <v-btn color="blue-darken-1" variant="text" @click="submit">
+                                            {{ form.editMode ? 'Update' : 'Save' }}
+                                        </v-btn>
+
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-row>
+                        <!--                            </v-card>-->
+
+                        <!--                    </v-stepper>-->
+                        <!--                </v-stepper-window>-->
+
+
+        <!--    <div class='demo-app'>-->
+        <!--        <div class='demo-app-sidebar'>-->
+        <!--            <div class='demo-app-sidebar-section'>-->
+        <!--                <h2>Instructions</h2>-->
+        <!--                <ul>-->
+        <!--                    <li>Select dates and you will be prompted to create a new event</li>-->
+        <!--                    <li>Drag, drop, and resize events</li>-->
+        <!--                    <li>Click an event to delete it</li>-->
+        <!--                </ul>-->
+        <!--            </div>-->
+        <!--            <div class='demo-app-sidebar-section'>-->
+        <!--                <label>-->
+        <!--                    <input-->
+        <!--                        type='checkbox'-->
+        <!--                        :checked='calendarOptions.weekends'-->
+        <!--                        @change='handleWeekendsToggle'-->
+        <!--                    />-->
+        <!--                    toggle weekends-->
+        <!--                </label>-->
+        <!--            </div>-->
+        <!--            <div class='demo-app-sidebar-section'>-->
+        <!--                <h2>All Events ({{ currentEvents.length }})</h2>-->
+        <!--                <ul>-->
+        <!--                    <li v-for='event in currentEvents' :key='event.id'>-->
+        <!--                        <b>{{ event.startStr }}</b>-->
+        <!--                        <i>{{ event.title }}</i>-->
+        <!--                    </li>-->
+        <!--                </ul>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <div class="row" style="
+              -webkit-user-select: none;
+            /*-khtml-user-select: none;*/
+             -moz-user-select: none;
+            -ms-user-select: none;
+            /*-o-user-select: none;*/
+            user-select: none;">
+            <div class="col-lg-12 col-md-12" >
+                <div class="card" style="background-color: rgba(0,119,246,0.05)">
+                    <div class="card-body">
+                        <div class='demo-app-main'>
+                            <FullCalendar id="calendar" ref="calendar" v-on:update-calendar="updateCalendar"
+                                          :event-render="handleEventRender" @eventDrop="handleEventDrop"
+                                          :options="calendarOptions"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>
