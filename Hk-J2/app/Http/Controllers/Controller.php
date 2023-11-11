@@ -29,7 +29,7 @@ class Controller extends BaseController
         $clients = Client::where('userId', $mainUserId)->orderBy('created_at', 'DESC')->paginate(10);
         $projects = Project::where('userId', $mainUserId)->orderBy('created_at', 'DESC')->paginate(10);
         $notes = DB::table('notes')->where('userId', $mainUserId)->get();
-        $orders = User::getMainUserOrders()->paginate(20);
+        $orders = User::ordersFormated();//User::getMainUserOrders()->paginate(20);
 
         $filter = $request->filter;
 

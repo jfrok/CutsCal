@@ -127,17 +127,44 @@ class User extends Authenticatable
 
         return $exists;
     }
-    public static function getMainUserOrders(){
+    public static function getMainUserOrders()
+    {
         $orders = DB::table('orders')
             ->join('users', 'orders.employer_id', '=', 'users.id')
             ->select('orders.email', 'users.name as user_name', 'orders.email',
                 'orders.name', 'orders.service_id', 'orders.phone',
-                'orders.date', 'orders.time', 'orders.price', 'status', 'orders.created_at')
-            ->where('orders.main_user_id', self::findTheMainUser()->id)
+                'orders.date', 'orders.time', 'orders.price', 'status', 'orders.created_at', 'orders.id as order_id')
+            ->where('orders.main_user_id', self::findTheMainUser()->id ?? '')
             ->orderBy('orders.created_at', 'DESC');
-        if ($orders){
+        if ($orders) {
             return $orders;
         }
+    }
+    public static function getUserServicesById($id = null)
+    {
+        $services = DB::table('services')->select('services.*')->where('userId', self::findTheMainUser()->id ?? '')->whereIn('id', $id);
+//        dd($services) ;
+        return $services;
+    }
+
+    public static function ordersFormated()
+    {
+        $orders = self::getMainUserOrders()->get();
+        $arr = [];
+        foreach ($orders as $order) {
+            $arr = array([
+                'order_id' => $order->order_id,
+                'name' => $order->name,
+                'user_name' => $order->user_name,
+                'email' => $order->email,
+                'phone' => $order->phone,
+                'date' => $order->date,
+                'time' => $order->time,
+                'price' => $order->price,
+                'service' => self::getUserServicesById(explode(',', $order->service_id))->get(),
+                'created_at' => $order->created_at]);
+        }
+        return $arr;
     }
 //    public function belongRoles()
 //    {

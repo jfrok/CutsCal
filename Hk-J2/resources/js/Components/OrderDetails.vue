@@ -21,45 +21,35 @@
                             <thead>
                             <tr>
                                 <th>Barber</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Status</th>
+                                <th class="text-end">Services</th>
+                                <!--                                <th>Price</th>-->
+                                <!--                                <th>Status</th>-->
                             </tr>
                             </thead>
 
                             <tbody>
                             <tr>
                                 <td v-text="orderData.user_name"></td>
-                                <td  v-text="orderData.email"></td>
-                                <td  v-text="orderData.price"></td>
-                                <td  v-text="orderData.status"></td>
+                                <!--                                <td class="text-end">hii</td>-->
+                                <td class="text-end"> <div v-for="item in orderData.service"  class="p-1"> <v-chip>{{item.name}}</v-chip></div></td>
+
+                                <!--                                <td  v-text="orderData.price"></td>-->
+                                <!--                                <td  v-text="orderData.status"></td>-->
                             </tr>
 
-                            <tr>
-                                <th>Total</th>
-                                <th></th>
-                                <th class="text-end">
-<!--                                    ${{ subtotal }}-->
-                                </th>
-                            </tr>
+                            <!--                            <tr>-->
+                            <!--                                <th>Total</th>-->
+                            <!--                                <th></th>-->
+                            <!--                                <th class="text-end">-->
+                            <!--&lt;!&ndash;                                    ${{ subtotal }}&ndash;&gt;-->
+                            <!--                                </th>-->
+                            <!--                            </tr>-->
                             </tbody>
                         </v-table>
                     </v-sheet>
                 </template>
 
                 <template v-slot:item.2>
-                    <h3 class="text-h6">Services</h3>
-
-                    <br>
-
-                    <v-radio-group v-model="shipping" label="Delivery Method">
-                        <v-radio label="Standard Shipping" value="5"></v-radio>
-                        <v-radio label="Priority Shipping" value="10"></v-radio>
-                        <v-radio label="Express Shipping" value="15"></v-radio>
-                    </v-radio-group>
-                </template>
-
-                <template v-slot:item.3>
                     <h3 class="text-h6">Confirm</h3>
 
                     <br>
@@ -98,6 +88,15 @@
                         </v-table>
                     </v-sheet>
                 </template>
+                <template v-slot:item.3>
+                    <h3 class="text-h6">Services</h3>
+
+                    <br>
+
+                    <v-radio-group v-model="shipping" label="Delivery Method">
+                        <v-radio  value="5" v-for="item in orderData.service" :label="item.name"/>
+                    </v-radio-group>
+                </template>
             </v-stepper>
         </v-card-text>
         <v-card-actions>
@@ -129,8 +128,8 @@ export default {
         step: 1,
         items: [
             'Review Order',
-            'Services',
             'invoice',
+            'Settings',
         ],
         products: [
             {

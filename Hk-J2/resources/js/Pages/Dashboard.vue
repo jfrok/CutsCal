@@ -349,7 +349,7 @@ function removeNote(nId) {
                                 <v-table
                                     style="border-radius: 20px"
                                     fixed-header
-                                    v-if="orders.data.length > 0"
+                                    v-if="orders"
                                 >
                                     <thead>
                                     <tr>
@@ -378,7 +378,7 @@ function removeNote(nId) {
                                     </thead>
                                     <tbody>
                                     <tr
-                                        v-for="item in orders.data"
+                                        v-for="item in orders"
                                         :key="item.id"
                                     >
                                         <td>{{ item.name }}</td>
