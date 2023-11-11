@@ -34,7 +34,7 @@ class Setting extends Model
            return $userInterval;
        }
     }
-    public static function generateUniqueToken($model,$col,$length = 32) {
+    public static function generateUniqueToken($model,$col,$length = 11) {
         do {
             $token = \Illuminate\Support\Str::random($length);
         } while ($model::where($col, $token)->exists());

@@ -10,7 +10,6 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-
         $request->validate([
             'name' => 'required|max:100',
             'email' => 'nullable|email|max:100',
@@ -20,19 +19,22 @@ class OrderController extends Controller
             'service' => 'required|array|min:1',
         ]);
         $userId = User::getUserIdByToken($request->frameToken);
-//        dd($userId);
+        $jS = json_encode($request->service);
+        $strFirstO = str_replace('[','',$jS);
+        $strSecO = str_replace(']','',$strFirstO);
+//        dd($strSecO);
         $orders = Order::create(['employer_id' => $request->barber,
-         'service_id' => serialize($request->service),
-         'main_user_id' => $userId,
-         'name' => $request->name,
-         'email' => $request->email,
-         'phone' => $request->phone,
-         'date' => $request->date,
-         'time' => $request->time,
-         'price' => '0.99','status'=>'open']);
-     if ($orders){
+            'service_id' => $strSecO,
+            'main_user_id' => $userId,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'date' => $request->date,
+            'time' => $request->time,
+            'price' => '0.99','status'=>'open']);
+        if ($orders){
 //         dd('nice');
-         return back()->with('message', 'Successfully res');
-      }
+            return back()->with('message', 'Successfully res');
+        }
     }
 }

@@ -145,18 +145,62 @@
                         />
                     </v-form>
                 </div>
-                <div v-if="current == 'thx'">
-                    <ThxDialog :back-to-step-one="1"/>
-                </div>
+<!--                <div v-if="current == 'thx'">-->
+                    <v-dialog v-model="thxDialog">
+                        <v-sheet
+                            class="position-relative"
+                            min-height="450"
+                        >
+                            <v-fade-transition hide-on-leave>
+                                <v-card
+                                    append-icon="$close"
+                                    class="mx-auto"
+                                    elevation="16"
+                                    max-width="500"
+                                    title="Send a receipt"
+                                >
+<!--                                    <template v-slot:append>-->
+<!--                                        <v-btn icon="$close" variant="text" @click="closeThxDialog()"></v-btn>-->
+<!--                                    </template>-->
+
+                                    <v-divider></v-divider>
+
+                                    <div class="py-12 text-center">
+                                        <v-icon
+                                            class="mb-6"
+                                            color="success"
+                                            icon="mdi-check-circle-outline"
+                                            size="128"
+                                        ></v-icon>
+                                        <div class="text-h4 font-weight-bold">Your reservation has been confirmed</div>
+                                    </div>
+                                    <v-divider></v-divider>
+                                    <div class="pa-4 text-end">
+                                        <v-btn
+                                            class="text-none"
+                                            color="medium-emphasis"
+                                            min-width="92"
+                                            rounded
+                                            variant="outlined"
+                                            @click="closeThxDialog()"
+                                        >
+                                            Back
+                                        </v-btn>
+                                    </div>
+                                </v-card>
+                            </v-fade-transition>
+                        </v-sheet>
+                    </v-dialog>
+<!--                </div>-->
             </v-card-text>
             <v-divider class="mx-4 mb-1"></v-divider>
             <v-card-actions>
                 <v-btn v-if="current >= 2" style="margin: 10px" @click="current --">Previous</v-btn>
                 <v-btn v-if="showNextButton()" @click="current ++">Next</v-btn>
                 <v-btn v-if="current == 5" @click="submit">Reserve
-                    <template v-slot:loader>
-                        <v-progress-linear indeterminate></v-progress-linear>
-                    </template>
+<!--                    <template v-slot:loader>-->
+<!--                        <v-progress-linear indeterminate></v-progress-linear>-->
+<!--                    </template>-->
                 </v-btn>
                 <!--                                <v-btn-->
                 <!--                                    color="deep-purple-lighten-2"-->
@@ -196,6 +240,7 @@ export default {
         loading: false,
         config: null,
         date: null,
+        thxDialog:false,
         headers: [
             {text: 'Name', value: 'name'},
             {text: 'Price', value: 'price', align: 'end'}
@@ -227,6 +272,10 @@ export default {
             } else {
                 return false
             }
+        },
+        closeThxDialog(){
+            this.thxDialog = false;
+            this.current = 1
         },
         showNextButton() {
             if (this.current == 1 && this.date != null) return true;
@@ -305,7 +354,8 @@ export default {
             router.post(route('store.order', this.frameToken), data.value ,{
                 preserveScroll:true,
                 onSuccess: () =>{
-                    this.current = 'thx';
+                    // this.current = 1;
+                    this.thxDialog = true
                 }
             })
             // }

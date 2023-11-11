@@ -159,7 +159,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
         return to_route('dashboard');
      });
 });
-Route::get('/make-a-reservation/{token}',[FrameController::class, 'edit'])->name('frame.view');
+Route::get('{token}',[FrameController::class, 'edit'])->name('frame.view');
 /// Order
 Route::post('/order-store', [OrderController::class, 'store'])->name('store.order');
 

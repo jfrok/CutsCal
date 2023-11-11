@@ -152,7 +152,7 @@ class User extends Authenticatable
         $orders = self::getMainUserOrders()->get();
         $arr = [];
         foreach ($orders as $order) {
-            $arr = array([
+             array_push($arr,[
                 'order_id' => $order->order_id,
                 'name' => $order->name,
                 'user_name' => $order->user_name,
