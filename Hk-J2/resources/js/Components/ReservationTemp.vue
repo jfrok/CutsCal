@@ -19,7 +19,7 @@
             <v-card-item>
 
                 <v-card-title>{{
-                        current == 1 ? 'Calendar' : current == 2 ? 'Services' : current == 3 ? 'Barbers' : current == 4 ? 'Time' : 'Form'
+                        current == 1 ? 'Calendar' : current == 2 ? 'Services' : current == 3 ? 'Barbers' : current == 4 ? 'Time' : current == 5 ?'Personal information' : 'Thank you'
                     }}
                 </v-card-title>
 
@@ -58,7 +58,6 @@
 
                 <div v-if="current == 1" style="display: flex;justify-content: center">
                     <flat-pickr style="display: none" v-model="date" :config="config" class="form-control"/>
-
                 </div>
                 <div v-if="current == 2">
                     <v-sheet border>
@@ -102,14 +101,13 @@
                                     </v-avatar>
                                 </td>
                             </tr>
-
                             </tbody>
                         </v-table>
                     </v-sheet>
                 </div>
 
                 <div v-if="current == 4">
-                    <v-card-title>Today's availability ({{ formatDate(date) }} at {{ selectedTime.toString() }})
+                    <v-card-title>Availability ({{ formatDate(date) }} at {{ selectedTime.toString() }})
                     </v-card-title>
                     <div class="px-4">
 
@@ -145,70 +143,73 @@
                         />
                     </v-form>
                 </div>
-<!--                <div v-if="current == 'thx'">-->
-                    <v-dialog v-model="thxDialog">
-                        <v-sheet
-                            class="position-relative"
-                            min-height="450"
-                        >
-                            <v-fade-transition hide-on-leave>
-                                <v-card
-                                    append-icon="$close"
-                                    class="mx-auto"
-                                    elevation="16"
-                                    max-width="500"
-                                    title="Send a receipt"
-                                >
-<!--                                    <template v-slot:append>-->
-<!--                                        <v-btn icon="$close" variant="text" @click="closeThxDialog()"></v-btn>-->
-<!--                                    </template>-->
+                <div v-if="current == 'thx'">
+                    <v-sheet style="position: absolute"
+                             class="position-relative"
+                             min-height="450">
+                        <!--        <div class="position-absolute d-flex align-center justify-center w-100 h-100">-->
+                        <!--            <v-btn-->
+                        <!--                size="x-large"-->
+                        <!--                color="deep-purple-darken-2"-->
+                        <!--                @click="dialog = !dialog"-->
+                        <!--            >-->
+                        <!--                Open Dialog-->
+                        <!--            </v-btn>-->
+                        <!--        </div>-->
 
-                                    <v-divider></v-divider>
+                        <v-fade-transition hide-on-leave>
+                            <v-card
+                                append-icon="$close"
+                                class="mx-auto"
+                                elevation="16"
+                                max-width="500"
+                                title="Success"
+                            >
+                                <template v-slot:append>
+                                    <v-btn icon="$close" variant="text" @click="current = 1"></v-btn>
+                                </template>
 
-                                    <div class="py-12 text-center">
-                                        <v-icon
-                                            class="mb-6"
-                                            color="success"
-                                            icon="mdi-check-circle-outline"
-                                            size="128"
-                                        ></v-icon>
-                                        <div class="text-h4 font-weight-bold">Your reservation has been confirmed</div>
-                                    </div>
-                                    <v-divider></v-divider>
-                                    <div class="pa-4 text-end">
-                                        <v-btn
-                                            class="text-none"
-                                            color="medium-emphasis"
-                                            min-width="92"
-                                            rounded
-                                            variant="outlined"
-                                            @click="closeThxDialog()"
-                                        >
-                                            Back
-                                        </v-btn>
-                                    </div>
-                                </v-card>
-                            </v-fade-transition>
-                        </v-sheet>
-                    </v-dialog>
-<!--                </div>-->
+                                <v-divider></v-divider>
+
+                                <div class="py-12 text-center">
+                                    <v-icon
+                                        class="mb-6"
+                                        color="success"
+                                        icon="mdi-check-circle-outline"
+                                        size="128"
+                                    ></v-icon>
+
+                                    <div class="text-h4 font-weight-bold">Thank you</div>
+                                    <h4>Thank you the reservation has made place check your email or your phone number for the reservation details</h4>
+                                </div>
+
+                                <v-divider></v-divider>
+                                <div class="pa-4 text-end">
+                                    <v-btn
+                                        class="text-none"
+                                        color="medium-emphasis"
+                                        min-width="92"
+                                        rounded
+                                        variant="outlined"
+                                        @click="current = 1"
+                                    >
+                                        Back
+                                    </v-btn>
+                                </div>
+                            </v-card>
+                        </v-fade-transition>
+                    </v-sheet>
+                </div>
             </v-card-text>
             <v-divider class="mx-4 mb-1"></v-divider>
             <v-card-actions>
                 <v-btn v-if="current >= 2" style="margin: 10px" @click="current --">Previous</v-btn>
                 <v-btn v-if="showNextButton()" @click="current ++">Next</v-btn>
                 <v-btn v-if="current == 5" @click="submit">Reserve
-<!--                    <template v-slot:loader>-->
-<!--                        <v-progress-linear indeterminate></v-progress-linear>-->
-<!--                    </template>-->
+                    <template v-slot:loader>
+                        <v-progress-linear indeterminate></v-progress-linear>
+                    </template>
                 </v-btn>
-                <!--                                <v-btn-->
-                <!--                                    color="deep-purple-lighten-2"-->
-                <!--                                    variant="text"-->
-                <!--                                    @click="reserve"-->
-                <!--                                >-->
-                <!--                                    Reserve-->
-                <!--                                </v-btn>-->
             </v-card-actions>
         </v-card>
     </div>
@@ -223,7 +224,6 @@ import ThxDialog from "@/Components/ThxDialog.vue";
 
 export default {
     components: {
-        ThxDialog,
         Link,
         FlatPickr
     },
@@ -240,7 +240,6 @@ export default {
         loading: false,
         config: null,
         date: null,
-        thxDialog:false,
         headers: [
             {text: 'Name', value: 'name'},
             {text: 'Price', value: 'price', align: 'end'}
@@ -272,10 +271,6 @@ export default {
             } else {
                 return false
             }
-        },
-        closeThxDialog(){
-            this.thxDialog = false;
-            this.current = 1
         },
         showNextButton() {
             if (this.current == 1 && this.date != null) return true;
@@ -354,8 +349,7 @@ export default {
             router.post(route('store.order', this.frameToken), data.value ,{
                 preserveScroll:true,
                 onSuccess: () =>{
-                    // this.current = 1;
-                    this.thxDialog = true
+                    this.current = 'thx';
                 }
             })
             // }

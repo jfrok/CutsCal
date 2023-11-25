@@ -15,7 +15,7 @@
                     <h3 class="text-h6">Order</h3>
 
                     <br>
-                    {{ orderData }}
+<!--                    {{ orderData }}-->
                     <v-sheet border>
                         <v-table>
                             <thead>

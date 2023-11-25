@@ -21,7 +21,7 @@ export default {
     data: () => ({
         current: 1,
         config: null,
-        rToken: usePage().url.replace('/',''),
+        rToken: usePage().url.replace('/make-a-reservation/',''),
         date: null,
         headers: [
             {text: 'Name', value: 'name'},

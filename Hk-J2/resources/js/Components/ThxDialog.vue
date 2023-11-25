@@ -48,7 +48,7 @@ defineProps({
                 </div>
 
                 <v-divider></v-divider>
-<!--{{backToStepOne}}-->
+{{backToStepOne}}
                 <div class="pa-4 text-end">
                     <v-btn
                         class="text-none"

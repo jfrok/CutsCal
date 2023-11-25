@@ -30,6 +30,7 @@ class Controller extends BaseController
         $projects = Project::where('userId', $mainUserId)->orderBy('created_at', 'DESC')->paginate(10);
         $notes = DB::table('notes')->where('userId', $mainUserId)->get();
         $orders = User::ordersFormated();//User::getMainUserOrders()->paginate(20);
+
         $filter = $request->filter;
 
         $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);

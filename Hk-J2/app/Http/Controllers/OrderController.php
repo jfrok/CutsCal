@@ -10,10 +10,11 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|max:100',
             'email' => 'nullable|email|max:100',
-            'phone' => 'required|max:15',
+            'phone' => 'required|Integer|max:15',
             'time' => '|date_format:H:i',
             'barber' => 'required',
             'service' => 'required|array|min:1',

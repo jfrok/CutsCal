@@ -121,7 +121,7 @@ class User extends Authenticatable
             ->value('userId');
         return $user_id;
     }
-   static function verifyToken($token) {
+    static function verifyToken($token) {
         $exists = Setting::where('frame_token', $token)
             ->exists();
 
@@ -140,6 +140,7 @@ class User extends Authenticatable
             return $orders;
         }
     }
+
     public static function getUserServicesById($id = null)
     {
         $services = DB::table('services')->select('services.*')->where('userId', self::findTheMainUser()->id ?? '')->whereIn('id', $id);
@@ -152,7 +153,7 @@ class User extends Authenticatable
         $orders = self::getMainUserOrders()->get();
         $arr = [];
         foreach ($orders as $order) {
-             array_push($arr,[
+            $arr[] = [
                 'order_id' => $order->order_id,
                 'name' => $order->name,
                 'user_name' => $order->user_name,
@@ -162,7 +163,7 @@ class User extends Authenticatable
                 'time' => $order->time,
                 'price' => $order->price,
                 'service' => self::getUserServicesById(explode(',', $order->service_id))->get(),
-                'created_at' => $order->created_at]);
+                'created_at' => $order->created_at];
         }
         return $arr;
     }

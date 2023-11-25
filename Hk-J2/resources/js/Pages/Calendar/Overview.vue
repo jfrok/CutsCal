@@ -199,6 +199,7 @@ export default defineComponent({
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
+                buttonText: this.customButtonsName(),
                 //  locale: esLocale,
                 initialView: windowWidth <= 400 ? 'timeGridWeek' : 'dayGridMonth',
 
@@ -212,7 +213,7 @@ export default defineComponent({
                 eventClick: this.handleEventClick,
                 eventDrop: this.handleEventDrop,
                 eventResize: this.handleEventResize,
-
+                dayHeaderContent: this.customDayHeaderContent,
                 // eventsSet: this.handleEvents
                 /* you can update a remote database when these fire:
                 eventAdd:
@@ -256,6 +257,18 @@ export default defineComponent({
         beforeDestroy() {
             // Remove the event listener when the component is destroyed to prevent memory leaks
             window.removeEventListener("resize", this.handleResize);
+        },
+        customButtonsName() {
+            const lang = usePage().props.auth.user.lang;
+            return lang === 'arabic'
+                ? { today: 'اليوم', month: 'الشهر', week: 'الاسبوع', day: 'day' }
+                : { today: 'today', month: 'month', week: 'week', day: 'day' };
+        },
+        customDayHeaderContent(arg) {
+            const customDayNames = usePage().props.auth.user.lang == 'arabic' ? ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الاجمعة', 'السبت'] :['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+            console.log(arg)
+            return customDayNames[arg.date.getUTCDay()];
         },
         handleEventRender(info) {
             const event = info.event
@@ -349,9 +362,7 @@ export default defineComponent({
     <AuthenticatedLayout>
         <Head title="Calendar"/>
 
-        <button @click="openAddEventModal" type="button" class="btn btn-info waves-effect waves-light mt-1">
-            Add Event
-        </button>
+
 
                         <v-row justify="center p-3">
                             <v-dialog v-model="form.dialog" persistent width="1024">
@@ -481,7 +492,38 @@ export default defineComponent({
                         </div>
                     </div>
                 </div>
+<!--                <div class="balk" style="position: fixed">-->
+<!--                    <button @click="openAddEventModal" type="button" class="btn btn-info waves-effect waves-light mt-1">-->
+<!--                        Add Event-->
+<!--                    </button>-->
+<!--                </div>-->
             </div>
+
         </div>
+
     </AuthenticatedLayout>
 </template>
+<style lang="css">
+.fc-day-today {
+    background-color: inherit !important;
+
+
+}
+.fc-day-today .fc-daygrid-day-number {
+    z-index: 9999;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    border-radius: 56px;
+    background: #1c72a2;
+
+}
+.fc .td,
+th {
+    border-bottom: none !important;
+}
+
+</style>

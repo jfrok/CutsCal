@@ -349,7 +349,7 @@ function removeNote(nId) {
                                 <v-table
                                     style="border-radius: 20px"
                                     fixed-header
-                                    v-if="orders"
+                                    v-if="orders.length > 0"
                                 >
                                     <thead>
                                     <tr>

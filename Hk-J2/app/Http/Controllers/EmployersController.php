@@ -154,16 +154,17 @@ class EmployersController extends Controller
 
     public function setMark(Request $request)
     {
-        $selectedUserIds = $request->input('user_ids');
-        $request->validate([
-            'user_ids' => 'required|array',
-            'user_ids.*' => 'integer|exists:users,id'
-        ]);
+        $selectedUserIds = $request->user_ids;
         User::whereIn('id', $selectedUserIds)->update(['mark' => 1]);
-        User::whereNotIn('id', $selectedUserIds)->update(['mark' => 0]);
-        return back()->with('message','Marks updated successfully.');
-    }
+        // get main user ids or users all employers
+        User::getUserAllEmployers()->get();
+        $notSelected = User::getUserAllEmployers()
+//            ->where('mark',1)
+            ->pluck('id');
+        $selectedUserIds == null ? User::whereIn('id', $notSelected)->update(['mark' => 0]) : User::whereNotIn('id', $selectedUserIds)->update(['mark' => 0]);
 
+        return back()->with('message', 'Marks updated successfully.');
+    }
 
     public function destroy($id)
     {

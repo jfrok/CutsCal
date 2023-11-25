@@ -28,13 +28,13 @@ class Setting extends Model
     }
     public static function getShopInterval($id = null)
     {
-       $userInterval = DB::table('scheduled_tasks')->select('interval')
+        $userInterval = DB::table('scheduled_tasks')->select('interval')
             ->where('userId',User::findTheMainUser()->id ?? $id)->first();
-       if ($userInterval){
-           return $userInterval;
-       }
+        if ($userInterval){
+            return $userInterval;
+        }
     }
-    public static function generateUniqueToken($model,$col,$length = 11) {
+    public static function generateUniqueToken($model,$col,$length = 32) {
         do {
             $token = \Illuminate\Support\Str::random($length);
         } while ($model::where($col, $token)->exists());
