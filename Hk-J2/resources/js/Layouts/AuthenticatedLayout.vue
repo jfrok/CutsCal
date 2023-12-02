@@ -184,12 +184,12 @@ const submitSchedule = () => {
                     </li>
                     <li class="nav-item"
                         v-if="$page.props.auth.userRole.includes('schedule-edit')">
-                        <v-btn @click="openScheduleDialog"
+                        <a href="javascript:void(0)" @click="openScheduleDialog"
                            class="dropdown-toggle nav-link header-nav-list ">
                             <!--                            <img src="assets/img/icons/header-icon-05.svg" alt="">-->
                             <!--                            <span class="notification-badge">2</span>-->
                             <i class="feather-calendar"/>
-                        </v-btn>
+                        </a>
                     </li>
                     <!--                    <li class="nav-item zoom-screen me-2">-->
                     <!--                        <a href="#" class="nav-link header-nav-list win-maximize">-->
@@ -267,7 +267,7 @@ const submitSchedule = () => {
 
                             </li>
                             <li class="submenu" v-if="$page.props.auth.userRole.includes('event-calendar')"
-                                :class="{'active':$page.component == 'Calendar/Overview'}">
+                                :class="{'active':$page.component.includes('Calendar')}">
                                 <Link :href="route('calendar.overview')"><i class="fas fa-calendar"></i>
                                     <span> {{
                                             usePage().props.auth.user.lang == 'arabic' ? 'التقويم' : 'Calendar'
@@ -276,14 +276,14 @@ const submitSchedule = () => {
                                         class="menu-arrow"></span></Link>
                             </li>
                             <li v-if="$page.props.auth.userRole.includes('role-list')" class="submenu"
-                                :class="{'active':$page.component == 'Roles/Overview'}">
+                                :class="{'active':$page.component.includes('Roles')}">
                                 <Link :href="route('roles.index')"><i class="fas fa-list-alt"></i>
                                     <span> {{ usePage().props.auth.user.lang == 'arabic' ? 'الرتب' : 'Roles' }}</span>
                                     <span
                                         class="menu-arrow"></span></Link>
                             </li>
                             <li v-if="$page.props.auth.userRole.includes('user-list')" class="submenu"
-                                :class="{'active':$page.component == 'Accounts/Overview'}">
+                                :class="{'active':$page.component.includes('Account')}">
                                 <Link :href="route('users.index')"><i class="fas fa-users"></i>
                                     <span> {{
                                             usePage().props.auth.user.lang == 'arabic' ? 'الحسابات' : 'Accounts'
@@ -293,7 +293,7 @@ const submitSchedule = () => {
                             </li>
 
                             <li v-if="$page.props.auth.userRole.includes('employer-list')" class="submenu"
-                                :class="{'active':$page.component == 'Employers/Overview'}">
+                                :class="{'active':$page.component.includes('Employers')}">
                                 <Link :href="route('employer.overview')"><i class="fas fa-user-tag"></i>
                                     <span>{{
                                             usePage().props.auth.user.lang == 'arabic' ? 'الموظفون' : 'Employers'
@@ -303,7 +303,7 @@ const submitSchedule = () => {
                             </li>
                             <!--                            v-if="$page.props.auth.userRole.includes('employer-list')"-->
                             <li class="submenu" v-if="$page.props.auth.userRole.includes('client-list')"
-                                :class="{'active':$page.component == 'Clients/Overview'}">
+                                :class="{'active':$page.component.includes('Clients')}">
                                 <Link :href="route('client.overview')"><i class="fas fa-clipboard"></i>
                                     <span>{{
                                             usePage().props.auth.user.lang == 'arabic' ? 'الزبائن' : 'Clients'
@@ -312,14 +312,14 @@ const submitSchedule = () => {
                                         class="menu-arrow"></span></Link>
                             </li>
                             <li class="submenu" v-if="$page.props.auth.userRole.includes('schedule-edit')"
-                                :class="{'active':$page.component == 'Frame/Overview'}">
+                                :class="{'active':$page.component.includes('Frame')}">
                                 <Link :href="route('frame.overview')"><i class="fas fa-money-bill"></i>
                                     <span>{{ usePage().props.auth.user.lang == 'arabic' ? 'الايطار' : 'Frame' }}</span>
                                     <span
                                         class="menu-arrow"></span></Link>
                             </li>
                             <li class="submenu" v-if="$page.props.auth.userRole.includes('project-list')"
-                                :class="{'active':$page.component == 'Projects/Overview'}">
+                                :class="{'active':$page.component.includes('Projects')}">
                                 <Link :href="route('project.overview')"><i class="fas fa-server"></i>
                                     <span>{{
                                             usePage().props.auth.user.lang == 'arabic' ? 'المشاريع' : 'Projects'
@@ -329,7 +329,7 @@ const submitSchedule = () => {
                             </li>
 
                             <li class="submenu" v-if="$page.props.auth.userRole.includes('trash-list')"
-                                :class="{'active':$page.component == 'Trash'}">
+                                :class="{'active':$page.component.includes('Trash')}">
                                 <Link :href="route('trash')"><i class="fas fa-trash-restore"></i>
                                     <span> {{
                                             usePage().props.auth.user.lang == 'arabic' ? 'المهملات' : 'Trash'

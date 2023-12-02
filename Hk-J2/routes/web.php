@@ -151,6 +151,8 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     Route::prefix('frame')->group(function () {
         Route::get('overview',[FrameController::class, 'index'])->name('frame.overview');
         Route::post('create-services',[FrameController::class, 'createServices'])->name('services.create');
+        Route::post('delete-services/{sId}',[FrameController::class, 'deleteService'])->name('services.delete');
+
     });
     /// Schedule
      Route::post('/schedule', [ScheduleController::class, 'store'])->name('store.schedule');

@@ -1,22 +1,22 @@
 <template>
     <v-card>
         <v-card-title>
-            <span class="text-h5">Details: {{orderData.name}}</span>
+            <span class="text-h5">Details: {{ orderData.name }}</span>
         </v-card-title>
         <v-card-text>
 
             <v-stepper
                 v-model="step"
                 :items="items"
-                show-actions
+                hide-actions
                 editable
             >
                 <template v-slot:item.1>
                     <h3 class="text-h6">Order</h3>
 
                     <br>
-<!--                    {{ orderData }}-->
-                    <v-sheet border>
+                    <!--                    {{ orderData }}-->
+                    <v-sheet border style="box-shadow: unset">
                         <v-table>
                             <thead>
                             <tr>
@@ -31,7 +31,11 @@
                             <tr>
                                 <td v-text="orderData.user_name"></td>
                                 <!--                                <td class="text-end">hii</td>-->
-                                <td class="text-end"> <div v-for="item in orderData.service"  class="p-1"> <v-chip>{{item.name}}</v-chip></div></td>
+                                <td class="text-end">
+                                    <div v-for="item in orderData.service" class="p-1">
+                                        <v-chip>{{ item.name }}</v-chip>
+                                    </div>
+                                </td>
 
                                 <!--                                <td  v-text="orderData.price"></td>-->
                                 <!--                                <td  v-text="orderData.status"></td>-->
@@ -92,9 +96,8 @@
                     <h3 class="text-h6">Services</h3>
 
                     <br>
-
                     <v-radio-group v-model="shipping" label="Delivery Method">
-                        <v-radio  value="5" v-for="item in orderData.service" :label="item.name"/>
+                        <v-radio value="5" v-for="item in orderData.service" :label="item.name"/>
                     </v-radio-group>
                 </template>
             </v-stepper>
@@ -104,14 +107,13 @@
             <v-btn
                 color="blue-darken-1"
                 variant="text"
-                @click="dialog = false"
+                @click="closeDialog"
             >
                 Close
             </v-btn>
             <v-btn
                 color="blue-darken-1"
                 variant="text"
-                @click="dialog = false"
             >
                 Save
             </v-btn>
@@ -144,7 +146,17 @@ export default {
             },
         ],
     }),
-
+methods: {
+    closeDialog() {
+        this.$emit('close-dialog', false);
+    },
+},
+    // setup(){
+    //     const emit = defineEmits(['close-dialog']);
+    //     // emit('close-dialog', false);
+    //
+    //     return {emit}
+    // },
     computed: {
         subtotal() {
             return this.products.reduce((acc, product) => acc + product.quantity * product.price, 0)
@@ -155,3 +167,10 @@ export default {
     },
 }
 </script>
+<style>
+.v-stepper.v-sheet {
+    box-shadow: unset;
+    border-radius: 4px;
+    overflow: hidden;
+}
+</style>

@@ -116,8 +116,7 @@ watch(filteringEvents, (value) => {
 let orderDialog = ref(false)
 function openOrderDialog (item) {
     orderDialog.value = true;
-    orderData.value = item
-    console.log(orderData.value)
+    orderData.value = item;
 }
 updateMonthsByYear(props.events);
 
@@ -126,17 +125,12 @@ watch(() => props.events, (newEvents) => {
     // console.log(newEvents.data)
     updateMonthsByYear(newEvents);
 });
-//
-// let showData = reactive({
-//     showMore:10
-// });
+
 function showMore() {
     filteringEvents.showMore += 2;
     router.get(route('dashboard'), {...filteringEvents}, {
         preserveScroll: true, preserveState: true,
     },)
-
-    // console.log(showData)
 }
 
 let dialog = ref(false);
@@ -146,7 +140,9 @@ const noteForm = useForm({
     note: '',
     color: '',
 })
-
+function closeDialog() {
+    orderDialog.value = false
+}
 function makeNote() {
     if (noteForm.note || noteForm.color) {
         noteForm.post(route('note.make'), {
@@ -157,7 +153,6 @@ function makeNote() {
         })
     }
 }
-
 const notValidNote = v => {
     if (!v) {
         return false
@@ -329,7 +324,7 @@ function removeNote(nId) {
         <!--            </div>-->
         <!--<CreateAccount />-->
         <v-dialog v-model="orderDialog" width="800">
-            <OrderDetails :order-data="orderData"/>
+            <OrderDetails :order-data="orderData" @close-dialog="closeDialog"/>
         </v-dialog>
         <div class="row">
             <div class="col-12 col-lg-12 col-xl-8">

@@ -13,6 +13,7 @@ export default {
     },
     props: {
         errors: Object,
+        orders:Object,
         employers: Object,
         services: Array,
         schedule: Array,
@@ -101,7 +102,7 @@ export default {
 
 <template>
     <div class="row">
-        <ReservationTemp :employers="employers" :services="services" :schedule="schedule"
-                         :available-times-by-day="availableTimesByDay"  :frame-token="rToken" :errors="errors"/>
+        <ReservationTemp :employers="employers" :services="services" :schedule="schedule" :orders="orders"
+                         :available-times-by-day="availableTimesByDay" :frame-token="rToken" :errors="errors"/>
     </div>
 </template>

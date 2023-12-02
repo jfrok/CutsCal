@@ -1,6 +1,216 @@
+<template oncopy="return false" onpaste="return false" oncut="return false">
+    <AuthenticatedLayout>
+        <Head title="Calendar"/>
+<!--        <v-sheet class="pa-1 ma-1 wsheet">-->
+<!--            <div class="calendar-header">-->
+<!--                <div class="navigation">-->
+<!--                    <a href="javascript:void(0)" class="today-btn box-sh" @click="navigate('today')">Today</a>-->
+
+<!--                    <div class="header-btns">-->
+<!--                        <a href="javascript:void(0)" class="arrows-btns box-sh" @click="navigate('prev')">-->
+<!--                            &lt;!&ndash; <div class="icon-co"></div> &ndash;&gt;-->
+<!--                            <v-icon class="arrows-icon">-->
+<!--                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"-->
+<!--                                     fill="none">-->
+<!--                                    <mask id="mask0_228_10870" style="mask-type:alpha" maskUnits="userSpaceOnUse"-->
+<!--                                          x="0" y="0" width="20" height="20">-->
+<!--                                        <rect width="20" height="20" fill="#D9D9D9"/>-->
+<!--                                    </mask>-->
+<!--                                    <g mask="url(#mask0_228_10870)">-->
+<!--                                        <path d="M12 15L7 10L12 5L13.0625 6.0625L9.125 10L13.0625 13.9375L12 15Z"-->
+<!--                                              fill="#403E48"/>-->
+<!--                                    </g>-->
+<!--                                </svg>-->
+<!--                            </v-icon>-->
+<!--                        </a>-->
+<!--                        <a href="javascript:void(0)" class="arrows-btns box-sh" @click="navigate('next')">-->
+<!--                            <v-icon class="arrows-icon">-->
+<!--                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"-->
+<!--                                     fill="none">-->
+<!--                                    <mask id="mask0_228_10874" style="mask-type:alpha" maskUnits="userSpaceOnUse"-->
+<!--                                          x="0" y="0" width="20" height="20">-->
+<!--                                        <rect x="20" y="20" width="20" height="20" transform="rotate(-180 20 20)"-->
+<!--                                              fill="#D9D9D9"/>-->
+<!--                                    </mask>-->
+<!--                                    <g mask="url(#mask0_228_10874)">-->
+<!--                                        <path d="M8 5L13 10L8 15L6.9375 13.9375L10.875 10L6.9375 6.0625L8 5Z"-->
+<!--                                              fill="#403E48"/>-->
+<!--                                    </g>-->
+<!--                                </svg>-->
+<!--                            </v-icon>-->
+<!--                        </a>-->
+
+<!--                    </div>-->
+<!--                    <div class="title">-->
+<!--                        &lt;!&ndash;                        {{ currentDate }}&ndash;&gt;-->
+<!--                        {{ currentDayName() }}-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="mode-picker">-->
+<!--                    <div class="search-wr box-sh">-->
+<!--                        <a href="javascript:void(0)" class="search-btn" @click="setInputToFocus()">-->
+<!--                            <v-icon>-->
+<!--                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"-->
+<!--                                     fill="none">-->
+<!--                                    <path fill-rule="evenodd" clip-rule="evenodd"-->
+<!--                                          d="M7.33398 2.66634C4.75666 2.66634 2.66732 4.75568 2.66732 7.33301C2.66732 9.91034 4.75666 11.9997 7.33398 11.9997C9.91131 11.9997 12.0007 9.91034 12.0007 7.33301C12.0007 4.75568 9.91131 2.66634 7.33398 2.66634ZM1.33398 7.33301C1.33398 4.0193 4.02028 1.33301 7.33398 1.33301C10.6477 1.33301 13.334 4.0193 13.334 7.33301C13.334 10.6467 10.6477 13.333 7.33398 13.333C4.02028 13.333 1.33398 10.6467 1.33398 7.33301Z"-->
+<!--                                          fill="#8C8B91"/>-->
+<!--                                    <path fill-rule="evenodd" clip-rule="evenodd"-->
+<!--                                          d="M10.6289 10.6289C10.8892 10.3685 11.3113 10.3685 11.5717 10.6289L14.4717 13.5289C14.732 13.7892 14.732 14.2113 14.4717 14.4717C14.2113 14.732 13.7892 14.732 13.5289 14.4717L10.6289 11.5717C10.3685 11.3113 10.3685 10.8892 10.6289 10.6289Z"-->
+<!--                                          fill="#8C8B91"/>-->
+<!--                                </svg>-->
+<!--                            </v-icon>-->
+<!--                        </a>-->
+<!--                        <input type="text" ref="search" class="input-search" placeholder="Type to Search...">-->
+<!--                    </div>-->
+<!--                    <v-select variant="outlined rounded-pill" class="bg-secondary-pr box-sh" v-model="form.selectedView"-->
+<!--                              :items="['Month', 'Week', 'Day']" density="compact"/>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </v-sheet>-->
+        <v-row justify="center p-3">
+            <v-dialog v-model="form.dialog" persistent width="1024">
+                <v-card>
+                    <v-card-title>
+                        <span class="text-h5">{{ form.editMode ? 'Edit Event' : 'Create Event' }}</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+
+                                <!--                                                <v-col cols="12">-->
+                                <v-text-field
+                                    v-model="form.color"
+                                    type="color"
+                                    :label="$page.props.auth .user.lang == 'arabic'? 'الون' : 'Color'"
+                                    variant="outlined"/>
+                                <InputError :message="form.errors.color"/>
+                                <!--                                                </v-col>-->
+
+                                <v-col cols="12">
+                                    <v-text-field
+                                        :label="$page.props.auth .user.lang == 'arabic'? 'العنوان' : 'Title'"
+                                        v-model="form.title" required/>
+                                    <InputError :message="form.errors.title"/>
+                                </v-col>
+
+                                <v-col cols="6">
+                                    <v-text-field type="time"
+                                                  :label="$page.props.auth.user.lang == 'arabic'? 'الوقت من' : 'Time from'"
+                                                  v-model="form.timeFrom" required/>
+                                    <InputError :message="form.errors.timeFrom"/>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field type="time"
+                                                  :label="$page.props.auth.user.lang == 'arabic'? 'الوقت الئ' : 'Time to'"
+                                                  v-model="form.timeTo" required/>
+                                    <InputError :message="form.errors.timeTo"/>
+                                </v-col>
+                                <v-col md="6">
+                                    <flat-pickr :config="config" class="form-control"
+                                                v-model="form.dateFrom"></flat-pickr>
+                                    <InputError :message="form.errors.dateFrom"/>
+                                </v-col>
+                                <v-col md="6">
+                                    <flat-pickr class="form-control" :config="config"
+                                                v-model="form.dateTo"></flat-pickr>
+                                    <InputError :message="form.errors.dateTo"/>
+                                </v-col>
+                                <!--                                                add color input-->
+                                <v-container fluid>
+                                    <v-textarea
+                                        counter
+                                        label="Note(s)"
+                                        v-model="form.description"></v-textarea>
+                                </v-container>
+                            </v-row>
+                        </v-container>
+                        <!--                                        <small>*indicates required field</small>-->
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue-darken-1" variant="text" @click="form.dialog = false">
+                            Close
+                        </v-btn>
+                        <v-btn v-if="form.editMode" color="blue-darken-1" variant="text"
+                               @click="remove">
+                            Delete
+                        </v-btn>
+                        <v-btn color="blue-darken-1" variant="text" @click="submit">
+                            {{ form.editMode ? 'Update' : 'Save' }}
+                        </v-btn>
+
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-row>
+        <!--                            </v-card>-->
+
+        <!--                    </v-stepper>-->
+        <!--                </v-stepper-window>-->
+
+
+        <!--    <div class='demo-app'>-->
+        <!--        <div class='demo-app-sidebar'>-->
+        <!--            <div class='demo-app-sidebar-section'>-->
+        <!--                <h2>Instructions</h2>-->
+        <!--                <ul>-->
+        <!--                    <li>Select dates and you will be prompted to create a new event</li>-->
+        <!--                    <li>Drag, drop, and resize events</li>-->
+        <!--                    <li>Click an event to delete it</li>-->
+        <!--                </ul>-->
+        <!--            </div>-->
+        <!--            <div class='demo-app-sidebar-section'>-->
+        <!--                <label>-->
+        <!--                    <input-->
+        <!--                        type='checkbox'-->
+        <!--                        :checked='calendarOptions.weekends'-->
+        <!--                        @change='handleWeekendsToggle'-->
+        <!--                    />-->
+        <!--                    toggle weekends-->
+        <!--                </label>-->
+        <!--            </div>-->
+        <!--            <div class='demo-app-sidebar-section'>-->
+        <!--                <h2>All Events ({{ currentEvents.length }})</h2>-->
+        <!--                <ul>-->
+        <!--                    <li v-for='event in currentEvents' :key='event.id'>-->
+        <!--                        <b>{{ event.startStr }}</b>-->
+        <!--                        <i>{{ event.title }}</i>-->
+        <!--                    </li>-->
+        <!--                </ul>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <div class="row" style="
+              -webkit-user-select: none;
+            /*-khtml-user-select: none;*/
+             -moz-user-select: none;
+            -ms-user-select: none;
+            /*-o-user-select: none;*/
+            user-select: none;">
+            <div class="col-lg-12 col-md-12">
+                <div class="card" style="background-color: rgba(0,119,246,0.05)">
+                    <div class="card-body">
+                        <div class='demo-app-main'>
+                            <FullCalendar id="calendar" ref="calendar" v-on:update-calendar="updateCalendar"
+                                          :event-render="handleEventRender" @eventDrop="handleEventDrop"
+                                          :options="calendarOptions"/>
+                        </div>
+                    </div>
+                </div>
+                <!--                <div class="balk" style="position: fixed">-->
+                <!--                    <button @click="openAddEventModal" type="button" class="btn btn-info waves-effect waves-light mt-1">-->
+                <!--                        Add Event-->
+                <!--                    </button>-->
+                <!--                </div>-->
+            </div>
+
+        </div>
+
+    </AuthenticatedLayout>
+</template>
 <script lang="js">
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import {defineComponent, watch, getCurrentInstance} from "vue";
+import {defineComponent, watch, getCurrentInstance, watchEffect} from "vue";
 import FullCalendar from "@fullcalendar/vue3";
 import {useForm, usePage} from "@inertiajs/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -36,6 +246,7 @@ export default defineComponent({
             const {props} = usePage();
             const date = props.date ?? new Date();
             this.refs.calendar.getApi().gotoDate(date);
+            console.log(this.refs.calendar.getApi())
             // Update the windowHeight data property with the initial window height
             // You can also add an event listener to update the height when the window is resized
 
@@ -51,13 +262,90 @@ export default defineComponent({
         // calendarApi.changeView('timeGridWeek')
         // }
     },
-    // data() {
-    //     return {
-    //         flatpickrConfig: {
-    //             dateFormat: 'd-m-Y', // (01-12-2023)
-    //         },
-    //     }
-    // },
+    data() {
+
+        // function testCalendar() {
+        let windowWidth = window.innerWidth;
+        let items = [
+            '1',
+            '2',
+            'Submit',
+        ]
+        return {
+            selectedView: 'Month',
+            currentDate: '',
+            status: true,
+            search: false,
+            items,
+            // windowWidth,
+            config: {
+                wrap: false,
+                altFormat: 'M j, Y',
+                // altInput: true,
+                dateFormat: 'Y-m-d',
+                allowInput: true
+            },
+            calendarOptions: {
+                plugins: [
+                    // CustomViewCalendar,
+                    dayGridPlugin,
+                    timeGridPlugin,
+                    interactionPlugin // needed for dateClick
+                ],
+                headerToolbar: {
+                    left: 'prev,next today',
+                    //premium
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: this.customButtonsName(),
+                //  locale: esLocale,
+                initialView: windowWidth <= 400 ? 'timeGridWeek' : 'dayGridMonth',
+
+                // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+                editable: true,
+                selectable: true,
+                selectMirror: true,
+                dayMaxEvents: true,
+                weekends: true,
+                select: this.handleDateSelect,
+                eventClick: this.handleEventClick,
+                eventDrop: this.handleEventDrop,
+                eventResize: this.handleEventResize,
+                dayHeaderContent: this.customDayHeaderContent,
+                // eventsSet: this.handleEvents
+                /* you can update a remote database when these fire:
+                eventAdd:
+                eventChange:
+                eventRemove:
+                */
+                // initialEvents: t,
+                // eventDidMount: function(info) {
+                //     $(info.el).find(".fc-event-title").prepend("<b style='display: block'>"+getRemainingDays(info.event.dateTo)+"</b>");
+                // },
+                events: (info, success, fail) => {
+                    $.get('/calendar/events', function (data) {
+                        let dataToRender = data.events.map(x => {
+                            x.start = x.timeFrom ? `${x.dateFrom}T${x.timeFrom}` : x.dateFrom;
+                            x.end = x.timeTo ? `${x.dateTo}T${x.timeTo}` : x.dateTo;
+                            x.color = `${x.color}`
+                            if (!x.timeFrom) {
+                                x.displayEventTime = false
+                                x.start = `${x.dateFrom}`
+                                x.end = `${x.dateTo}`;
+                                x.allDay = true
+                            }
+                            return x;
+                        });
+                        success(dataToRender);
+                    })
+                }
+
+            },
+
+        }
+
+    },
     setup() {
         const internalInstance = getCurrentInstance();
 
@@ -85,13 +373,13 @@ export default defineComponent({
             params: null
         };
 
-        // Rest of the component setup...
         let form = useForm({
             title: '',
             color: '',
             timeFrom: '',
             timeTo: '',
             editMode: false,
+            selectedView: 'Day',
             resize: false,
             remove: false,
             dialog: false,
@@ -99,6 +387,37 @@ export default defineComponent({
             dateFrom: eventDetails.value[0],
             dateTo: eventDetails.value[1],
         })
+        // watch(() => form.selectedView, async (newView) => {
+        //     await this.$nextTick(); // Wait for the next update cycle
+        //
+        //     if (this.refs.calendar) {
+        //         const calendarApi = this.refs.calendar.getApi();
+        //         calendarApi.changeView(
+        //             newView === 'Month'
+        //                 ? 'dayGridMonth'
+        //                 : newView === 'Week'
+        //                     ? 'timeGridWeek'
+        //                     : newView === 'Day'
+        //                         ? 'timeGridDay'
+        //                         : 'dayGridMonth'
+        //         );
+        //         this.currentDayName();
+        //     }
+        // }, { immediate: true });
+        //
+        // watchEffect(() => {
+        //     const calendarApi = this.$refs.calendar.getApi();
+        //     calendarApi.changeView(
+        //         this.selectedView === 'Month' ? 'dayGridMonth'
+        //             : this.selectedView === 'Week' ? 'timeGridWeek'
+        //                 : this.selectedView === 'Day' ? 'timeGridDay'
+        //                     : 'dayGridMonth'
+        //     );
+        //     this.currentDayName();
+        //     console.log('change view');
+        // });
+
+
         watch(() => eventDetails, ($eventDetails) => {
             // console.log( moment($eventDetails.value[$eventDetails.value.length - 1].start).format('HH:mm'))
             if (moment($eventDetails.value[$eventDetails.value.length - 1].start).format('HH:mm') !== '00:00') {
@@ -167,89 +486,40 @@ export default defineComponent({
         }
         return {remove, form, submit, updateCalendar, routeName, handleEventDrop}
     },
-    data() {
 
-        // function testCalendar() {
-        let windowWidth = window.innerWidth;
-        let items = [
-            '1',
-            '2',
-            'Submit',
-        ]
-        return {
-            items,
-            // windowWidth,
-            config: {
-                wrap: false,
-                altFormat: 'M j, Y',
-                // altInput: true,
-                dateFormat: 'Y-m-d',
-                allowInput:true
-            },
-            calendarOptions: {
-                plugins: [
-                    // CustomViewCalendar,
-                    dayGridPlugin,
-                    timeGridPlugin,
-                    interactionPlugin // needed for dateClick
-                ],
-                headerToolbar: {
-                    left: 'prev,next today',
-                    //premium
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                buttonText: this.customButtonsName(),
-                //  locale: esLocale,
-                initialView: windowWidth <= 400 ? 'timeGridWeek' : 'dayGridMonth',
-
-                // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
-                editable: true,
-                selectable: true,
-                selectMirror: true,
-                dayMaxEvents: true,
-                weekends: true,
-                select: this.handleDateSelect,
-                eventClick: this.handleEventClick,
-                eventDrop: this.handleEventDrop,
-                eventResize: this.handleEventResize,
-                dayHeaderContent: this.customDayHeaderContent,
-                // eventsSet: this.handleEvents
-                /* you can update a remote database when these fire:
-                eventAdd:
-                eventChange:
-                eventRemove:
-                */
-                // initialEvents: t,
-                // eventDidMount: function(info) {
-                //     $(info.el).find(".fc-event-title").prepend("<b style='display: block'>"+getRemainingDays(info.event.dateTo)+"</b>");
-                // },
-                events: (info, success, fail) => {
-                    $.get('/calendar/events', function (data) {
-                        let dataToRender = data.events.map(x => {
-                            x.start = x.timeFrom ? `${x.dateFrom}T${x.timeFrom}` : x.dateFrom;
-                            x.end = x.timeTo ? `${x.dateTo}T${x.timeTo}` : x.dateTo;
-                            x.color = `${x.color}`
-                            if (!x.timeFrom) {
-                                x.displayEventTime = false
-                                x.start = `${x.dateFrom}`
-                                x.end = `${x.dateTo}`;
-                                x.allDay = true
-                            }
-                            return x;
-                        });
-                        success(dataToRender);
-                    })
-                }
-
-            },
-
-        }
-
-    },
 
     methods: {
-
+        // currentDayName() {
+        //     // console.log(this.$ref.datePicker.getApi())
+        //
+        //     const test = this.$refs.calendar.getApi();
+        //     this.currentDate = test.currentData.viewTitle
+        //     return this.currentDate
+        // },
+        // navigate(action) {
+        //     const calendarApi = this.$refs.calendar.getApi();
+        //     console.log(calendarApi)
+        //     switch (action) {
+        //         case 'next':
+        //             calendarApi.next();
+        //             this.currentDayName()
+        //             console.log(calendarApi)
+        //             break;
+        //         case 'prev':
+        //             calendarApi.prev();
+        //             this.currentDayName()
+        //             break;
+        //         case 'today':
+        //             calendarApi.today();
+        //             this.currentDayName()
+        //             this.selectedDate = moment(new Date).format('YYYY-MM-DD')
+        //             break;
+        //     }
+        // },
+        setInputToFocus() {
+            this.status = !this.status;
+            this.$refs.search.focus() //:  this.$refs.search.blur()
+        },
         updateWindowWidth() {
             // Update the windowHeight data property when the window is resized
             this.windowWidth = window.innerWidth;
@@ -261,11 +531,11 @@ export default defineComponent({
         customButtonsName() {
             const lang = usePage().props.auth.user.lang;
             return lang === 'arabic'
-                ? { today: 'اليوم', month: 'الشهر', week: 'الاسبوع', day: 'day' }
-                : { today: 'today', month: 'month', week: 'week', day: 'day' };
+                ? {today: 'اليوم', month: 'الشهر', week: 'الاسبوع', day: 'يوم'}
+                : {today: 'today', month: 'month', week: 'week', day: 'day'};
         },
         customDayHeaderContent(arg) {
-            const customDayNames = usePage().props.auth.user.lang == 'arabic' ? ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الاجمعة', 'السبت'] :['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+            const customDayNames = usePage().props.auth.user.lang == 'arabic' ? ['الاحد', 'الاثنين', 'الثلاثاء', 'الاربعاء', 'الخميس', 'الاجمعة', 'السبت'] : ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
             console.log(arg)
             return customDayNames[arg.date.getUTCDay()];
@@ -353,162 +623,18 @@ export default defineComponent({
             this.currentEvents = events
         },
 
-    }
+    },
 
 })
 
 </script>
-<template oncopy="return false" onpaste="return false" oncut="return false">
-    <AuthenticatedLayout>
-        <Head title="Calendar"/>
-
-
-
-                        <v-row justify="center p-3">
-                            <v-dialog v-model="form.dialog" persistent width="1024">
-                                <v-card>
-                                    <v-card-title>
-                                        <span class="text-h5">{{ form.editMode ? 'Edit Event' : 'Create Event' }}</span>
-                                    </v-card-title>
-                                    <v-card-text>
-                                        <v-container>
-                                            <v-row>
-
-                                                <!--                                                <v-col cols="12">-->
-                                                <v-text-field
-                                                    v-model="form.color"
-                                                    type="color"
-                                                    :label="$page.props.auth .user.lang == 'arabic'? 'الون' : 'Color'"
-                                                    variant="outlined"/>
-                                                <InputError :message="form.errors.color"/>
-                                                <!--                                                </v-col>-->
-
-                                                <v-col cols="12">
-                                                    <v-text-field
-                                                        :label="$page.props.auth .user.lang == 'arabic'? 'العنوان' : 'Title'"
-                                                        v-model="form.title" required/>
-                                                    <InputError :message="form.errors.title"/>
-                                                </v-col>
-
-                                                <v-col cols="6">
-                                                    <v-text-field type="time"
-                                                                  :label="$page.props.auth.user.lang == 'arabic'? 'الوقت من' : 'Time from'"
-                                                                  v-model="form.timeFrom" required/>
-                                                    <InputError :message="form.errors.timeFrom"/>
-                                                </v-col>
-                                                <v-col cols="6">
-                                                    <v-text-field type="time"
-                                                                  :label="$page.props.auth.user.lang == 'arabic'? 'الوقت الئ' : 'Time to'"
-                                                                  v-model="form.timeTo" required/>
-                                                    <InputError :message="form.errors.timeTo"/>
-                                                </v-col>
-                                                <v-col md="6">
-                                                    <flat-pickr :config="config" class="form-control"
-                                                                v-model="form.dateFrom"></flat-pickr>
-                                                    <InputError :message="form.errors.dateFrom"/>
-                                                </v-col>
-                                                <v-col md="6">
-                                                    <flat-pickr class="form-control" :config="config" v-model="form.dateTo"></flat-pickr>
-                                                    <InputError :message="form.errors.dateTo"/>
-                                                </v-col>
-                                                <!--                                                add color input-->
-                                                <v-container fluid>
-                                                    <v-textarea
-                                                        counter
-                                                        label="Note(s)"
-                                                        v-model="form.description"></v-textarea>
-                                                </v-container>
-                                            </v-row>
-                                        </v-container>
-                                        <!--                                        <small>*indicates required field</small>-->
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn color="blue-darken-1" variant="text" @click="form.dialog = false">
-                                            Close
-                                        </v-btn>
-                                        <v-btn v-if="form.editMode" color="blue-darken-1" variant="text"
-                                               @click="remove">
-                                            Delete
-                                        </v-btn>
-                                        <v-btn color="blue-darken-1" variant="text" @click="submit">
-                                            {{ form.editMode ? 'Update' : 'Save' }}
-                                        </v-btn>
-
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </v-row>
-                        <!--                            </v-card>-->
-
-                        <!--                    </v-stepper>-->
-                        <!--                </v-stepper-window>-->
-
-
-        <!--    <div class='demo-app'>-->
-        <!--        <div class='demo-app-sidebar'>-->
-        <!--            <div class='demo-app-sidebar-section'>-->
-        <!--                <h2>Instructions</h2>-->
-        <!--                <ul>-->
-        <!--                    <li>Select dates and you will be prompted to create a new event</li>-->
-        <!--                    <li>Drag, drop, and resize events</li>-->
-        <!--                    <li>Click an event to delete it</li>-->
-        <!--                </ul>-->
-        <!--            </div>-->
-        <!--            <div class='demo-app-sidebar-section'>-->
-        <!--                <label>-->
-        <!--                    <input-->
-        <!--                        type='checkbox'-->
-        <!--                        :checked='calendarOptions.weekends'-->
-        <!--                        @change='handleWeekendsToggle'-->
-        <!--                    />-->
-        <!--                    toggle weekends-->
-        <!--                </label>-->
-        <!--            </div>-->
-        <!--            <div class='demo-app-sidebar-section'>-->
-        <!--                <h2>All Events ({{ currentEvents.length }})</h2>-->
-        <!--                <ul>-->
-        <!--                    <li v-for='event in currentEvents' :key='event.id'>-->
-        <!--                        <b>{{ event.startStr }}</b>-->
-        <!--                        <i>{{ event.title }}</i>-->
-        <!--                    </li>-->
-        <!--                </ul>-->
-        <!--            </div>-->
-        <!--        </div>-->
-        <div class="row" style="
-              -webkit-user-select: none;
-            /*-khtml-user-select: none;*/
-             -moz-user-select: none;
-            -ms-user-select: none;
-            /*-o-user-select: none;*/
-            user-select: none;">
-            <div class="col-lg-12 col-md-12" >
-                <div class="card" style="background-color: rgba(0,119,246,0.05)">
-                    <div class="card-body">
-                        <div class='demo-app-main'>
-                            <FullCalendar id="calendar" ref="calendar" v-on:update-calendar="updateCalendar"
-                                          :event-render="handleEventRender" @eventDrop="handleEventDrop"
-                                          :options="calendarOptions"/>
-                        </div>
-                    </div>
-                </div>
-<!--                <div class="balk" style="position: fixed">-->
-<!--                    <button @click="openAddEventModal" type="button" class="btn btn-info waves-effect waves-light mt-1">-->
-<!--                        Add Event-->
-<!--                    </button>-->
-<!--                </div>-->
-            </div>
-
-        </div>
-
-    </AuthenticatedLayout>
-</template>
 <style lang="css">
 .fc-day-today {
     background-color: inherit !important;
 
 
 }
+
 .fc-day-today .fc-daygrid-day-number {
     z-index: 9999;
     display: flex;
@@ -521,9 +647,151 @@ export default defineComponent({
     background: #1c72a2;
 
 }
+
 .fc .td,
 th {
     border-bottom: none !important;
 }
 
+.fc .fc-button .fc-icon {
+    font-size: 1.5em;
+    position: relative;
+    top: -4px;
+    vertical-align: middle;
+}
+
+.calendar-header {
+    display: flex;
+    padding: 16px 24px;
+    background-color: #FBFAFB;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 24px !important;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 29px;
+    transition: background-color 0.3s ease;
+
+    button {
+        &:hover {
+            background-color: #ffffff;
+        }
+    }
+}
+
+.title {
+    color: #403E48;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+}
+
+.today-btn {
+    cursor: pointer;
+    border-radius: 29px;
+    transition: background-color 0.3s ease;
+    background-color: #ffffff;
+    display: flex;
+    padding: 8px 12px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+
+    &:hover {
+        background-color: #ffffff;
+    }
+}
+
+.arrows-btns {
+    &:hover {
+        background-color: #ffffff;
+    }
+
+    background-color: #ffffff;
+    border-radius: 29px;
+    padding: 8px 12px;
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.search-wr {
+    background-color: #ffffff;
+    border-radius: 29px;
+    height: 40px;
+}
+
+.search-btn {
+    background-color: #ffffff;
+    border-radius: 29px;
+    padding: 8px 12px;
+    display: inline-flex;
+    width: 42px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.input-search {
+    width: 0px;
+    border-style: none;
+    outline: none;
+    border-radius: 29px;
+    transition: all .5s ease-in-out;
+    background-color: #ffffff !important;
+    color: #fff;
+
+    &:focus {
+        color: #000;
+        width: 300px;
+        border-radius: 0px;
+        background-color: transparent;
+        /*border-bottom: 1px solid #EDEBEF;*/
+        transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+
+    }
+}
+
+.mode-picker {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+    gap: 12px;
+}
+
+.mode-picker .v-select__menu-icon {
+    left: 10px;
+    margin-inline-start: 16px;
+    opacity: 100%;
+    transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mode-picker .v-input .v-input__control .v-text-field .v-input__details {
+    width: 160px;
+    padding-inline-start: 24px;
+    padding-inline-end: 56px;
+}
+
+.mode-picker .v-input__details {
+    display: none !important;
+}
+
+.mode-picker .v-select {
+    background-color: #ffffff !important;
+    border-radius: 29px;
+    width: 160px;
+}
 </style>

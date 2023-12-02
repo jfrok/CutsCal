@@ -37,6 +37,13 @@ const interval = ref(usePage().props.auth.interval.interval);
 const selectedDaysData = computed(() => {
     return days.value.filter(day => selectedDays.value.includes(day.id));
 });
+const computedTimes = computed(() => {
+    return selectedDaysData.value.map(day => ({
+        openingTime: day.openingTime,
+        closingTime: day.closingTime,
+    }));
+});
+
 const intervalData = computed(() => {
     return interval.value
 });
@@ -56,6 +63,7 @@ const debouncedSubmitSchedule = _.debounce(submitSchedule, 250);
 
 if (!props.includeBtn) {
     watch(selectedDaysData, debouncedSubmitSchedule);
+    watch(computedTimes, debouncedSubmitSchedule);
 
     // onMounted(() => {
         if (intervalData != usePage().props.auth.interval.interval) {

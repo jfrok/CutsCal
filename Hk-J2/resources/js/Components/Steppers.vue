@@ -37,7 +37,7 @@ export default {
             'Calendar',
             'Services',
             'Barbers',
-            'Finish',
+            'Preview',
         ],
         products: [
             {
@@ -104,6 +104,12 @@ export default {
         markedEmployers() {
             router.post(route('employer.setMark'), {user_ids: this.selectedEmployee.map(ids => ids.id)});
         },
+        deleteService(sId) {
+            router.post(route('services.delete',sId),{
+                preserveScroll: true, preserveState: true,
+
+            });
+        },
         openNewWindow() {
 
             const windowFeatures = 'width=800,height=600,menubar=yes,toolbar=yes';
@@ -169,12 +175,15 @@ export default {
                     <tr>
                         <th>Name</th>
                         <th class="text-end">Price</th>
+                        <th class="text-end">Action</th>
+
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="item in services" :key="item.id">
                         <td v-text="item.name"></td>
                         <td class="text-end" v-text="item.price"></td>
+                        <td class="text-end"><a href="javascript:void(0)" @click="deleteService(item.id)"><i style="color: red; cursor: pointer" class="feather-x-circle"></i></a></td>
                     </tr>
 
                     </tbody>
@@ -242,7 +251,7 @@ export default {
             </v-sheet>
         </template>
         <template v-slot:item.4>
-            <h3 class="text-h6">Finish</h3>
+            <h3 class="text-h6">Preview</h3>
             <br>
             <div class="col-auto text-center ms-auto download-grp">
                 <a href="javascript:void(0)" v-if="$page.props.auth.schedule != null" @click="openNewWindow"

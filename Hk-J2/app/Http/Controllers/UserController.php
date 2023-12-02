@@ -166,9 +166,8 @@ class UserController extends Controller
         if (User::whereEmail($request->email)->exists() && $request->email != $user->email) {
             return back()->with('error', 'The email has already been taken');
         }
-
+//dd($request->all());
         $user->fill($request->only(['name', 'email', 'job', 'city', 'address', 'description', 'subscription_end_date']));
-
         if ($request->file('img')) {
             $imageName = $request->file('img')->getClientOriginalName();
             $user->avatar = '/img/avatar/' . $imageName;

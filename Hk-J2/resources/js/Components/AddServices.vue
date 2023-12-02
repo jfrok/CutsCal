@@ -39,7 +39,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import InputError from "@/Components/InputError.vue";
-import {reactive, ref} from "vue";
 import {useToast} from "vue-toastification";
 import {Head} from "@inertiajs/vue3";
 export default {
@@ -61,7 +60,6 @@ export default {
         });
 
         function saveUser() {
-            const emit = defineEmits(['close-dialog']);
             form.post(route('services.create'),form, {
                 preserveScroll: true,
                 preserveState: true,
@@ -70,7 +68,7 @@ export default {
                         form.name = '';
                     form.price = '';
                     form.duration = '';
-                    emit('close-dialog',false)
+                    this.$emit('close-dialog',false)
                     // form.editMode ? form.editMode = false : form.editMode = true;
                     // form.editMode ? showToastSuccess('Successfully updated') : showToastSuccess('Successfully added')
                     form.reset()

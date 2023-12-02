@@ -110,11 +110,14 @@
                     <v-card-title>Availability ({{ formatDate(date) }} at {{ selectedTime.toString() }})
                     </v-card-title>
                     <div class="px-4">
-
                         <v-chip-group v-for="item in [...availableTimesByDay]">
-                            <v-chip v-if="item.dayId === getDayNumber(date)" v-for="t in item.times"
-                                    :style="`cursor: pointer; ${selectedTime.includes(t) ? 'background-color: #f2f8ff;' : ''} `"
-                                    @click="toggleSelectionTime(t)">{{ t }}
+                            <v-chip
+                                v-if="item.dayId === getDayNumber(date)"
+                                v-for="t in filterAvailableTimes(item.times)"
+                                :style="`cursor: pointer; ${selectedTime.includes(t) ? 'background-color: #f2f8ff;' : ''} `"
+                                @click="toggleSelectionTime(t)"
+                            >
+                                {{ t }}
                             </v-chip>
                         </v-chip-group>
                     </div>
@@ -229,6 +232,7 @@ export default {
     },
     props: {
         errors: Object,
+        orders:Object,
         employers: Object,
         services: Array,
         schedule: Array,
@@ -264,7 +268,9 @@ export default {
             v => (v && v.length >= 10) || 'Phone number must be at least 10 digits'
         ]
     }),
+
     methods: {
+
         isMobile() {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 return true
@@ -363,6 +369,11 @@ export default {
         },
     },
     computed: {
+        filterAvailableTimes() {
+            return (times) => {
+                return times.filter((time) => !this.orders.map((a) => a.time).includes(time));
+            };
+        },
         isMobileC() {
             if (this.isMobile()) {
                 return true

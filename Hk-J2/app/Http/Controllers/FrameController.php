@@ -23,46 +23,55 @@ class FrameController extends Controller
 
     public function edit($token)
     {
-//        if (Auth::check()) {
-        $orders = Order::all();
-        $disabledTimesByDay = [];
+        if (User::verifyToken($token)) {
+            $userId = User::getUserIdByToken($token);
 
-        foreach ($orders as $o){
-            $disabledTimesByDay[] = $o->date;
-            $disabledTimesByDay[] = $o->time;
-        }
-//        dd($disabledTimesByDay);
-            if (User::verifyToken($token)) {
-                $userId = User::getUserIdByToken($token);
-                $schedule = Setting::getTheShopScheduleById($userId);
-                $availableTimesByDay = [];
-                foreach ($schedule as $s) {
-                    if (isset($s['id'], $s['openingTime'], $s['closingTime'])) {
-                        $openingTime = Carbon::createFromFormat('H:i', $s['openingTime']);
-                        $closingTime = Carbon::createFromFormat('H:i', $s['closingTime']);
+            $orders = Order::where('main_user_id',User::findTheMainUser()->id)->get();
 
-                        $times = [];
-                        while ($openingTime->lessThan($closingTime)) {
-                            $times[] = $openingTime->format('H:i');
-                            $openingTime->addMinutes(Setting::getShopInterval($userId)->interval);
-                        }
-
-                        $dayId = $s['id'];
-                        $availableTimesByDay[] = [
-                            'dayId' => $dayId,
-                            'times' => $times
-                        ];
-                    }
-                }
-
-                $services = DB::table('services')->select('id', 'name', 'price')->where('userId', Auth::id() ?? $userId)->get();
-                $employers = User::getUserAllEmployers($userId)->where('users.mark', 1)->paginate(10);
-
-                return inertia('Frame/View', ['employers' => $employers, 'services' => $services, 'schedule' => $schedule, 'availableTimesByDay' => $availableTimesByDay]);
+            // Extract the existing disabled times from orders
+            $disabledTimesByDay = [];
+            foreach ($orders as $o) {
+                $disabledTimesByDay[] = $o->date;
+                $disabledTimesByDay[] = $o->time;
             }
-//        }
-    }
 
+            $schedule = Setting::getTheShopScheduleById($userId);
+            $availableTimesByDay = [];
+
+            foreach ($schedule as $s) {
+                if (isset($s['id'], $s['openingTime'], $s['closingTime'])) {
+                    $openingTime = Carbon::createFromFormat('H:i', $s['openingTime']);
+                    $closingTime = Carbon::createFromFormat('H:i', $s['closingTime']);
+
+                    $times = [];
+                    while ($openingTime->lessThan($closingTime)) {
+                        $times[] = $openingTime->format('H:i');
+                        $openingTime->addMinutes(Setting::getShopInterval($userId)->interval);
+                    }
+
+                    $dayId = $s['id'];
+                    $availableTimesByDay[] = [
+                        'dayId' => $dayId,
+                        'times' => $times
+                    ];
+                }
+            }
+
+            $services = DB::table('services')->select('id', 'name', 'price')->where('userId', Auth::id() ?? $userId)->get();
+            $employers = User::getUserAllEmployers($userId)->where('users.mark', 1)->paginate(10);
+
+            return inertia('Frame/View', [
+                'employers' => $employers,
+                'orders' => $orders,
+                'services' => $services,
+                'schedule' => $schedule,
+                'availableTimesByDay' => $availableTimesByDay,
+                'disabledTimesByDay' => $disabledTimesByDay, // Pass the disabled times to the view
+            ]);
+        }
+
+//        return redirect()->route('');
+    }
     public function createServices(Request $request)
     {
         $request->validate([
@@ -79,5 +88,12 @@ class FrameController extends Controller
               return back()->with('message', 'Added successfully');
           }
         return back()->with('error', 'Ops something wrong');
+    }
+    public function deleteService($sId){
+       $service = DB::table('services')->where('id',$sId);
+        if ($service){
+            $service->delete();
+            return back()->with('message', 'Deleted successfully');
+        }
     }
 }
