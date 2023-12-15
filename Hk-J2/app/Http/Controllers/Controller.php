@@ -149,8 +149,8 @@ class Controller extends BaseController
     {
 //        dd($request->all());
         $request->validate([
-            'note' => 'required|string',
-            'color' => 'nullable|string',
+            'note' => 'required|string|max:250',
+            'color' => 'nullable|string|max:250',
         ]);
 
         $new = DB::table('notes')->insert([

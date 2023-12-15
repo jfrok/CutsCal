@@ -66,7 +66,7 @@ class FrameController extends Controller
                 'services' => $services,
                 'schedule' => $schedule,
                 'availableTimesByDay' => $availableTimesByDay,
-                'disabledTimesByDay' => $disabledTimesByDay, // Pass the disabled times to the view
+                'disabledTimesByDay' => $disabledTimesByDay,
             ]);
         }
 

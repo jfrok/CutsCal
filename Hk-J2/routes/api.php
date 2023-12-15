@@ -23,3 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('hk/projects/{token}',[\App\Http\Controllers\ApiController::class,'projects']);
 Route::get('hk/projects/{slug}/{token}',[\App\Http\Controllers\ApiController::class,'content']);
 Route::get('hk/personalDetails/{token}',[\App\Http\Controllers\ApiController::class,'personalDetails']);
+Route::get('cutcal/reservation-data/{token}',[\App\Http\Controllers\ApiController::class,'reservationData']);
+Route::post('cutcal/reservation-data-store/',[\App\Http\Controllers\ApiController::class,'storeReservation']);
