@@ -126,21 +126,27 @@ class ApiController extends Controller
     }
     public function storeReservation(Request $request)
     {
-        dd('hoi');
-        $request->validate([
-            'name' => 'required|max:100',
-            'email' => 'nullable|email|max:100',
-            'phone' => 'required|Integer|max:15',
-            'time' => 'date_format:H:i',
-            'barber' => 'required',
-            'service' => 'required|array|min:1',
-        ]);
+//        Carbon::parse($request->date)->format('dd');
+//        return $request->date;
+        try {
+            $validator = $request->validate([
+                'name' => 'required|max:100',
+                'date' => 'required',
+                'email' => 'nullable|email|max:100',
+                'phone' => 'required|integer|digits_between:1,20',
+                'time' => 'date_format:H:i',
+                'barber' => 'required',
+                'service' => 'required|array|min:1',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            return response()->json(['error' => $exception->validator->errors()], 422);
+        }
 
         $userId = User::getUserIdByToken($request->frameToken);
 
         $jS = json_encode($request->service);
-        $strFirstO = str_replace('[','',$jS);
-        $strSecO = str_replace(']','',$strFirstO);
+        $strFirstO = str_replace('[', '', $jS);
+        $strSecO = str_replace(']', '', $strFirstO);
 
         $orders = Order::create([
             'employer_id' => $request->barber,
@@ -152,14 +158,13 @@ class ApiController extends Controller
             'date' => $request->date,
             'time' => $request->time,
             'price' => '0.99',
-            'status' => 'open'
+            'status' => 'open',
         ]);
 
         if ($orders) {
-            return response()->json(['message' => 'Successfully reserved'], 200);
+            return response()->json(['message' => 'Successfully reserved','status' => 200], 200);
         } else {
             return response()->json(['error' => 'Failed to reserve'], 500);
         }
     }
-
 }
