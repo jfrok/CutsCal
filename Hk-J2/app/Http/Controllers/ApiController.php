@@ -21,10 +21,10 @@ class ApiController extends Controller
         $setting = Setting::where('api_token', $token)->first();
         $check = Setting::where('api_token', $token)->first();
         if ($setting) {
-            $project = Project::where('userId',$check->userId)
-                ->select(['id', 'title', 'description','path','slug','sourceUrl','demoUrl','created_at','updated_at'])
+            $project = Project::where('userId', $check->userId)
+                ->select(['id', 'title', 'description', 'path', 'slug', 'sourceUrl', 'demoUrl', 'created_at', 'updated_at'])
                 ->get();
-          return response()->json(['projects' => $project]);
+            return response()->json(['projects' => $project]);
         } else {
             return response()->json(['error' => 'Invalid token'], 401);
         }
@@ -38,7 +38,7 @@ class ApiController extends Controller
             $content = Content::select('contents.*')
                 ->join('projects', 'contents.project_id', '=', 'projects.id')
                 ->where('projects.slug', $slug)
-                ->where('projects.userId',$check->userId)
+                ->where('projects.userId', $check->userId)
                 ->orderBy('sort')->get()->toArray();
             return response()->json(['content' => $content]);
         } else {
@@ -74,11 +74,9 @@ class ApiController extends Controller
         if (User::verifyToken($token)) {
 
             $userId = User::getUserIdByToken($token);
-//            dd($userId);
 
             $orders = Order::where('main_user_id', $userId)->get();
 
-            // Extract the existing disabled times from orders
             $disabledTimesByDay = [];
             foreach ($orders as $o) {
                 $disabledTimesByDay[] = $o->date;
@@ -124,10 +122,10 @@ class ApiController extends Controller
 
         return response()->json(['error' => 'Invalid token'], JsonResponse::HTTP_UNAUTHORIZED);
     }
+
     public function storeReservation(Request $request)
     {
-//        Carbon::parse($request->date)->format('dd');
-//        return $request->date;
+
         try {
             $validator = $request->validate([
                 'name' => 'required|max:100',
@@ -143,6 +141,17 @@ class ApiController extends Controller
         }
 
         $userId = User::getUserIdByToken($request->frameToken);
+        $timeFormatted = Carbon::parse($request->time)->format('H:i:s');
+
+        $existingOrder = Order::where('main_user_id', $userId)
+            ->where('date', $request->date)
+            ->where('time', $timeFormatted)
+            ->first();
+
+        if ($existingOrder) {
+            return response()->json(['error' => 'Order already exists for the given date and time'], 422);
+        }
+
 
         $jS = json_encode($request->service);
         $strFirstO = str_replace('[', '', $jS);
@@ -162,7 +171,7 @@ class ApiController extends Controller
         ]);
 
         if ($orders) {
-            return response()->json(['message' => 'Successfully reserved','status' => 200], 200);
+            return response()->json(['message' => 'Successfully reserved', 'status' => 200], 200);
         } else {
             return response()->json(['error' => 'Failed to reserve'], 500);
         }
