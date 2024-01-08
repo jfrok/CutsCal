@@ -75,7 +75,7 @@ class ApiController extends Controller
 
             $userId = User::getUserIdByToken($token);
 
-            $orders = Order::where('main_user_id', $userId)->get();
+            $orders = Order::select('date','time')->where('main_user_id', $userId)->get();
 
             $disabledTimesByDay = [];
             foreach ($orders as $o) {
@@ -105,7 +105,8 @@ class ApiController extends Controller
                 }
             }
 
-            $services = DB::table('services')->select('id', 'name', 'price')->where('userId', Auth::id() ?? $userId)->get();
+            $services = DB::table('services')->select('id', 'name', 'price')
+                ->where('userId', Auth::id() ?? $userId)->get();
             $employers = User::getUserAllEmployers($userId)->where('users.mark', 1)->paginate(10);
 
             $responseData = [
@@ -123,57 +124,58 @@ class ApiController extends Controller
         return response()->json(['error' => 'Invalid token'], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
-    public function storeReservation(Request $request)
+    public function storeReservation($token,Request $request)
     {
+        if (User::verifyToken($token)) {
+            try {
+                $validator = $request->validate([
+                    'name' => 'required|max:100',
+                    'date' => 'required',
+                    'email' => 'nullable|email|max:100',
+                    'phone' => 'required|integer|digits_between:1,20',
+                    'time' => 'date_format:H:i',
+                    'barber' => 'required',
+                    'service' => 'required|array|min:1',
+                ]);
+            } catch (\Illuminate\Validation\ValidationException $exception) {
+                return response()->json(['error' => $exception->validator->errors()], 422);
+            }
 
-        try {
-            $validator = $request->validate([
-                'name' => 'required|max:100',
-                'date' => 'required',
-                'email' => 'nullable|email|max:100',
-                'phone' => 'required|integer|digits_between:1,20',
-                'time' => 'date_format:H:i',
-                'barber' => 'required',
-                'service' => 'required|array|min:1',
+            $userId = User::getUserIdByToken($request->frameToken);
+            $timeFormatted = Carbon::parse($request->time)->format('H:i:s');
+
+            $existingOrder = Order::where('main_user_id', $userId)
+                ->where('date', $request->date)
+                ->where('time', $timeFormatted)
+                ->first();
+
+            if ($existingOrder) {
+                return response()->json(['error' => 'Order already exists for the given date and time'], 422);
+            }
+
+
+            $jS = json_encode($request->service);
+            $strFirstO = str_replace('[', '', $jS);
+            $strSecO = str_replace(']', '', $strFirstO);
+
+            $orders = Order::create([
+                'employer_id' => $request->barber,
+                'service_id' => $strSecO,
+                'main_user_id' => $userId,
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'date' => $request->date,
+                'time' => $request->time,
+                'price' => '0.99',
+                'status' => 'open',
             ]);
-        } catch (\Illuminate\Validation\ValidationException $exception) {
-            return response()->json(['error' => $exception->validator->errors()], 422);
-        }
 
-        $userId = User::getUserIdByToken($request->frameToken);
-        $timeFormatted = Carbon::parse($request->time)->format('H:i:s');
-
-        $existingOrder = Order::where('main_user_id', $userId)
-            ->where('date', $request->date)
-            ->where('time', $timeFormatted)
-            ->first();
-
-        if ($existingOrder) {
-            return response()->json(['error' => 'Order already exists for the given date and time'], 422);
-        }
-
-
-        $jS = json_encode($request->service);
-        $strFirstO = str_replace('[', '', $jS);
-        $strSecO = str_replace(']', '', $strFirstO);
-
-        $orders = Order::create([
-            'employer_id' => $request->barber,
-            'service_id' => $strSecO,
-            'main_user_id' => $userId,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'date' => $request->date,
-            'time' => $request->time,
-            'price' => '0.99',
-            'status' => 'open',
-        ]);
-
-        if ($orders) {
-            return response()->json(['message' => 'Successfully reserved', 'status' => 200], 200);
-        } else {
-            return response()->json(['error' => 'Failed to reserve'], 500);
+            if ($orders) {
+                return response()->json(['message' => 'Successfully reserved', 'status' => 200], 200);
+            } else {
+                return response()->json(['error' => 'Failed to reserve'], 500);
+            }
         }
     }
 }

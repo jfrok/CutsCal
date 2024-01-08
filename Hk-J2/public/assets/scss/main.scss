@@ -1,0 +1,23 @@
+
+.v-table {
+    .v-table__wrapper {
+        >table {
+            >tbody {
+                >tr {
+                    &:not(:last-child) {
+                        >td {
+                            border-bottom: unset !important;
+                            border-bottom: unset;
+                        }
+                        >th {
+                            border-bottom: unset !important;
+                            border-bottom: unset;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@import "schedule";

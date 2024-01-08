@@ -1,3 +1,69 @@
+<template>
+    <div style="overflow-y: scroll;">
+        <!--            sdule-->
+        <v-toolbar v-if="includeBtn"
+                   dark
+                   color="primary"
+        >
+            <v-btn
+                icon
+                dark
+                @click="emit('close-dialog',false)"
+            >
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Settings</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+                <v-btn
+                    variant="text"
+                    @click="submitSchedule"
+                >
+                    Save
+                </v-btn>
+            </v-toolbar-items>
+        </v-toolbar>
+        <v-card title="Schedule" class="rounded-card">
+            <v-card-text>
+                <v-table class="sch-table">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Check</th>
+                        <th class="text-left">Opening time</th>
+                        <th class="text-left">Closing time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr >
+                        <td style="padding: 20px">
+                            <v-text-field v-model="interval" label="Interval" type="number"/>
+<!--                            <input-error :message="interval.error"/>-->
+                        </td>
+                    </tr>
+                    <tr v-for="day in days" :key="day.id">
+                        <td class="align-items-center d-flex">
+                            <v-checkbox
+                                v-model="selectedDays"
+                                :label="day.label"
+                                :value="day.id"
+                            />
+                        </td>
+                        <td class="time-inputs mt-16 mr-3 ">
+                            <v-text-field v-model="day.openingTime" variant="outlined"
+                                          :readonly="!selectedDays.includes(day.id)" type="time"/>
+                        </td>
+                        <td class="time-inputs">
+                            <v-text-field v-model="day.closingTime"
+                                          :readonly="!selectedDays.includes(day.id)" type="time"/>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </v-table>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
 <script setup>
 import {router, usePage} from "@inertiajs/vue3";
 import {computed, onMounted, ref, watch} from "vue";
@@ -66,78 +132,11 @@ if (!props.includeBtn) {
     watch(computedTimes, debouncedSubmitSchedule);
 
     // onMounted(() => {
-        if (intervalData != usePage().props.auth.interval.interval) {
-            watch(intervalData, debouncedSubmitSchedule);
-        }
+    if (intervalData != usePage().props.auth.interval.interval) {
+        watch(intervalData, debouncedSubmitSchedule);
+    }
     // });
 }
 
 
 </script>
-<template>
-    <div style="overflow-y: scroll;">
-        <!--            sdule-->
-        <v-toolbar v-if="includeBtn"
-                   dark
-                   color="primary"
-        >
-            <v-btn
-                icon
-                dark
-                @click="emit('close-dialog',false)"
-            >
-                <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-toolbar-title>Settings</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-                <v-btn
-                    variant="text"
-                    @click="submitSchedule"
-                >
-                    Save
-                </v-btn>
-            </v-toolbar-items>
-        </v-toolbar>
-        <v-card title="Schedule" class="rounded-card">
-            <v-card-text>
-                <v-table>
-                    <thead>
-                    <tr>
-                        <th class="text-left">Check</th>
-                        <th class="text-left">Opening time</th>
-                        <th class="text-left">Closing time</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td style="padding: 20px">
-                            <v-text-field v-model="interval" label="Interval" type="number"/>
-<!--                            <input-error :message="interval.error"/>-->
-                        </td>
-                    </tr>
-                    <tr v-for="day in days" :key="day.id">
-                        <td>
-                            <v-checkbox
-                                v-model="selectedDays"
-                                :label="day.label"
-                                :value="day.id"
-                            />
-                        </td>
-                        <td class="time-inputs mt-16 mr-3">
-                            <v-text-field v-model="day.openingTime"
-                                          :readonly="!selectedDays.includes(day.id)" type="time"/>
-                        </td>
-                        <td class="time-inputs">
-                            <v-text-field v-model="day.closingTime"
-                                          :readonly="!selectedDays.includes(day.id)" type="time"/>
-                        </td>
-                    </tr>
-
-                    </tbody>
-                </v-table>
-            </v-card-text>
-
-        </v-card>
-    </div>
-</template>

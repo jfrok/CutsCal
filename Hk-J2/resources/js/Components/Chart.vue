@@ -1,5 +1,9 @@
+<template>
+    <div>
+        <apexchart width="100%" type="line" :options="options" :series="series"/>
+    </div>
+</template>
 <script>
-import VueApexCharts from 'vue-apexcharts'
 
 export default {
     props:{
@@ -18,10 +22,10 @@ export default {
                 }
             },
             series: [
-            //     {
-            //     name: 'projects',
-            //     data: this.count,
-            // },
+                //     {
+                //     name: 'projects',
+                //     data: this.count,
+                // },
                 {
                     name: 'events',
                     data: this.eventCount
@@ -30,8 +34,3 @@ export default {
     }
 }
 </script>
-<template>
-    <div>
-        <apexchart width="100%" type="line" :options="options" :series="series"/>
-    </div>
-</template>

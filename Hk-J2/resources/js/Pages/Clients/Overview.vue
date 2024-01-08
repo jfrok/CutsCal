@@ -19,7 +19,7 @@
                             </div>
                         </div>
 
-                        <v-table v-if="clients.data.length > 0">
+                        <v-table v-if="clients.data.length > 0" fixed-header>
                             <thead>
                             <tr>
                                 <th class="text-center">

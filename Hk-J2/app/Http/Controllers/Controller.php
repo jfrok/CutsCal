@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
 class Controller extends BaseController
 {
 //    function __construct()
@@ -60,11 +61,11 @@ class Controller extends BaseController
                     $query->whereBetween('dateFrom', [$thisWeek['start'], $thisWeek['end']]);
                 });
             })
-            ->skip($showMore ? $showMore : 10)->take(10)->get()->count();
+            ->skip($showMore ? $showMore : 10)->take($showMore ? $showMore : 10)->get()->count();
 
 //        $eventCounter = count(Event::where('userId',Auth::id())->where('dateFrom','>=',Carbon::now())->get());
 
-        $events = Event::orderBy('dateFrom', $past ?? '' ? 'DESC' : 'ASC')
+        $events = Event::orderBy('dateFrom', 'DESC')
             ->where('userId', $mainUserId)
             ->when(!$filter, function ($query) {
                 return $query->where('dateFrom', '>=', Carbon::now()->format('Y-m-d'));
@@ -93,7 +94,7 @@ class Controller extends BaseController
 //        dd(count(Event::where('userId',Auth::id())->skip($showMore ? $showMore : 10)->take($showMore ? $showMore : 10)->get()));
         $totalUsers = User::all()->count();
         /// manin user userId
-        $totalClients = Client::where('userId',$mainUserId)->count();
+        $totalClients = Client::where('userId', $mainUserId)->count();
         /// manin user userId
         $totalEvents = Event::where('userId', $mainUserId)->where('dateFrom', '>=', Carbon::now())->count();
         /// manin user userId
@@ -101,35 +102,62 @@ class Controller extends BaseController
 //        dd(Auth::user()->created_at->format('Y-m-d') ?? '');
         $period = \Carbon\CarbonPeriod::create(Carbon::today() ?? '2023-05-25', Carbon::today()->addMonths(1));
 
-        $p = [];
-        $count = [];
-        $eventCount = [];
-        // the period and create push to array
-        foreach ($period as $date) {
-            array_push($p, $date->format('M-d'));
+
+//        $p = [];
+//        $count = [];
+//        $eventCount = [];
+//
+//        foreach ($period as $date) {
+//            $p[] = Carbon::parse($date)->format('M');
+//        }
+//
+//        foreach ($p as $pd) {
+//            $projectCount = Project::where('userId', $mainUserId)
+//                ->whereDate('created_at', Carbon::parse($pd))
+//                ->count();
+//
+//            $count[] = $projectCount > 0 || !Carbon::parse($pd)->isFuture() ? $projectCount : 0;
+//        }
+//
+//        foreach ($p as $pd) {
+//            $eventCount[] = Event::where('userId', $mainUserId)
+//                ->whereDate('dateFrom', Carbon::parse($pd))
+//                ->count();
+//        }
+
+
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
+        $clientCount = [];
+        $monthsInYear = Carbon::createFromDate($currentYear, 1, 1)->monthsUntil(Carbon::createFromDate($currentYear, 12, 31));
+
+        foreach ($monthsInYear as $month) {
+            $p[] = $month->format('M');
         }
 
         foreach ($p as $pd) {
-            if (Project::where('userId', $mainUserId)->whereDate('created_at', \Carbon\Carbon::parse($pd))->count() > 0 || !\Carbon\Carbon::parse($pd)->isFuture()) {
-                array_push($count, Project::where('userId', $mainUserId)->whereDate('created_at', \Carbon\Carbon::parse($pd))->count());
-            } else {
-                array_push($count, 0);
-            }
-        }
-        foreach ($p as $pd) {
-            if (Event::where('userId', $mainUserId)->whereDate('dateFrom', \Carbon\Carbon::parse($pd))->count() > 0 || !\Carbon\Carbon::parse($pd)->isFuture()) {
-                array_push($eventCount, Event::where('userId', $mainUserId)->whereDate('dateFrom', \Carbon\Carbon::parse($pd))->count());
-            } else {
-                array_push($eventCount, 0);
-            }
-        }
+            $projectCount = Project::where('userId', $mainUserId)
+                ->whereMonth('created_at', Carbon::parse($pd)->month)
+                ->count();
 
+            $count[] = $projectCount > 0 || !Carbon::parse($pd)->isFuture() ? $projectCount : 0;
 
+            // Filter events for the current month and year
+            $eventCount[] = Event::where('userId', $mainUserId)
+                ->whereYear('dateFrom', $currentYear)
+                ->whereMonth('dateFrom', Carbon::parse($pd)->month)
+                ->count();
+            $clientCount[] = Client::where('userId', $mainUserId)
+                ->whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', Carbon::parse($pd)->month)
+                ->count();
+        }
         return inertia('Dashboard', [
             'p' => $p,
             'countNextEvent' => $countNextEvent,
             'counterTrueOrFalse' => $counterTrueOrFalse,
             'count' => $count,
+            'clientCount' => $clientCount,
             'eventCount' => $eventCount,
             'clients' => $clients,
             'projects' => $projects,
@@ -164,10 +192,11 @@ class Controller extends BaseController
         return back()->with('error', 'Ops something wrong');
 
     }
+
     public function removeNote($nId)
     {
-        $selectedNote = DB::table('notes')->where('id',$nId);
-        if ($selectedNote->delete()){
+        $selectedNote = DB::table('notes')->where('id', $nId);
+        if ($selectedNote->delete()) {
             return back()->with('success', 'The note deleted successfully');
         }
         return back()->with('error', 'Ops something wrong');

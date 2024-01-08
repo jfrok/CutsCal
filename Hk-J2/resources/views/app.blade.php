@@ -44,6 +44,7 @@
         <link rel="stylesheet" href="{{asset('assets/plugins/fontawesome/css/all.min.css')}}">
 
         <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
+        <link href="{{asset('assets/scss/main.scss')}}">
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css">

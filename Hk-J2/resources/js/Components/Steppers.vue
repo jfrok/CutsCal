@@ -1,146 +1,3 @@
-<script>
-import ShopSchedule from "@/Components/ShopSchedule.vue";
-import {router} from "@inertiajs/vue3";
-import AddServices from "@/Components/AddServices.vue";
-import {Link} from "@inertiajs/vue3";
-import {isMobile} from "@/Pages/Ref/isMobile";
-import {scheduleDialog} from "@/Pages/Ref/scheduleDialog";
-import {useToast} from "vue-toastification";
-
-export default {
-    name: 'Steppers',
-    components: {AddServices, ShopSchedule, Link},
-    props: {
-        employers: Object,
-        markedEmployees: Object,
-        services: Array,
-        frameToken: String,
-    },
-    data: (props) => ({
-        width: {
-            min: 300,
-            max: 1000,
-            slider: 500,
-        },
-        height: {
-            min: 300,
-            max: 1000,
-            slider: 500,
-        },
-        url: route('frame.view', props.frameToken),
-        frameUI: [],
-        selectedEmployee: props.markedEmployees ?? null,
-        servicesDialog: false,
-        shipping: 0,
-        step: 1,
-        items: [
-            'Calendar',
-            'Services',
-            'Barbers',
-            'Preview',
-        ],
-        products: [
-            {
-                name: 'Product 1',
-                price: 10,
-                quantity: 2,
-            },
-            {
-                name: 'Product 2',
-                price: 15,
-                quantity: 10,
-            },
-        ],
-    }),
-
-    watch: {
-        // validatedSelectedEmployee(newVal) {
-        //     this.selectedEmployee = newVal;
-        // },
-        selectedEmployee(newVal, oldVal) {
-            const ids = this.selectedEmployee.map(itemId => itemId.id);
-            const markedIds = this.markedEmployees.map(itemId => itemId.id);
-            if (!markedIds.includes(ids) && ids !== null) {
-                this.markedEmployers();
-                // console.log(newVal)
-                // this.selectedEmployee = newVal;
-            }
-        }
-    },
-
-    methods: {
-        copy() {
-            const textToCopy = this.$refs.embed.textContent;
-            navigator.clipboard.writeText(textToCopy)
-                .then(() => {
-                    let toast = useToast();
-                    toast.success('Text copied to clipboard')
-                    console.log('Text copied to clipboard');
-                })
-                .catch(err => {
-                    console.error('Error in copying text: ', err);
-                });
-        },
-        itemValue(item) {
-            return item;
-        },
-        openScheduleDialog() {
-            scheduleDialog.value = true
-        },
-        createServices() {
-            this.servicesDialog = true
-            // form.reset()
-            // form.editMode = false;
-            // routeName.route = 'client.store';
-            // routeName.route = '';
-        },
-        embedFrame() {
-            let frame = `<iframe src=${this.url} width="${this.width.slider.toFixed()}" height="${this.height.slider.toFixed()}" frameborder="0"></iframe>`
-            return this.frameUI = frame;
-        },
-        selectEmployee(employeeId) {
-            this.selectedEmployee = employeeId;
-        },
-        markedEmployers() {
-            router.post(route('employer.setMark'), {user_ids: this.selectedEmployee.map(ids => ids.id)});
-        },
-        deleteService(sId) {
-            router.post(route('services.delete',sId),{
-                preserveScroll: true, preserveState: true,
-
-            });
-        },
-        openNewWindow() {
-
-            const windowFeatures = 'width=800,height=600,menubar=yes,toolbar=yes';
-            window.open(this.url, '_blank', windowFeatures);
-        }
-    },
-
-    computed: {
-        scheduleDialog() {
-            return scheduleDialog
-        },
-        isMobile() {
-            return isMobile
-        },
-        validatedSelectedEmployee() {
-            return this.selectedEmployee.filter(id =>
-                this.markedEmployees.some(markedEmployee => markedEmployee.id === id)
-            );
-        },
-        embedFrameC() {
-            return this.frameUI = this.embedFrame();
-        },
-        subtotal() {
-            return this.products.reduce((acc, product) => acc + product.quantity * product.price, 0);
-        },
-        total() {
-            return this.subtotal + Number(this.shipping ?? 0);
-        },
-    },
-}
-</script>
 <template>
     <v-stepper
         v-model="step"
@@ -348,3 +205,146 @@ export default {
         <!--        </template>-->
     </v-stepper>
 </template>
+<script>
+import ShopSchedule from "@/Components/ShopSchedule.vue";
+import {router} from "@inertiajs/vue3";
+import AddServices from "@/Components/AddServices.vue";
+import {Link} from "@inertiajs/vue3";
+import {isMobile} from "@/Pages/Ref/isMobile";
+import {scheduleDialog} from "@/Pages/Ref/scheduleDialog";
+import {useToast} from "vue-toastification";
+
+export default {
+    name: 'Steppers',
+    components: {AddServices, ShopSchedule, Link},
+    props: {
+        employers: Object,
+        markedEmployees: Object,
+        services: Array,
+        frameToken: String,
+    },
+    data: (props) => ({
+        width: {
+            min: 300,
+            max: 1000,
+            slider: 500,
+        },
+        height: {
+            min: 300,
+            max: 1000,
+            slider: 500,
+        },
+        url: 'http://localhost:8080/'+props.frameToken,//route('frame.view', props.frameToken),
+        frameUI: [],
+        selectedEmployee: props.markedEmployees ?? null,
+        servicesDialog: false,
+        shipping: 0,
+        step: 1,
+        items: [
+            'Calendar',
+            'Services',
+            'Barbers',
+            'Preview',
+        ],
+        products: [
+            {
+                name: 'Product 1',
+                price: 10,
+                quantity: 2,
+            },
+            {
+                name: 'Product 2',
+                price: 15,
+                quantity: 10,
+            },
+        ],
+    }),
+
+    watch: {
+        // validatedSelectedEmployee(newVal) {
+        //     this.selectedEmployee = newVal;
+        // },
+        selectedEmployee(newVal, oldVal) {
+            const ids = this.selectedEmployee.map(itemId => itemId.id);
+            const markedIds = this.markedEmployees.map(itemId => itemId.id);
+            if (!markedIds.includes(ids) && ids !== null) {
+                this.markedEmployers();
+                // console.log(newVal)
+                // this.selectedEmployee = newVal;
+            }
+        }
+    },
+
+    methods: {
+        copy() {
+            const textToCopy = this.$refs.embed.textContent;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    let toast = useToast();
+                    toast.success('Text copied to clipboard')
+                    console.log('Text copied to clipboard');
+                })
+                .catch(err => {
+                    console.error('Error in copying text: ', err);
+                });
+        },
+        itemValue(item) {
+            return item;
+        },
+        openScheduleDialog() {
+            scheduleDialog.value = true
+        },
+        createServices() {
+            this.servicesDialog = true
+            // form.reset()
+            // form.editMode = false;
+            // routeName.route = 'client.store';
+            // routeName.route = '';
+        },
+        embedFrame() {
+            let frame = `<iframe src=${this.url} width="${this.width.slider.toFixed()}" height="${this.height.slider.toFixed()}" frameborder="0"></iframe>`
+            return this.frameUI = frame;
+        },
+        selectEmployee(employeeId) {
+            this.selectedEmployee = employeeId;
+        },
+        markedEmployers() {
+            router.post(route('employer.setMark'), {user_ids: this.selectedEmployee.map(ids => ids.id)});
+        },
+        deleteService(sId) {
+            router.post(route('services.delete',sId),{
+                preserveScroll: true, preserveState: true,
+
+            });
+        },
+        openNewWindow() {
+
+            const windowFeatures = 'width=800,height=600,menubar=yes,toolbar=yes';
+            window.open(this.url, '_blank', windowFeatures);
+        }
+    },
+
+    computed: {
+        scheduleDialog() {
+            return scheduleDialog
+        },
+        isMobile() {
+            return isMobile
+        },
+        validatedSelectedEmployee() {
+            return this.selectedEmployee.filter(id =>
+                this.markedEmployees.some(markedEmployee => markedEmployee.id === id)
+            );
+        },
+        embedFrameC() {
+            return this.frameUI = this.embedFrame();
+        },
+        subtotal() {
+            return this.products.reduce((acc, product) => acc + product.quantity * product.price, 0);
+        },
+        total() {
+            return this.subtotal + Number(this.shipping ?? 0);
+        },
+    },
+}
+</script>

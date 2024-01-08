@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="table-responsive" v-if="employers.data.length > 0">
-                            <v-table v-if="employers.data.length > 0">
+                            <v-table v-if="employers.data.length > 0" fixed-header>
                                 <thead>
                                 <tr>
                                     <th class="text-center">

@@ -82,6 +82,7 @@
                                 <v-text-field
                                     v-model="form.color"
                                     type="color"
+                                    maxlength="50"
                                     :label="$page.props.auth .user.lang == 'arabic'? 'الون' : 'Color'"
                                     variant="outlined"/>
                                 <InputError :message="form.errors.color"/>
@@ -89,19 +90,20 @@
 
                                 <v-col cols="12">
                                     <v-text-field
+                                        maxlength="100"
                                         :label="$page.props.auth .user.lang == 'arabic'? 'العنوان' : 'Title'"
                                         v-model="form.title" required/>
                                     <InputError :message="form.errors.title"/>
                                 </v-col>
 
                                 <v-col cols="6">
-                                    <v-text-field type="time"
+                                    <v-text-field maxlength="50" type="time"
                                                   :label="$page.props.auth.user.lang == 'arabic'? 'الوقت من' : 'Time from'"
                                                   v-model="form.timeFrom" required/>
                                     <InputError :message="form.errors.timeFrom"/>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-text-field type="time"
+                                    <v-text-field  maxlength="50" type="time"
                                                   :label="$page.props.auth.user.lang == 'arabic'? 'الوقت الئ' : 'Time to'"
                                                   v-model="form.timeTo" required/>
                                     <InputError :message="form.errors.timeTo"/>
@@ -121,7 +123,8 @@
                                     <v-textarea
                                         counter
                                         label="Note(s)"
-                                        v-model="form.description"></v-textarea>
+                                        v-model="form.description"
+                                        maxlength="200"></v-textarea>
                                 </v-container>
                             </v-row>
                         </v-container>

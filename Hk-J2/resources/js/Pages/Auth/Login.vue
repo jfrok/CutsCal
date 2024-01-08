@@ -1,48 +1,8 @@
-<script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-// import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '../../Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
-
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
-
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
-function error(mesg) {
-    toastr.error(mesg)
-}
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
-};
-
-const password = ref('');
-const showPassword = ref(false);
-
-const togglePasswordVisibility = () => {
-    showPassword.value = !showPassword.value;
-};
-</script>
 <template>
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-
+{{form.password}}
         <div class="main-wrapper login-body">
 
             <div class="login-wrapper">
@@ -132,12 +92,48 @@ const togglePasswordVisibility = () => {
 </template>
 <script>
 import GuestLayout from "@/Layouts/GuestLayout.vue";
+import Checkbox from '@/Components/Checkbox.vue';
+import InputError from '../../Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { Head, Link,useForm } from '@inertiajs/vue3';
 
 export default {
+    props:{
+        canResetPassword: {
+            type: Boolean,
+        },
+        status: {
+            type: String,
+        },
+    },
     Layout: GuestLayout,
-    methods:{
+    data(){
+       return {
+           showPassword:false,
+          form:useForm({
+              email: '',
+              remember: false,
+              password:'',
+          })
+       }
+    },
+    methods: {
+        error(mesg) {
+            toastr.error(mesg)
+        },
+        submit() {
+            this.form.post(route('login'), {
+                onFinish: () => form.reset('password'),
+            });
 
-
-    }
+        },
+        togglePasswordVisibility()
+        {
+            this.showPassword = !this.showPassword;
+        }
+    },
+    components:{Checkbox,InputError,InputLabel,PrimaryButton,TextInput,Head,Link},
 }
 </script>

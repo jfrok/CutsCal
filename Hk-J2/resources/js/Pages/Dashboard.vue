@@ -8,6 +8,7 @@ import moment from 'moment';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {orderData} from "@/Pages/Ref/OrderData";
 import OrderDetails from "@/Components/OrderDetails.vue";
+import AnylticChart from "@/Components/anylticChart.vue";
 function arabicDay(dateFrom) {
     const englishDay = moment(dateFrom).format('dddd');
     const arabicDays = {
@@ -418,8 +419,10 @@ function removeNote(nId) {
                             </div>
                             <div class="card-body">
                                 <!--                                <div id="school-area"></div>-->
-                                <Chart :p="$page.props.p" :count="$page.props.count"
-                                       :eventCount="$page.props.eventCount"/>
+                                <anyltic-chart :p="$page.props.p" :count="$page.props.count"
+                                       :eventCount="$page.props.eventCount" :clientCount="$page.props.clientCount"/>
+<!--                                <Chart :p="$page.props.p" :count="$page.props.count"-->
+<!--                                       :eventCount="$page.props.eventCount"/>-->
                             </div>
                         </div>
                     </div>
