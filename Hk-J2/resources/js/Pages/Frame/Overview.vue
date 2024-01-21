@@ -43,7 +43,7 @@ this.setCookie()    }
     <AuthenticatedLayout>
         <div class="row">
             <div class="col-sm-12">
-                <div class="card card-table" style="background-color: rgba(0,119,246,0.05)">
+                <div class="card card-table border-r-20 border-secondary-color-2 bg-official-secondary">
                     <div class="card-body">
                         <div class="page-header">
                             <div class="row align-items-center">

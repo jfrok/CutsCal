@@ -5,7 +5,7 @@ import FormatTime from "@/Components/FormatTime.vue";
 import {useToast} from "vue-toastification";
 import ShopSchedule from "@/Components/ShopSchedule.vue";
 import {scheduleDialog} from "@/Pages/Ref/scheduleDialog";
-
+import {isMobile} from "@/Pages/Ref/isMobile";
 const showingNavigationDropdown = ref(false);
 const toast = useToast();
 const fullName = ref(usePage().props.auth.user.name);
@@ -15,18 +15,6 @@ const openScheduleDialog = () => {
     return scheduleDialog.value = true
 
 }
-
-function isMobile() {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        return true
-    } else {
-        return false
-    }
-}
-
-const t = isMobile()
-console.log(t)
-
 function setInitials() {
     const names = fullName.value.split(' ');
     initials.value = names.map(name => name[0]).join('').toUpperCase();
@@ -83,18 +71,23 @@ const submitSchedule = () => {
 //     toastr.error(mesg)
 // }
 
-// const bottomBar = ref();
-// usePage().component.includes('Calendar')
-// switch (bottomBar.value) {
-//     case 0: return 'red-accent-1ss';
-//     case 1: return 'orange-darken-4s';
-//     default: return 'deep-orange-lighten-2s';
-// }
+const bottomBar = ref(0);
+
+
+const trackPage = {
+    calendar: usePage().component.includes('Calendar'),
+    account:usePage().component.includes('Account')
+};
+bottomBar.value = trackPage.calendar ? 1 : trackPage.account ? 2 : 0;
+
 const color = computed(() => {
     switch (bottomBar.value) {
-        case 0: return 'red-accent-1';
-        case 1: return 'orange-darken-4';
-        default: return 'deep-orange-lighten-2';
+        case 0:
+            return 'red-accent-1';
+        case 1:
+            return 'orange-darken-4';
+        default:
+            return 'deep-orange-lighten-2';
     }
 });
 </script>
@@ -449,8 +442,9 @@ const color = computed(() => {
 
             </div>
         </div>
-        <v-layout class="overflow-visible h-auto">
+        <v-layout class="overflow-visible h-auto" v-if="isMobile">
             <v-bottom-navigation
+
                 v-model="bottomBar"
                 :bg-color="color"
                 mode="shift"
@@ -471,11 +465,16 @@ const color = computed(() => {
                 </Link>
                 <Link :href="route('account.overview')">
                 <v-btn>
-                    <v-icon>mdi-users</v-icon>
+                    <v-icon>mdi-account</v-icon>
 
                     <span>Accounts</span>
                 </v-btn>
                 </Link>
+<!--                <v-btn @click="bottomBar.value = 1">-->
+<!--                    <v-icon>mdi-grid</v-icon>-->
+
+<!--                    <span>Home</span>-->
+<!--                </v-btn>-->
                 <!--                        <v-btn>-->
                 <!--                            <v-icon>mdi-image</v-icon>-->
 

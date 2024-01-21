@@ -1,3 +1,76 @@
+<template>
+    <AuthenticatedLayout>
+    <Head title="Trash"/>
+    <div class="row" >
+        <div class="col-sm-12 border-r-20 border-secondary-color-2 bg-official-secondary">
+            <Loader :show="showSpinner" color="blue"  />
+
+
+            <div class="card bg-official-secondary">
+                <div class="card-header bg-official-secondary">
+                    <h3 class="page-title">{{$page.props.auth.user.lang == 'arabic'? 'إدارة المهملات' : 'Trash Management'}}</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <v-table v-if="trashed.length > 0">
+                            <thead>
+                            <tr>
+                                <th class="text-center">
+                                    <v-checkbox
+                                        v-model="getIds.selectAllIdsChecker"
+                                        @change="selectClients"
+                                    ></v-checkbox>
+                                </th>
+                                <th class="text-left">Title</th>
+                                <th class="text-left">View</th>
+                                <th v-if="$page.props.auth.userRole.includes('trash-restore')" class="text-left">Restore</th>
+                                <th class="text-left">Delete</th>
+                                <th class="text-left">Delete at</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr
+                                v-for="item in trashed"
+                                :key="item.id"
+                            >
+                                <td>
+                                    <v-checkbox
+                                        v-model="getIds.id"
+                                        :value="item.id"
+                                    ></v-checkbox>
+                                </td>
+                                <td>{{ item.title }}</td>
+
+                                <td>
+                                    <div class="up-come-headerS">   <Link :href="route('content.index',item.id)"><span><i class="feather-eye"></i></span></Link></div></td>
+                                <td v-if="$page.props.auth.userRole.includes('trash-restore')">  <div class="up-come-headerS">   <Link  @click="restore(item.id)"><span><i class="feather-refresh-ccw"></i></span></Link></div></td>
+                                <td v-if="$page.props.auth.userRole.includes('trash-force-delete')"><div class="up-come-headerS"><a type="button" @click="destroy(item.id)"><span><i class="feather-trash"></i></span></a></div></td>
+                                <td>{{moment(item.deleted_at).format('DD/MM/YYYY')}}</td>
+                            </tr>
+                            </tbody>
+                            <div v-if="$page.props.auth.userRole.includes('trash-delete')" class="p-20">
+                                <v-btn color="red-darken-1" @click="groupDelete(0)"
+                                       v-if="trashed.length > 1"><span><i
+                                    class="feather-trash-2"></i></span>
+                                </v-btn>
+                            </div>
+                        </v-table>
+                        <v-alert v-else
+                            type="info"
+                            title="No data founded"
+                            text="There are is no data"
+                            variant="tonal"
+                        ></v-alert>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    </AuthenticatedLayout>
+</template>
 <script setup>
 import {Head, router, useForm} from '@inertiajs/vue3';
 import {Link} from "@inertiajs/vue3";
@@ -89,77 +162,3 @@ const groupDelete = () => {
 };
 
 </script>
-
-<template>
-    <AuthenticatedLayout>
-    <Head title="Trash"/>
-    <div class="row" >
-        <div class="col-sm-12" >
-            <Loader :show="showSpinner" color="blue"  />
-
-
-            <div class="card" style="background-color: rgba(0,119,246,0.05)">
-                <div class="card-header" style="background-color: rgba(0,119,246,0.00)">
-                    <h3 class="page-title">{{$page.props.auth.user.lang == 'arabic'? 'إدارة المهملات' : 'Trash Management'}}</h3>
-                </div>
-
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <v-table v-if="trashed.length > 0">
-                            <thead>
-                            <tr>
-                                <th class="text-center">
-                                    <v-checkbox
-                                        v-model="getIds.selectAllIdsChecker"
-                                        @change="selectClients"
-                                    ></v-checkbox>
-                                </th>
-                                <th class="text-left">Title</th>
-                                <th class="text-left">View</th>
-                                <th v-if="$page.props.auth.userRole.includes('trash-restore')" class="text-left">Restore</th>
-                                <th class="text-left">Delete</th>
-                                <th class="text-left">Delete at</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr
-                                v-for="item in trashed"
-                                :key="item.id"
-                            >
-                                <td>
-                                    <v-checkbox
-                                        v-model="getIds.id"
-                                        :value="item.id"
-                                    ></v-checkbox>
-                                </td>
-                                <td>{{ item.title }}</td>
-
-                                <td>
-                                    <div class="up-come-headerS">   <Link :href="route('content.index',item.id)"><span><i class="feather-eye"></i></span></Link></div></td>
-                                <td v-if="$page.props.auth.userRole.includes('trash-restore')">  <div class="up-come-headerS">   <Link  @click="restore(item.id)"><span><i class="feather-refresh-ccw"></i></span></Link></div></td>
-                                <td v-if="$page.props.auth.userRole.includes('trash-force-delete')"><div class="up-come-headerS"><a type="button" @click="destroy(item.id)"><span><i class="feather-trash"></i></span></a></div></td>
-                                <td>{{moment(item.deleted_at).format('DD/MM/YYYY')}}</td>
-                            </tr>
-                            </tbody>
-                            <div v-if="$page.props.auth.userRole.includes('trash-delete')" class="p-20">
-                                <v-btn color="red-darken-1" @click="groupDelete(0)"
-                                       v-if="trashed.length > 1"><span><i
-                                    class="feather-trash-2"></i></span>
-                                </v-btn>
-                            </div>
-                        </v-table>
-                        <v-alert v-else
-                            type="info"
-                            title="No data founded"
-                            text="There are is no data"
-                            variant="tonal"
-                        ></v-alert>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-    </AuthenticatedLayout>
-</template>

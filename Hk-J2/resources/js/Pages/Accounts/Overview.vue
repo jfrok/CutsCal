@@ -2,7 +2,7 @@
     <AuthenticatedLayout>
         <div class="row">
             <div class="col-sm-12">
-                <div class="card card-table">
+                <div class="card card-table border-r-20 border-secondary-color-2 bg-official-secondary">
                     <div class="card-body">
 
                         <div class="page-header">
