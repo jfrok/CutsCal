@@ -1,7 +1,5 @@
 <template>
-<!--    {{p}}-->
-    {{clientCount}}
-    {{count}}
+
     <apexchart width="100%" type="bar" :options="chartOptions" :series="series" />
 </template>
 
@@ -17,6 +15,7 @@ export default {
         return {
             series: [
                 {
+                    color:'#ff9900',
                     name: 'Planed Orders',
                     data: this.eventCount,
                 },
@@ -54,7 +53,7 @@ export default {
                 },
                 yaxis: {
                     title: {
-                        text: '$ (thousands)',
+                        text: 'Overview',
                     },
                 },
                 fill: {
@@ -63,7 +62,7 @@ export default {
                 tooltip: {
                     y: {
                         formatter: function (val) {
-                            return val + ' Order';
+                            return val;
                         },
                     },
                 },

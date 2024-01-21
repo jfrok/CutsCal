@@ -1,5 +1,5 @@
 <template>
-    <div style="overflow-y: scroll;">
+    <div class="overflow-y-scroll">
         <!--            sdule-->
         <v-toolbar v-if="includeBtn"
                    dark
@@ -23,9 +23,12 @@
                 </v-btn>
             </v-toolbar-items>
         </v-toolbar>
-        <v-card title="Schedule" class="rounded-card">
+        <v-card  class="rounded-card">
             <v-card-text>
-                <v-table class="sch-table">
+                <h4 class="h4 font-weight-thin mb-7">Interval</h4>
+                <v-text-field v-model="interval" label="Interval" color="primary" variant="outlined" type="number"/>
+                <h4 class="h4 font-weight-thin mb-7 mt-7">Schedule</h4>
+                <v-table class="sch-table bg-official-secondary">
                     <thead>
                     <tr>
                         <th class="text-left">Check</th>
@@ -34,12 +37,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr >
-                        <td style="padding: 20px">
-                            <v-text-field v-model="interval" label="Interval" type="number"/>
-<!--                            <input-error :message="interval.error"/>-->
-                        </td>
-                    </tr>
                     <tr v-for="day in days" :key="day.id">
                         <td class="align-items-center d-flex">
                             <v-checkbox
@@ -49,11 +46,11 @@
                             />
                         </td>
                         <td class="time-inputs mt-16 mr-3 ">
-                            <v-text-field v-model="day.openingTime" variant="outlined"
+                            <v-text-field v-model="day.openingTime" variant="text"
                                           :readonly="!selectedDays.includes(day.id)" type="time"/>
                         </td>
                         <td class="time-inputs">
-                            <v-text-field v-model="day.closingTime"
+                            <v-text-field variant="text" v-model="day.closingTime"
                                           :readonly="!selectedDays.includes(day.id)" type="time"/>
                         </td>
                     </tr>

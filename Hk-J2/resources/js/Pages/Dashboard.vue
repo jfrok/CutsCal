@@ -171,8 +171,8 @@ function removeNote(nId) {
 
 
         <div class="row">
-            <div class="col-xl-3 col-sm-6 col-12 d-flex" v-if="$page.props.auth.userRole.includes('user-list')">
-                <div class="card bg-comman w-100 bBcW">
+            <div class="col-xl-3 col-sm-6 col-12 d-flex " v-if="$page.props.auth.userRole.includes('user-list')">
+                <div class="card bg-comman w-100 bBcW border-secondary-color-2">
                     <div class="card-body">
                         <div class="db-widgets d-flex justify-content-between align-items-center">
                             <div class="db-info">
@@ -190,7 +190,7 @@ function removeNote(nId) {
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6 col-12 d-flex" v-if="$page.props.auth.userRole.includes('client-list')">
-                <div class="card bg-comman w-100 bBcW">
+                <div class="card bg-comman w-100 bBcW border-secondary-color-2">
                     <div class="card-body">
                         <div class="db-widgets d-flex justify-content-between align-items-center">
                             <div class="db-info">
@@ -208,7 +208,7 @@ function removeNote(nId) {
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6 col-12 d-flex" v-if="$page.props.auth.userRole.includes('employer-list')">
-                <div class="card bg-comman w-100 bBcW">
+                <div class="card bg-comman w-100 bBcW border-secondary-color-2">
                     <div class="card-body">
                         <div class="db-widgets d-flex justify-content-between align-items-center">
                             <div class="db-info">
@@ -242,7 +242,7 @@ function removeNote(nId) {
             <!--                </div>-->
             <!--            </div>-->
             <div class="col-xl-3 col-sm-6 col-12 d-flex" v-if="$page.props.auth.userRole.includes('event-calendar')">
-                <div class="card bg-comman w-100 bBcW">
+                <div class="card bg-comman w-100 bBcW border-secondary-color-2">
                     <div class="card-body">
                         <div class="db-widgets d-flex justify-content-between align-items-center">
                             <div class="db-info">
@@ -262,7 +262,7 @@ function removeNote(nId) {
         </div>
         <div v-if="$page.props.auth.userRole.includes('note-list')">
             <v-dialog width="500" v-model="noteDialog">
-                <v-card title="Make a note" style="border-radius: 20px">
+                <v-card title="Make a note" class="border-r-20">
                     <v-card-text>
                         <v-textarea
                             v-model="noteForm.note"
@@ -293,14 +293,15 @@ function removeNote(nId) {
                 </v-card>
             </v-dialog>
 
-            <v-sheet style="background-color: rgba(0,119,246,0.15);border-radius: 20px"
+            <v-sheet
                      max-width="1156"
-                     class="mx-auto mt-8"
+                     class="mx-auto mt-8 bg-official-secondary border-r-20"
                      elevation="12"
                      height="128"
                      width="100%"
+                     border
             >
-                <v-row align="center" justify="center">
+                <v-row align="center" justify="center" class="mt-1">
                     <v-col cols="auto">
                         <v-btn density="compact" @click="noteDialog = true" icon="mdi-plus"/>
                     </v-col>
@@ -332,9 +333,8 @@ function removeNote(nId) {
 
                 <div class="row">
                     <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                        <div class="card flex-fill comman-shadow" style="background-color: rgba(0,119,246,0.15);">
-                            <div class="card-header d-flex align-items-center"
-                                 style="background-color: rgba(0,119,246,0.00);">
+                        <div class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2 border-secondary-color-2">
+                            <div class="card-header d-flex align-items-center bg-official-secondary ">
                                 <h5 class="card-title">
                                     {{
                                         $page.props.auth.user.lang == 'arabic' ? 'تاريخ الحجوزات' : 'Reservations History'
@@ -388,19 +388,19 @@ function removeNote(nId) {
                                     </tr>
                                     </tbody>
                                 </v-table>
-                                <v-alert v-else style="margin-top: 70px"
+                                <v-alert v-else class="mt-16"
                                          type="info"
                                          variant="tonal"
                                 >
-                                    <v-alert-title style="justify-content: center;display: flex">There is no clients
+                                    <v-alert-title class="d-flex justify-center">There is no clients
                                     </v-alert-title>
                                 </v-alert>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                        <div class="card flex-fill comman-shadow" style="background-color: rgba(0,119,246,0.04)">
-                            <div class="card-header" style="background-color: rgba(0,119,246,0.0)">
+                        <div class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2">
+                            <div class="card-header bg-official-secondary">
                                 <div class="row align-items-center">
                                     <div class="col-6">
                                         <h5 class="card-title">
@@ -429,9 +429,8 @@ function removeNote(nId) {
 
                     <div class="col-12 col-lg-12 col-xl-12 d-flex"
                          v-if="$page.props.auth.userRole.includes('client-list')">
-                        <div class="card flex-fill comman-shadow" style="background-color: rgba(0,119,246,0.15);">
-                            <div class="card-header d-flex align-items-center"
-                                 style="background-color: rgba(0,119,246,0.00);">
+                        <div class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2">
+                            <div class="card-header d-flex align-items-center bg-official-secondary">
                                 <h5 class="card-title">
                                     {{
                                         $page.props.auth.user.lang == 'arabic' ? 'تاريخ الزبائن' : 'Clients History'
@@ -440,8 +439,8 @@ function removeNote(nId) {
                             </div>
                             <div class="card-body">
                                 <v-table
-                                    style="border-radius: 20px"
                                     fixed-header
+                                    class="bg-white border-r-20"
                                     v-if="clients.data.length > 0"
                                 >
                                     <thead>
@@ -468,11 +467,11 @@ function removeNote(nId) {
                                     </tr>
                                     </tbody>
                                 </v-table>
-                                <v-alert v-else style="margin-top: 70px"
+                                <v-alert v-else class="mt-16"
                                          type="info"
                                          variant="tonal"
                                 >
-                                    <v-alert-title style="justify-content: center;display: flex">There is no clients
+                                    <v-alert-title class="d-flex justify-center">There is no clients
                                     </v-alert-title>
                                 </v-alert>
                             </div>
@@ -482,9 +481,8 @@ function removeNote(nId) {
 
                     <div class="col-12 col-lg-12 col-xl-12 d-flex"
                          v-if="$page.props.auth.userRole.includes('project-list')">
-                        <div class="card flex-fill comman-shadow" style="background-color: rgba(0,119,246,0.04)">
-                            <div class="card-header d-flex align-items-center"
-                                 style="background-color: rgba(0,119,246,0.00)">
+                        <div class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2">
+                            <div class="card-header d-flex align-items-center bg-official-secondary">
                                 <h5 class="card-title">
                                     {{
                                         $page.props.auth.user.lang == 'arabic' ? 'تاريخ المشاريع' : 'Projects History'
@@ -537,7 +535,7 @@ function removeNote(nId) {
             </div>
 
             <div class="col-12 col-lg-12 col-xl-4 d-flex" v-if="$page.props.auth.userRole.includes('event-calendar')">
-                <div class="card flex-fill comman-shadow" style="background-color: rgba(0,119,246,0.10)">
+                <div class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2">
                     <div class="card-body">
                         <div class="calendar-info1">
                             <div class="up-come-header">
@@ -548,8 +546,8 @@ function removeNote(nId) {
                                 <span v-if="$page.props.auth.userRole.includes('event-create')"><Link :href="route('calendar.overview')"><i
                                     class="feather-plus"></i></Link></span>
                             </div>
-                            <div class="up-come-header" style="position: relative;float: right;margin-top: 3px;">
-                                <span style="cursor: pointer" @click="dialog = true" class="feather-filter"></span>
+                            <div class="up-come-header position-relative float-right mt-1">
+                                <span @click="dialog = true" class="feather-filter cursor-pointer"></span>
                                 <!--                            <FilterDialog />-->
                             </div>
                             <v-row justify="center" v-if="totalEvents > 0">
@@ -561,7 +559,7 @@ function removeNote(nId) {
                                     <v-card>
                                         <v-card-title>Select a Filter</v-card-title>
                                         <v-divider></v-divider>
-                                        <v-card-text style="height: auto;">
+                                        <v-card-text class="h-auto">
                                             <v-radio-group
                                                 v-model="filteringEvents.filter"
                                                 column
@@ -597,21 +595,20 @@ function removeNote(nId) {
 
                                 <div id="events-wrapper" v-for="year in uniqueYears" :key="year" >
 
-                                    <div class="upcome-event-date"
-                                         style="display: flex;justify-content: center;margin-top: 70px">
-                                        <h3 style="background-color: rgba(0,119,246,0.00)">{{ year }}</h3>
+                                    <div class="upcome-event-date d-flex justify-center mt-16">
+                                        <h3 class="bg-official-secondary">{{ year }}</h3>
                                     </div>
                                     <!--{{// events}}-->
-                                    <div v-for="month in monthsByYear[year]" :key="month" style="margin-top: 55px;">
+                                    <div v-for="month in monthsByYear[year]" class="mt-14" :key="month">
                                         <div class="upcome-event-date" >
-                                            <h3 style="background-color: rgba(0,119,246,0.00)">{{ moment(month).format('MMMM') }}</h3>
+                                            <h3 class="bg-official-secondary">{{ moment(month).format('MMMM') }}</h3>
                                         </div>
 
                                         <div v-for="event in events"
                                              :key="event.id">
                                             <div class="calendar-details"
                                                  v-if="month == moment(event.dateFrom).format('MM') && year == moment(event.dateFrom).format('YYYY')">
-                                                <p style="font-size: 10px;background-color: rgba(0,119,246,0.00)" v-if="event.timeFrom !== null" >{{
+                                                <p class="font-size-14 bg-official-secondary" v-if="event.timeFrom !== null" >{{
                                                         event.timeFrom
                                                     }}
                                                     {{ event.timeTo }}</p>
@@ -644,14 +641,14 @@ function removeNote(nId) {
                                     </div>
                                 </div>
                             </div>
-                            <v-alert v-else style="margin-top: 70px"
+                            <v-alert v-else class="mt-16"
                                      type="info"
                                      variant="tonal"
                             >
-                                <v-alert-title style="justify-content: center;display: flex">There is no events
+                                <v-alert-title class="d-flex justify-center">There is no events
                                 </v-alert-title>
                             </v-alert>
-                            <div style="display: flex;justify-content: center;margin-top: 5px"
+                            <div class="d-flex justify-center mt-2"
                                  v-if="props.countNextEvent != 0">
                                 <a href="javascript:void(0)" @click="showMore" methods="post"
                                    id="showMoreBtn">{{

@@ -66,7 +66,7 @@
                                 </tr>
                                 </tbody>
                                 <div v-if="$page.props.auth.userRole.includes('employer-delete')" class="p-20">
-                                    <v-btn color="red-darken-1" @click="groupDelete(0)"
+                                    <v-btn color="red-darken-1" rounded size="small" @click="groupDelete(0)"
                                            v-if="employers.data.length > 1"><span><i
                                         class="feather-trash-2"></i></span>
                                     </v-btn>

@@ -183,31 +183,23 @@
         <!--                </ul>-->
         <!--            </div>-->
         <!--        </div>-->
-        <div class="row" style="
-              -webkit-user-select: none;
-            /*-khtml-user-select: none;*/
-             -moz-user-select: none;
-            -ms-user-select: none;
-            /*-o-user-select: none;*/
-            user-select: none;">
-            <div class="col-lg-12 col-md-12">
-                <div class="card" style="background-color: rgba(0,119,246,0.05)">
-                    <div class="card-body">
-                        <div class='demo-app-main'>
-                            <FullCalendar id="calendar" ref="calendar" v-on:update-calendar="updateCalendar"
+        <v-row class="disable-user-select">
+            <v-col cols="12">
+                <v-card class="vcard border-r-20 border-secondary-color-2" elevation="0">
+                    <v-card-text>
+<!--                        <div class="border-r-20">-->
+                            <FullCalendar class="border-r-20" id="calendar" ref="calendar" @update-calendar="updateCalendar"
                                           :event-render="handleEventRender" @eventDrop="handleEventDrop"
                                           :options="calendarOptions"/>
-                        </div>
-                    </div>
-                </div>
-                <!--                <div class="balk" style="position: fixed">-->
-                <!--                    <button @click="openAddEventModal" type="button" class="btn btn-info waves-effect waves-light mt-1">-->
-                <!--                        Add Event-->
-                <!--                    </button>-->
-                <!--                </div>-->
-            </div>
-
-        </div>
+<!--                        </div>-->
+                    </v-card-text>
+                </v-card>
+                <!-- Uncomment the following section if you have a button -->
+                <!-- <v-btn @click="openAddEventModal" color="info" class="mt-1">
+                  Add Event
+                </v-btn> -->
+            </v-col>
+        </v-row>
 
     </AuthenticatedLayout>
 </template>
@@ -331,7 +323,7 @@ export default defineComponent({
                         let dataToRender = data.events.map(x => {
                             x.start = x.timeFrom ? `${x.dateFrom}T${x.timeFrom}` : x.dateFrom;
                             x.end = x.timeTo ? `${x.dateTo}T${x.timeTo}` : x.dateTo;
-                            x.color = `${x.color}`
+                            x.color = `${x.color === 'null' ? '#ff9900' : x.color}`
                             if (!x.timeFrom) {
                                 x.displayEventTime = false
                                 x.start = `${x.dateFrom}`

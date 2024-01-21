@@ -11,12 +11,12 @@
             <br>
             <ShopSchedule v-if="!isMobile" :include-btn="false"/>
             <div class="text-center p-20" v-else>
-                <v-btn color="#3d5ee1" style="color: white" @click="openScheduleDialog">Edit</v-btn>
+                <v-btn color="#3d5ee1" @click="openScheduleDialog">Edit</v-btn>
             </div>
         </template>
         <template v-slot:item.2>
             <h3 class="text-h6">Services</h3>
-            <div style="float: right;top: -20px;position: relative">
+            <div class="d-flex justify-end">
                 <a href="javascript:void(0)" @click="createServices" class="btn btn-primary"><i
                     class="fas fa-plus"></i></a>
             </div>
@@ -26,9 +26,8 @@
                 <AddServices @close-dialog="servicesDialog = false"/>
             </v-dialog>
 
-            <v-sheet border>
                 <v-table>
-                    <thead>
+                    <thead class="bg-official-secondary">
                     <tr>
                         <th>Name</th>
                         <th class="text-end">Price</th>
@@ -40,22 +39,24 @@
                     <tr v-for="item in services" :key="item.id">
                         <td v-text="item.name"></td>
                         <td class="text-end" v-text="item.price"></td>
-                        <td class="text-end"><a href="javascript:void(0)" @click="deleteService(item.id)"><i style="color: red; cursor: pointer" class="feather-x-circle"></i></a></td>
+                        <td class="text-end"><a href="javascript:void(0)" class="cursor-pointer f-color-red" @click="deleteService(item.id)"><i class="feather-x-circle"></i></a></td>
                     </tr>
 
                     </tbody>
                 </v-table>
-            </v-sheet>
 
         </template>
         <template v-slot:item.3>
+<!--            <div class="d-flex">-->
             <h3 class="text-h6">Barbers</h3>
-            <div style="float:right;top:-50px;position:relative;margin:8px;">
+            <div class="d-flex justify-end b-ps">
                 <Link :href="route('employer.create')" class="btn btn-primary"><i
                     class="fas fa-plus"></i></Link>
             </div>
+<!--            </div>-->
             <br>
             <v-autocomplete
+                class="mb-7"
                 v-model="selectedEmployee"
                 :items="employers"
                 chips
@@ -85,7 +86,7 @@
             </v-autocomplete>
             <v-sheet border>
                 <v-table>
-                    <thead>
+                    <thead class="bg-official-secondary">
                     <tr>
                         <th>Name</th>
                         <th class="text-end">Avatar</th>
@@ -132,7 +133,7 @@
                         single-line
                         density="compact"
                         type="number"
-                        style="width: 70px"
+                        class="w-30"
                     ></v-text-field>
                 </template>
             </v-slider>
@@ -151,7 +152,7 @@
                         single-line
                         density="compact"
                         type="number"
-                        style="width: 70px"
+                        class="w-30"
                     ></v-text-field>
                 </template>
             </v-slider>

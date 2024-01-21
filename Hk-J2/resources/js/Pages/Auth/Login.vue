@@ -2,7 +2,6 @@
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-{{form.password}}
         <div class="main-wrapper login-body">
 
             <div class="login-wrapper">
@@ -76,7 +75,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <PrimaryButton class="ml-4" style="background-color: #0a53be" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" >
+                                        <PrimaryButton class="bg-official" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" >
                                             Log in
                                         </PrimaryButton>
 <!--                                        <button class="btn btn-primary btn-block" type="submit">Login</button>-->

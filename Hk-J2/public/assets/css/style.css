@@ -4,6 +4,13 @@ html {
 /*[data-page] {*/
 /*    display: none;*/
 /*}*/
+:root {
+    /*3d5ee1 0a53be --secondary-color FBFAFB EDEBEF*/
+    --primary-color: #ff9900;
+    --secondary-color: #FBFAFB;
+    --secondary-color-2:#EDEBEF;
+    --white-color: #fff	;
+}
  /*width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -17,7 +24,7 @@ html {
 /* Handle */
 ::-webkit-scrollbar-thumb {
     /*realy nice color (rgb(6 97 160))*/
-    background: #3d5ee1;
+    background:  var(--primary-color);
 
 }
 
@@ -25,10 +32,31 @@ html {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+.bg-official {
+    background: var(--primary-color) !important;
+}
+.bg-official-secondary {
+    background: var(--secondary-color) !important;
+}
+.bg-white {
+    background: var(--white-color) !important;
+}
+.border-r-20 {
+     border-radius: 20px !important;
+}
+.f-color-red{
+    color: red !important;
+}
+.v-alert--variant-tonal .v-alert__underlay {
+    background: var(--primary-color) !important;
+
+}
 body {
     background-color: #f7f7fa;
     color: #333;
-    font-family: roboto, sans-serif,"Amiri", serif;
+    /*font-family: 'Comfortaa', sans-serif;*/
+    font-family: 'Roboto', sans-serif,"Amiri", serif;
     font-size: 15px;
     height: 100%;
     line-height: 1.5;
@@ -46,7 +74,9 @@ a:hover, a:active, a:focus {
     outline: none;
     text-decoration: none
 }
-
+a{
+    text-decoration: none;
+}
 input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
     box-shadow: 0 0 0 1000px #fff inset !important
@@ -61,7 +91,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 }
 
 .form-control:focus {
-    border-color: #3d5ee1;
+    border-color:  var(--primary-color);
     box-shadow: none;
     outline: 0
 }
@@ -79,7 +109,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 }
 
 a {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     text-decoration: none
 }
 
@@ -214,7 +244,7 @@ table.table td h2 a {
 }
 
 table.table td h2 a:hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 table.table td h2 span {
@@ -253,11 +283,11 @@ table.table td h2 span {
 }
 
 .table-striped tbody tr:nth-of-type(even) {
-    background-color: rgba(255, 255, 255, .3)
+    background-color: #EDEBEF
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(235, 235, 235, .4)
+    background-color: #EDEBEF
 }
 
 .table-bordered {
@@ -304,7 +334,7 @@ table.table td h2 span {
 
 .nav-tabs.menu-tabs .nav-item.active .nav-link {
     color: #fff;
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .settings-menu-links .nav-tabs.menu-tabs {
@@ -364,7 +394,7 @@ table.table td h2 span {
 .settings-btn .upload {
     position: absolute;
     z-index: 11;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     border-radius: 5px;
     right: 2px;
     top: 1.5px;
@@ -462,8 +492,8 @@ table.table td h2 span {
     font-weight: 700;
     padding: 10px 26px;
     margin-right: 15px;
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1;
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color);
     color: #fff;
     border-radius: 4px
 }
@@ -486,15 +516,14 @@ table.table td h2 span {
 
 .card .card-header .card-title {
     margin-bottom: 0;
-    font-weight: 600;
+    font-weight: revert-layer;
     font-size: 20px;
     color: #000;
-    font-family: source sans pro, sans-serif
-}
+    font-family: 'Comfortaa', sans-serif;}
 
 .check:checked + .checktoggle {
-    background-color: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background-color:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .check:checked + .checktoggle:after {
@@ -516,7 +545,7 @@ table.table td h2 span {
     border-radius: 5px;
     color: #000;
     background: #fff;
-    border: 1px solid #3d5ee1
+    border: 1px solid  var(--primary-color)
 }
 
 .nav-tabs.menu-tabs .nav-item {
@@ -527,7 +556,7 @@ table.table td h2 span {
 
 .nav-tabs.menu-tabs .nav-link:hover {
     color: #fff;
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .settings-form .social-icon {
@@ -535,8 +564,8 @@ table.table td h2 span {
     height: 40px;
     margin-right: 6px;
     color: #fff;
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1;
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color);
     border-radius: 5px;
     font-size: 24px;
     display: flex;
@@ -572,7 +601,7 @@ table.table td h2 span {
     justify-content: center;
     -webkit-justify-content: center;
     -ms-flex-pack: center;
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     color: #fff;
     position: relative;
     right: -6px;
@@ -580,7 +609,7 @@ table.table td h2 span {
 }
 
 .add-links {
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     color: #fff;
     font-size: 16px;
     font-weight: 700;
@@ -645,7 +674,7 @@ table.table td h2 span {
     height: 20px;
     width: 20px;
     background-color: #fff;
-    border: 1px solid #3d5ee1;
+    border: 1px solid  var(--primary-color);
     border-radius: 50%
 }
 
@@ -659,7 +688,7 @@ table.table td h2 span {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .custom_radio input {
@@ -781,7 +810,7 @@ table.table td h2 span {
 }
 
 .actions a:hover {
-    background-color: #3d5ee1 !important;
+    background-color:  var(--primary-color) !important;
     color: #fff !important
 }
 
@@ -1099,7 +1128,7 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .text-primary, .dropdown-menu > li > a.text-primary {
-    color: #3d5ee1 !important
+    color:  var(--primary-color) !important
 }
 
 .text-success, .dropdown-menu > li > a.text-success {
@@ -1127,8 +1156,8 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .btn-primary {
-    background-color: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background-color:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .btn-primary-save-bg {
@@ -1136,8 +1165,8 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .btn-primary-save-bg:hover {
-    background-color: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background-color:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary.active, .btn-primary:active, .open > .dropdown-toggle.btn-primary {
@@ -1161,8 +1190,8 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1;
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color);
     color: #fff
 }
 
@@ -1304,8 +1333,8 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .download-grp .btn-outline-primary {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1;
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color);
     color: #fff
 }
 
@@ -1324,14 +1353,14 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .btn-outline-gray.active {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1;
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color);
     color: #fff
 }
 
 .btn-outline-primary {
-    color: #3d5ee1;
-    border-color: #3d5ee1
+    color:  var(--primary-color);
+    border-color:  var(--primary-color)
 }
 
 .btn-outline-primary:hover, .btn-outline-gray:hover {
@@ -1345,13 +1374,13 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .btn-outline-primary.disabled, .btn-outline-primary:disabled {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     background-color: transparent
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active, .show > .btn-outline-primary.dropdown-toggle {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color)
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-primary.dropdown-toggle:focus {
@@ -1484,16 +1513,16 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color)
 }
 
 .pagination > li > a, .pagination > li > span {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .page-link:hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .page-link:focus {
@@ -1501,8 +1530,8 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .page-item.active .page-link {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color)
 }
 
 .dropdown-menu {
@@ -1514,7 +1543,7 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .dropdown-item.active, .dropdown-item:active {
-    background-color: #3d5ee1
+    background-color:  var(--primary-color)
 }
 
 .navbar-nav .open .dropdown-menu {
@@ -1579,7 +1608,7 @@ a.bg-danger:focus, a.bg-danger:hover, button.bg-danger:focus, button.bg-danger:h
 }
 
 .bootstrap-datetimepicker-widget table td.active, .bootstrap-datetimepicker-widget table td.active:hover {
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     text-shadow: unset
 }
 
@@ -1726,8 +1755,8 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 
 .nav-tabs.nav-tabs-solid > .active > a, .nav-tabs.nav-tabs-solid > .active > a:hover, .nav-tabs.nav-tabs-solid > .active > a:focus {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1;
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color);
     color: #fff
 }
 
@@ -1763,8 +1792,8 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 
 .nav-tabs.nav-tabs-solid > li > a.active, .nav-tabs.nav-tabs-solid > li > a.active:hover, .nav-tabs.nav-tabs-solid > li > a.active:focus {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1;
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color);
     color: #fff
 }
 
@@ -1818,7 +1847,7 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 
 .nav-tabs.nav-tabs-top > li > a.active, .nav-tabs.nav-tabs-top > li > a.active:hover, .nav-tabs.nav-tabs-top > li > a.active:focus {
-    border-top-color: #3d5ee1
+    border-top-color:  var(--primary-color)
 }
 
 .nav-tabs.nav-tabs-bottom > li {
@@ -1828,7 +1857,7 @@ div.dataTables_wrapper div.dataTables_length select {
 .nav-tabs.nav-tabs-bottom > li > a.active, .nav-tabs.nav-tabs-bottom > li > a.active:hover, .nav-tabs.nav-tabs-bottom > li > a.active:focus {
     border-bottom-width: 2px;
     border-color: transparent;
-    border-bottom-color: #3d5ee1;
+    border-bottom-color:  var(--primary-color);
     background-color: transparent;
     transition: none 0s ease 0s;
     -moz-transition: none 0s ease 0s;
@@ -1945,7 +1974,7 @@ div.dataTables_wrapper div.dataTables_length select {
 .avatar-title {
     width: 100%;
     height: 100%;
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     color: #fff;
     display: flex;
     align-items: center;
@@ -2190,6 +2219,11 @@ div.dataTables_wrapper div.dataTables_length select {
     display: inline-block;
     line-height: 60px
 }
+.header .header-left .logo h2 {
+    color:  var(--primary-color);
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: revert-layer;
+}
 
 .header .header-left .logo img {
     margin-top: 3px;
@@ -2289,7 +2323,7 @@ div.dataTables_wrapper div.dataTables_length select {
     line-height: 1.2;
     font-size: 12px;
     font-weight: 500;
-    color: #3d5ee1 !important
+    color:  var(--primary-color) !important
 }
 
 .user-img .user-text h6 {
@@ -2346,11 +2380,11 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 
 .user-menu .dropdown-menu .dropdown-item:hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .header .dropdown-menu > li > a:focus, .header .dropdown-menu > li > a:hover {
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     color: #fff
 }
 
@@ -2363,14 +2397,14 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 
 .header .dropdown-menu > li > a i {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     margin-right: 10px;
     text-align: center;
     width: 18px
 }
 
 .header .user-menu .dropdown-menu > li > a i {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     font-size: 16px;
     margin-right: 10px;
     min-width: 18px;
@@ -2500,7 +2534,7 @@ html.menu-opened {
 .user-menu.nav .header-nav-list {
     width: 40px;
     height: 40px;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     border-radius: 50px;
     padding: 0;
     display: -webkit-box;
@@ -2592,13 +2626,13 @@ footer p {
 
 .sidebar-menu li a:hover {
     /*color: #fff;*/
-    /*background: #3d5ee1;*/
+    /*background:  var(--primary-color);*/
     border-radius: 6px
 }
 
 .sidebar-menu > ul > li:not(.active) > a:hover {
     /*background-color: #fff;*/
-    color: #3d5ee1;
+    color:  var(--primary-color);
     margin: 0 -15px;
     padding-left: 30px
 }
@@ -2633,7 +2667,7 @@ tbody tr:nth-child(odd) {
     position: absolute;
     left: 10px;
     top: 0;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     -webkit-transition: all .3s;
     -ms-transition: all .3s;
     transition: all .2s;
@@ -2692,7 +2726,7 @@ tbody tr:nth-child(odd) {
 
 .sidebar-menu ul ul a.active {
     color: #fff;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     border-radius: 6px
 }
 
@@ -3091,7 +3125,7 @@ tbody tr:nth-child(odd) {
 }
 
 .social-login > a:hover {
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     color: #fff
 }
 
@@ -3150,8 +3184,8 @@ tbody tr:nth-child(odd) {
 }
 
 .btn-primary.primary-reset:hover {
-    background-color: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background-color:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .profile-views {
@@ -3229,7 +3263,7 @@ tbody tr:nth-child(odd) {
 }
 
 .user-menu.nav > li > a .badge {
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     display: block;
     font-size: 10px;
     font-weight: 700;
@@ -3339,12 +3373,44 @@ tbody tr:nth-child(odd) {
 }
 
 .bg-comman .db-icon {
-    background-color: #edf4ff;
+    background-color: var(--secondary-color-2);
+    /*background-color: #dddcdd;*/
     border-radius: 8px
 }
 .bBcW{
-    background-color: rgba(0,119,246,0.15);
+    background-color: var(--secondary-color);
     color: #000
+}
+.v-toolbar.bg-primary{
+    background: var(--primary-color) !important;
+}
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+.b-ps {
+    top:-50px;
+    margin:8px;
+}
+.w-30 {
+    width: 70px !important;
+}
+.top-min20{
+    top: -20px !important;
+}
+.disable-user-select{
+    -webkit-user-select: none;
+    /*-khtml-user-select: none;*/
+    -moz-user-select: none;
+    -ms-user-select: none;
+    /*-o-user-select: none;*/
+    user-select: none;
+}
+.vcard.v-card{
+    background: var(--secondary-color);
+    border: var(--secondary-color-2);
+}
+.border-secondary-color-2{
+    border: 1px solid var(--secondary-color-2) !important;
 }
 .db-info h3 {
     font-size: 22px;
@@ -3395,7 +3461,7 @@ tbody tr:nth-child(odd) {
     width: 13px;
     height: 13px;
     border-radius: 50%;
-    background-color: #3d5ee1
+    background-color:  var(--primary-color)
 }
 
 .activity-feed .feed-item:after {
@@ -3604,7 +3670,7 @@ tbody tr:nth-child(odd) {
 }
 
 .circle-blue {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .circle-green {
@@ -3776,9 +3842,26 @@ tbody tr:nth-child(odd) {
 .fc .fc-button-group>.fc-button {
     text-transform: capitalize;
     font-weight: 600;
-    border-radius: 49px !important;
-    background: #3d5ee1;
-    border: none;
+    border-radius: 50px !important;
+    background:  var(--white-color);
+    border: 1px solid var(--primary-color);
+    color: black;
+}
+.fc .fc-button .fc-icon{
+    left: -2px;
+}
+.fc .fc-button-group>.fc-next-button{
+    width: 40px;
+    height: 40px;
+    border-radius: 50px !important;
+    border: 1px solid var(--primary-color);
+}
+
+.fc .fc-button-group>.fc-prev-button{
+    width: 40px;
+    height: 40px;
+    border-radius: 50px !important;
+    border: 1px solid var(--primary-color);
 }
 .fc-toolbar.fc-header-toolbar {
     margin-bottom: 1.5rem
@@ -3791,7 +3874,7 @@ tbody tr:nth-child(odd) {
 .fc-toolbar h2 {
     font-size: 18px;
     font-weight: 600;
-    font-family: roboto, sans-serif;
+    font-family: 'Roboto', sans-serif;
     line-height: 30px;
     text-transform: uppercase
 }
@@ -3850,7 +3933,7 @@ tbody tr:nth-child(odd) {
 }
 
 .fc-state-down, .fc-state-active, .fc-state-disabled {
-    background-color: #3d5ee1 !important;
+    background-color:  var(--primary-color) !important;
     color: #fff !important;
     text-shadow: none !important
 }
@@ -3873,7 +3956,9 @@ tbody tr:nth-child(odd) {
     padding: 5px;
     text-align: center
 }
-
+.fc-day-today .fc-daygrid-day-number {
+background: #00000040 !important;
+}
 .fc-basic-view td.fc-week-number span {
     padding-right: 8px;
     font-weight: 700;
@@ -3927,7 +4012,7 @@ tbody tr:nth-child(odd) {
 }
 
 .mail-list > li.active > a {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     font-weight: 700
 }
 
@@ -4068,7 +4153,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .error-box h1 {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     font-size: 10em
 }
 
@@ -4214,7 +4299,7 @@ table.table-inbox tbody tr.checked {
 .profile-edit-icon {
     width: 34px;
     height: 34px;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     position: absolute;
     border-radius: 50px;
     bottom: 0;
@@ -4298,8 +4383,8 @@ table.table-inbox tbody tr.checked {
 }
 
 .follow-btn-group .follow-btns {
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1;
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color);
     margin-right: 15px
 }
 
@@ -4314,8 +4399,8 @@ table.table-inbox tbody tr.checked {
 }
 
 .follow-btn-group .message-btns:hover {
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .personal-activity {
@@ -4344,7 +4429,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .personal-icons i {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .student-personals-grp .card {
@@ -4413,7 +4498,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .bg-photoshop {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .bg-editor {
@@ -4462,8 +4547,8 @@ table.table-inbox tbody tr.checked {
 .student-submit .btn-primary {
     min-width: 160px;
     border-radius: 10px;
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .student-submit .btn-primary:hover {
@@ -4714,8 +4799,8 @@ table.table-inbox tbody tr.checked {
 }
 
 .lesson .btn-info {
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .lesson .btn-info:hover {
@@ -4748,7 +4833,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .lesson .lesson-confirm a {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     font-size: 14px
 }
 
@@ -4913,14 +4998,14 @@ table.table-inbox tbody tr.checked {
 .calendar-box:before {
     content: "";
     position: absolute;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     width: 4px;
     height: 100%;
     border-radius: 25px
 }
 
 .normal-bg:before {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .break-bg:before {
@@ -5062,7 +5147,7 @@ table.table-inbox tbody tr.checked {
 
 .steps-history li {
     margin-bottom: 10px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     font-weight: 500
 }
 
@@ -5228,14 +5313,14 @@ table.table-inbox tbody tr.checked {
 }
 
 .skip-group .skip-btn:hover {
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1;
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color);
     color: #fff
 }
 
 .skip-group .continue-btn {
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1;
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color);
     color: #fff
 }
 
@@ -5246,7 +5331,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .lesson-view-all a {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     font-weight: 500;
     font-size: 14px
 }
@@ -5424,7 +5509,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .settings-menu ul li a.active {
-    color: #3d5ee1 !important;
+    color:  var(--primary-color) !important;
     border: 0
 }
 
@@ -5536,7 +5621,7 @@ table.table-inbox tbody tr.checked {
 
 .invoice-item .customer-text a {
     font-size: 14px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     margin-left: 12px
 }
 
@@ -5602,7 +5687,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoices-links.active {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .invoices-links .feather {
@@ -5909,7 +5994,7 @@ table.table-inbox tbody tr.checked {
 .checkbox-title {
     font-weight: 600;
     font-size: 16px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     margin-bottom: 14px
 }
 
@@ -5935,8 +6020,8 @@ table.table-inbox tbody tr.checked {
 }
 
 .custom_check input:checked ~ .checkmark {
-    background-color: #3d5ee1;
-    border-color: #3d5ee1
+    background-color:  var(--primary-color);
+    border-color:  var(--primary-color)
 }
 
 .custom_check .checkmark {
@@ -5977,7 +6062,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .selectBox p .select-icon {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     width: 20px;
     height: 20px
 }
@@ -5988,9 +6073,9 @@ table.table-inbox tbody tr.checked {
 
 .report-btn .btn {
     font-weight: 600;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     background: #fff;
-    border: 2px solid #3d5ee1;
+    border: 2px solid  var(--primary-color);
     border-radius: 8px;
     width: 100%;
     padding: 11px 0
@@ -6040,12 +6125,12 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoices-tabs ul li a:hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .invoices-tabs ul li a.active {
-    color: #3d5ee1;
-    border-bottom: 2px solid #3d5ee1
+    color:  var(--primary-color);
+    border-bottom: 2px solid  var(--primary-color)
 }
 
 .invoices-settings-btn {
@@ -6061,7 +6146,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoices-settings-icon {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     margin-right: 20px
 }
 
@@ -6080,8 +6165,8 @@ table.table-inbox tbody tr.checked {
     color: #fff;
     padding: 12px 0;
     min-width: 167px;
-    background: #3d5ee1;
-    border: 1px solid #3d5ee1;
+    background:  var(--primary-color);
+    border: 1px solid  var(--primary-color);
     border-radius: 6px;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -6130,7 +6215,7 @@ table.table-inbox tbody tr.checked {
 .inovices-widget-header .inovices-amount {
     font-weight: 600;
     font-size: 24px;
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .inovices-all {
@@ -6250,11 +6335,11 @@ table.table-inbox tbody tr.checked {
 .invoice-load-btn .btn {
     font-weight: 700;
     font-size: 16px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     min-width: 170px;
     padding: 12px 15px;
     background: #fff;
-    border: 2px solid #3d5ee1;
+    border: 2px solid  var(--primary-color);
     border-radius: 6px;
     display: inline-flex;
     justify-content: center;
@@ -6274,7 +6359,7 @@ table.table-inbox tbody tr.checked {
     margin-right: 8px;
     vertical-align: 0;
     border: 3px solid #3e45eb7d;
-    border-right-color: #3d5ee1;
+    border-right-color:  var(--primary-color);
     border-radius: 50%;
     -webkit-animation: .75s linear infinite spinner-border;
     animation: .75s linear infinite spinner-border
@@ -6293,7 +6378,7 @@ table.table-inbox tbody tr.checked {
 
 .invoices-page-header .invoices-breadcrumb-item a {
     font-weight: 600;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -6315,7 +6400,7 @@ table.table-inbox tbody tr.checked {
     width: 24px;
     height: 24px;
     margin-right: 10px;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -6343,7 +6428,7 @@ table.table-inbox tbody tr.checked {
 
 .invoices-create-btn .invoices-preview-link {
     font-weight: 600;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     margin-right: 30px
 }
 
@@ -6352,7 +6437,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoices-create-btn .delete-invoice-btn {
-    background: #3d5ee1;
+    background:  var(--primary-color);
     margin-right: 10px
 }
 
@@ -6361,7 +6446,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoices-create-btn .save-invoice-btn {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .invoices-create-btn .save-invoice-btn:hover {
@@ -6385,7 +6470,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoices-form .multipleSelection .selectBox {
-    border: 2px solid #3d5ee1;
+    border: 2px solid  var(--primary-color);
     border-radius: 6px
 }
 
@@ -6424,7 +6509,7 @@ table.table-inbox tbody tr.checked {
 
 .invoice-inner-head span a {
     font-weight: 500;
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .invoice-inner-head span a:hover {
@@ -6454,7 +6539,7 @@ table.table-inbox tbody tr.checked {
 
 .invoice-inner-footer .form-control {
     position: absolute;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     background: 0 0;
     border: 0;
     display: inline-block;
@@ -6464,7 +6549,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoice-inner-footer .form-control::placeholder {
-    color: #3d5ee1;
+    color:  var(--primary-color);
     font-weight: 500
 }
 
@@ -6497,7 +6582,7 @@ table.table-inbox tbody tr.checked {
 .invoice-add-table h4 {
     font-weight: 600;
     font-size: 20px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     margin-bottom: 30px
 }
 
@@ -6536,7 +6621,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoice-add-table .add-btn {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .invoice-add-table .remove-btn {
@@ -6578,7 +6663,7 @@ table.table-inbox tbody tr.checked {
     width: 266px;
     border-radius: 4px;
     padding: 15px;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     display: flex;
     justify-content: space-between;
     align-items: center
@@ -6822,7 +6907,7 @@ table.table-inbox tbody tr.checked {
 .invoice-total-box .add-links-bg {
     background: 0 0;
     padding: 0;
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .invoice-total-box .service-amount {
@@ -6848,7 +6933,7 @@ table.table-inbox tbody tr.checked {
 
 .invoice-total-box .add-links-one {
     font-weight: 500;
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .invoice-total-box .service-trash-one {
@@ -6868,7 +6953,7 @@ table.table-inbox tbody tr.checked {
 .invoice-total-footer h4 {
     font-size: 20px;
     margin-bottom: 0;
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .invoice-total-footer h4 span {
@@ -6989,7 +7074,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoice-issues-box {
-    background: #3d5ee1;
+    background:  var(--primary-color);
     border-radius: 10px;
     text-align: center;
     padding: 10px;
@@ -7053,7 +7138,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoice-item-bg {
-    background: #3d5ee1;
+    background:  var(--primary-color);
     border-radius: 10px;
     margin-top: 30px;
     margin-bottom: 30px
@@ -7171,7 +7256,7 @@ table.table-inbox tbody tr.checked {
 
 .invoices-upload-btn .upload {
     position: absolute;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     border-radius: 4px;
     right: 6px;
     top: 8px;
@@ -7193,7 +7278,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .invoice-setting-btn .cancel-btn {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .invoice-setting-btn .cancel-btn:hover {
@@ -7363,8 +7448,8 @@ table.table-inbox tbody tr.checked {
 }
 
 .paid-continue-btn {
-    background-color: #3d5ee1;
-    border: 1px solid #3d5ee1;
+    background-color:  var(--primary-color);
+    border: 1px solid  var(--primary-color);
     border-radius: 5px;
     color: #fff;
     display: block;
@@ -7376,15 +7461,15 @@ table.table-inbox tbody tr.checked {
 
 .paid-continue-btn:hover, .paid-continue-btn:focus, .paid-continue-btn:active {
     background-color: #fff;
-    border: 1px solid #3d5ee1;
-    color: #3d5ee1
+    border: 1px solid  var(--primary-color);
+    color:  var(--primary-color)
 }
 
 .paid-cancel-btn {
     background-color: #fff;
-    border: 1px solid #3d5ee1;
+    border: 1px solid  var(--primary-color);
     border-radius: 5px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     display: block;
     font-size: 18px;
     font-weight: 600;
@@ -7466,7 +7551,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .bank-details-btn .bank-cancel-btn {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .bank-details-btn .bank-cancel-btn:hover {
@@ -7474,16 +7559,16 @@ table.table-inbox tbody tr.checked {
 }
 
 .bank-details-btn .bank-save-btn {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .bank-details-btn .bank-save-btn:hover {
-    background: #3d5ee1
+    background:  var(--primary-color)
 }
 
 .check:checked + .checktoggle {
-    background-color: #3d5ee1;
-    border: 1px solid #3d5ee1
+    background-color:  var(--primary-color);
+    border: 1px solid  var(--primary-color)
 }
 
 .invoice-total-inner .checktoggle {
@@ -7528,7 +7613,7 @@ table.table-inbox tbody tr.checked {
 .settings-form .bootstrap-tagsinput .tag {
     margin-right: 5px;
     color: #fff;
-    background: #3d5ee1 !important;
+    background:  var(--primary-color) !important;
     border-radius: 0;
     font-size: 15px;
     font-weight: 500;
@@ -7623,13 +7708,13 @@ table.table-inbox tbody tr.checked {
 .back-btn {
     font-weight: 600;
     font-size: 16px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     display: inline-block;
     margin-bottom: 18px
 }
 
 .post-author span:nth-child(1):hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .post-author a {
@@ -7688,7 +7773,7 @@ table.table-inbox tbody tr.checked {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: #3d5ee1;
+    background:  var(--primary-color);
     border-radius: 6px;
     min-width: 92px;
     padding: 6px 10px;
@@ -7711,7 +7796,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .post-list .post-author a span:hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .edit-delete-btn a {
@@ -7784,15 +7869,15 @@ table.table-inbox tbody tr.checked {
 
 .list-links li.active a {
     background: #fff;
-    border: 1px solid #3d5ee1;
-    color: #3d5ee1
+    border: 1px solid  var(--primary-color);
+    color:  var(--primary-color)
 }
 
 .user-menu.nav > li.view-btn > a {
     color: #fff;
     padding: 10px 15px;
     border-radius: 6px;
-    background-color: #3d5ee1
+    background-color:  var(--primary-color)
 }
 
 .user-menu.nav > li.view-btn > a:hover {
@@ -8132,9 +8217,9 @@ table.table-inbox tbody tr.checked {
 }
 
 .social-share > li > a {
-    border: 1px solid #3d5ee1;
+    border: 1px solid  var(--primary-color);
     border-radius: 6px;
-    color: #3d5ee1;
+    color:  var(--primary-color);
     display: flex;
     display: -ms-flexbox;
     align-items: center;
@@ -8145,7 +8230,7 @@ table.table-inbox tbody tr.checked {
 }
 
 .social-share > li > a:hover {
-    background-color: #3d5ee1;
+    background-color:  var(--primary-color);
     color: #fff;
     border-color: #fff
 }
@@ -8201,11 +8286,11 @@ table.table-inbox tbody tr.checked {
 }
 
 a.blog-author-name:hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 a.comment-btn:hover {
-    color: #3d5ee1
+    color:  var(--primary-color)
 }
 
 .save-btn {
@@ -9687,6 +9772,9 @@ body[data-layout-mode=dark] .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-o
 }
 
 @media (min-width: 992px) {
+    .mini-sidebar li.active > a::before{
+        width: 55px;
+    }
     #toggle_btn {
         align-items: center;
         color: #fff;
@@ -9695,7 +9783,7 @@ body[data-layout-mode=dark] .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-o
         font-size: 18px;
         height: 40px;
         width: 40px;
-        background: #3d5ee1;
+        background:  var(--primary-color);
         justify-content: center;
         padding: 0 12px;
         border-radius: 10px;
@@ -9975,7 +10063,7 @@ body[data-layout-mode=dark] .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-o
     }
 
     .user-menu.nav > li > a .badge {
-        background-color: #3d5ee1;
+        background-color:  var(--primary-color);
         color: #fff
     }
 
@@ -11206,6 +11294,9 @@ transform: rotate(90deg);
     width: 30px;
 }
 
+.v-input__details:not(.v-form .v-input__details){
+    display: none !important;
+}
 @media (max-width: 900px) {
     #calendar{
         max-width: 600px;
@@ -11215,11 +11306,10 @@ transform: rotate(90deg);
 /*        margin-bottom: 1.5em;*/
 /*        font-size: 10px;*/
 /*    }*/
-/*    .fc .fc-toolbar-title {*/
-/*        font-size: 1.5em;*/
-/*        margin-top: 50px;*/
-/*        white-space: nowrap;*/
-/*    }*/
+    .fc .fc-toolbar-title {
+        font-size: 2.75em !important;
+        white-space: nowrap;
+    }
 /*    .fc-direction-ltr .fc-daygrid-event.fc-event-end, .fc-direction-rtl .fc-daygrid-event.fc-event-start {*/
 /*        margin-right: 2px;*/
 /*        height: 30px;*/

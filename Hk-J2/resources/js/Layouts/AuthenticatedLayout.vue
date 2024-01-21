@@ -5,24 +5,28 @@ import FormatTime from "@/Components/FormatTime.vue";
 import {useToast} from "vue-toastification";
 import ShopSchedule from "@/Components/ShopSchedule.vue";
 import {scheduleDialog} from "@/Pages/Ref/scheduleDialog";
+
 const showingNavigationDropdown = ref(false);
 const toast = useToast();
 const fullName = ref(usePage().props.auth.user.name);
 const initials = ref('');
 
 const openScheduleDialog = () => {
-    return  scheduleDialog.value = true
+    return scheduleDialog.value = true
 
 }
+
 function isMobile() {
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         return true
     } else {
         return false
     }
 }
+
 const t = isMobile()
 console.log(t)
+
 function setInitials() {
     const names = fullName.value.split(' ');
     initials.value = names.map(name => name[0]).join('').toUpperCase();
@@ -78,6 +82,21 @@ const submitSchedule = () => {
 // function error(mesg) {
 //     toastr.error(mesg)
 // }
+
+// const bottomBar = ref();
+// usePage().component.includes('Calendar')
+// switch (bottomBar.value) {
+//     case 0: return 'red-accent-1ss';
+//     case 1: return 'orange-darken-4s';
+//     default: return 'deep-orange-lighten-2s';
+// }
+const color = computed(() => {
+    switch (bottomBar.value) {
+        case 0: return 'red-accent-1';
+        case 1: return 'orange-darken-4';
+        default: return 'deep-orange-lighten-2';
+    }
+});
 </script>
 <template>
     <!--    <ExpireAlert />-->
@@ -96,16 +115,16 @@ const submitSchedule = () => {
                 <div class="header-left">
                     <Link v-if="$page.props.auth.user"
                           :href="route('dashboard')" class="logo">
-<div class="logo">
-
-    <img src="/images/logo/fulllogo.png" alt="Logo" class="logo"  >
-</div>
+                        <div class="logo mt-4">
+<h2>CutCal</h2>
+<!--                            <img src="/images/logo/fulllogo.png" alt="Logo" class="logo">-->
+                        </div>
                         <!--                        <h6><img src="/images/logo/fulllogo.png" alt="Logo" class="logo"  ></h6>-->
                     </Link>
-                                        <a v-if="$page.props.auth.user"
-                                           :href="route('dashboard')" class="logo logo-small">
-                                            <img src="/images/logo/fulllogo.png" alt="Logo" width="30" height="30">
-                                        </a>
+<!--                    <a v-if="$page.props.auth.user"-->
+<!--                       :href="route('dashboard')" class="logo logo-small">-->
+<!--                        <img src="/images/logo/fulllogo.png" alt="Logo" width="30" height="30">-->
+<!--                    </a>-->
                 </div>
                 <div class="menu-toggle">
                     <a href="javascript:void(0);" id="toggle_btn">
@@ -151,7 +170,8 @@ const submitSchedule = () => {
                                         <a href="#">
                                             <div class="media d-flex">
           <span class="avatar avatar-sm flex-shrink-0">
-            <img class="avatar-img rounded-circle" alt="User Image" src="https://i.postimg.cc/c1FQY4PG/icononly-nobuffer.png">
+            <img class="avatar-img rounded-circle" alt="User Image"
+                 src="https://i.postimg.cc/c1FQY4PG/icononly-nobuffer.png">
           </span>
                                                 <div class="media-body flex-grow-1">
                                                     <p class="noti-details">
@@ -174,7 +194,7 @@ const submitSchedule = () => {
                             </div>
 
                             <v-alert v-else
-                                     color="#2A3B4D"
+                                     color="#ff9900"
                                      theme="dark"
                                      prominent
                             >
@@ -196,12 +216,12 @@ const submitSchedule = () => {
                     <!--&lt;!&ndash;                            <img src="assets/img/icons/header-icon-04.svg" alt="">&ndash;&gt;-->
                     <!--                        </a>-->
                     <!--                    </li>-->
-<!--                    <a href="#" @click="openScheduleDialog"-->
-<!--                       class="dropdown-toggle nav-link header-nav-list " data-bs-toggle="dropdown">-->
-<!--                        &lt;!&ndash;                            <img src="assets/img/icons/header-icon-05.svg" alt="">&ndash;&gt;-->
-<!--                        &lt;!&ndash;                            <span class="notification-badge">2</span>&ndash;&gt;-->
-<!--                        <i class="feather-calendar"/>-->
-<!--                    </a>-->
+                    <!--                    <a href="#" @click="openScheduleDialog"-->
+                    <!--                       class="dropdown-toggle nav-link header-nav-list " data-bs-toggle="dropdown">-->
+                    <!--                        &lt;!&ndash;                            <img src="assets/img/icons/header-icon-05.svg" alt="">&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            <span class="notification-badge">2</span>&ndash;&gt;-->
+                    <!--                        <i class="feather-calendar"/>-->
+                    <!--                    </a>-->
                     <li class="nav-item dropdown has-arrow new-user-menus">
                         <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                         <span class="user-img">
@@ -343,13 +363,13 @@ const submitSchedule = () => {
             </div>
 
             <div v-if="$page.props.auth.userRole.includes('schedule-edit')">
-                        <v-dialog  v-model="scheduleDialog"
-                                   fullscreen
-                                   :scrim="false"
+                <v-dialog v-model="scheduleDialog"
+                          fullscreen
+                          :scrim="false"
 
-                                   transition="dialog-bottom-transition">
-           <ShopSchedule @close-dialog="scheduleDialog = false" :include-btn="true"/>
-                        </v-dialog>
+                          transition="dialog-bottom-transition">
+                    <ShopSchedule @close-dialog="scheduleDialog = false" :include-btn="true"/>
+                </v-dialog>
             </div>
             <div class="page-wrapper">
                 <div class="content container-fluid">
@@ -422,11 +442,47 @@ const submitSchedule = () => {
                     <!--                </div>-->
                     <!--            </div>-->
                 </div>
+
                 <footer>
                     <p>Copyright © {{ new Date().getFullYear() }} Jhdevelopers - <a href="#">support</a></p>
                 </footer>
+
             </div>
         </div>
+        <v-layout class="overflow-visible h-auto">
+            <v-bottom-navigation
+                v-model="bottomBar"
+                :bg-color="color"
+                mode="shift"
+            >
+                <Link :href="route('dashboard')">
+                <v-btn @click="bottomBar.value = 1">
+                    <v-icon>mdi-grid</v-icon>
+
+                    <span>Home</span>
+                </v-btn>
+                </Link>
+                <Link :href="route('calendar.overview')">
+                <v-btn @click="bottomBar.value = 1">
+                    <v-icon>mdi-calendar</v-icon>
+
+                    <span>Calendar</span>
+                </v-btn>
+                </Link>
+                <Link :href="route('account.overview')">
+                <v-btn>
+                    <v-icon>mdi-users</v-icon>
+
+                    <span>Accounts</span>
+                </v-btn>
+                </Link>
+                <!--                        <v-btn>-->
+                <!--                            <v-icon>mdi-image</v-icon>-->
+
+                <!--                            <span>Image</span>-->
+                <!--                        </v-btn>-->
+            </v-bottom-navigation>
+        </v-layout>
     </div>
 </template>
 <style scoped>
