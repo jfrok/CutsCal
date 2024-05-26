@@ -33,6 +33,8 @@ class RoleController extends Controller
     public function index(Request $request)
     {
 //        $user = User::find(Auth::id());
+        $rolesUsers = [];
+
         if (Auth::id() == 20 || Auth::user()->hasPermissionTo('role-access-all')) {
 //            $roles = Role::orderBy('id')->paginate(10);
             $roles = DB::table('roles')
@@ -40,6 +42,12 @@ class RoleController extends Controller
                 ->select('roles.*', 'users.name as user_name')
                 ->orderBy('roles.id')
                 ->paginate(10);
+            $rolesData = Role::all();
+
+            foreach ($rolesData as $role) {
+                $rolesUsers[] = ['role' => $role->name, 'users' => User::role($role->name)->get()];
+            }
+
         } else {
             $roles = DB::table('roles')
                 ->join('users', 'roles.userId', '=', 'users.id')
@@ -51,15 +59,14 @@ class RoleController extends Controller
 
 //        $test = User::role('writer')->get();
 //        dd(\App\Models\Role::getRoleUsers('founder'));
-        return inertia('Roles/Overview', ['roles' => $roles])
+        return inertia('Roles/Overview', ['roles' => $roles, 'rolesUsers' => $rolesUsers])
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     public function getRoleUsers($roleName)
     {
         $users = User::role($roleName)->get();
-//dd($users);
-        return $users;
+        return back()->with($users);
     }
 
     /**
@@ -92,6 +99,7 @@ class RoleController extends Controller
         ]);
         $role = Role::create(['name' => User::findTheMainUser()->id != 20 ? User::findTheMainUser()->id . '.' . $request->input('name') : $request->input('name'),
             'userId' => User::findTheMainUser()->id]);
+
         if ($role){
             $role->syncPermissions($request->input('permission'));
             return redirect()->route('roles.index')

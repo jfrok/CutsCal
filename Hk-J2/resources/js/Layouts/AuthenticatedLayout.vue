@@ -463,7 +463,7 @@ const color = computed(() => {
                     <span>Calendar</span>
                 </v-btn>
                 </Link>
-                <Link :href="route('account.overview')">
+                <Link v-if="$page.props.auth.userRole.includes('user-list')" :href="route('account.overview')">
                 <v-btn>
                     <v-icon>mdi-account</v-icon>
 

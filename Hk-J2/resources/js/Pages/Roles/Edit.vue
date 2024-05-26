@@ -7,17 +7,38 @@
                     <h2>{{ form.name }}</h2>
                     <form @submit.prevent="submitForm">
                         <v-text-field label="Role Name" v-model="form.name"/>
-                        <div>
-                            <div v-for="permission in permissions" :key="permission.id">
+                        <div class="mt-10">
+                            <v-row>
+
+                                <v-col cols="12" md="4" v-for="(rolesLables, index) in rolesFilter" :key="index">
+                                    <h4 class="text-capitalize">
+                                        {{rolesLables}}
+                                    </h4>
+                                <template v-for="(permission, index) in permissions">
+
+
+                                <template v-if="rolesLables == permission.name.split('-')[0]">
+<!--                                <template v-if="index === permissions.findIndex(p => p.name.startsWith('client'))">-->
+<!--                                    <div class="d-flex justify-center">-->
+
+<!--                                    </div>-->
+<!--                                </template>-->
+                                    <div>
                                 <v-checkbox
                                     :value="permission.id"
                                     v-model="form.permission"
                                     :label="permission.name"
                                 />
-                            </div>
+                                    </div>
+                            </template>
+                            </template>
+                                </v-col>
+
+                            </v-row>
                         </div>
-<!--                        <v-btn type="submit" color="primary">Apply</v-btn>-->
+                        <!-- <v-btn type="submit" color="primary">Apply</v-btn> -->
                     </form>
+
                 </div>
             </div>
         </div>
@@ -37,6 +58,19 @@ export default {
         rolePermissions: Object,
         role: Array,
         permissions: Array,
+    },
+    computed:{
+        rolesFilter() {
+            let labels = [];
+            this.permissions.forEach(p => {
+                let name = p.name.split('-')[0];
+                labels.push(name);
+            });
+            labels = [...new Set(labels)];
+            return labels;
+        }
+
+
     },
     setup(props) {
         const form = useForm({

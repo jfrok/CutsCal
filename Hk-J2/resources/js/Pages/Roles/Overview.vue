@@ -1,12 +1,10 @@
 <template>
     <AuthenticatedLayout>
         <Head title="Roles"/>
-
         <div class="row">
         <div class="col-sm-12" >
             <div class="card card-table border-r-20 border-secondary-color-2 bg-official-secondary">
                 <div class="card-body">
-
                     <div class="page-header">
                         <div class="row align-items-center">
                             <div class="col">
@@ -19,68 +17,44 @@
                         </div>
                     </div>
 
-<!--                    <div class="table-responsive">-->
-<!--                        <table-->
-<!--                            class="table border-0 star-student table-hover table-center mb-0 datatable table-striped">-->
-<!--                            <thead class="student-thread">-->
-<!--                            <tr>-->
-<!--                                <th>Name</th>-->
-<!--                                <th>Belong</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr v-for="role in roles.data" :key="role.id">-->
-<!--                                <td>-->
-<!--                                    &lt;!&ndash;<div style="padding: 20px 30px">&ndash;&gt;-->
-<!--                                    <Link :href="route('roles.show',role.id)">{{ role.name }}</Link>-->
-<!--                                    <a style="padding: 20px 60px"-->
-<!--                                       v-if="usePage().props.auth.userRole.includes('role-delete')" methods="delete"-->
-<!--                                       @click="roleDelete(role.id)"><i class="fas fa-minus-circle hover-effect"></i></a>-->
-<!--                                    &lt;!&ndash;</div>&ndash;&gt;-->
-<!--                                    &lt;!&ndash;                                    </h2>&ndash;&gt;-->
-<!--                                </td>-->
-<!--                                <td>-->
-<!--                                    <h2>{{role.user_name}}</h2>-->
-
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-
-<!--                        <h2>Tree View</h2>-->
-<!--                        <p>A tree view represents a hierarchical view of information, where each item can have a number of subitems.</p>-->
-<!--                        <p>Click on the arrow(s) to open or close the tree branches.</p>-->
-
-<!--                       <TreeView />-->
-
-                        <div class="text-subtitle-2 mb-2" v-if="roles.data.length > 0">
+                        <div class="text-subtitle-2 mb-2 w-100" v-if="roles.data.length > 0">
                             <div v-for="uniqueUserName in uniqueUserNames" :key="uniqueUserName">
                                <h4 class="p-10 mt-5"> {{ uniqueUserName }} </h4>
-
                                 <hr>
-                            <v-expansion-panels v-for="role in roles.data"
-                                                :key="role.id">
-                                    <v-expansion-panel  v-if="role.user_name === uniqueUserName"
-                                        :title="role.name"
-                                    >
-                                    <v-expansion-panel-text>
+                            <v-expansion-panels >
+                                    <v-expansion-panel v-for="role in roles.data"
+                                                       :key="role.id">
+                                        <v-expansion-panel-title>{{ role.name }}</v-expansion-panel-title>
+                                    <v-expansion-panel-text v-if="role.user_name === uniqueUserName">
                                         <v-row class="mt-5 mb-7" >
-                                            <v-btn block  variant="tonal" @click="fetchUsers(role.name)">Fetch Users</v-btn>
+                                            <v-col cols="12">
+                                            <div v-for="(roleHolders,index) in rolesUsers" :key="index" >
+                                                <template v-if="roleHolders.role == role.name">
+                                              <v-chip-group v-if="roleHolders.users.length > 0">
+                                                  <v-chip v-for="(user,index) in roleHolders.users" :key="index">
+                                                      {{user.name}}
+                                                  </v-chip>
+                                              </v-chip-group>
+                                                <div class="text-center h-1" v-if="roleHolders.users.length < 1">
+                                                    No users
+                                                </div>
+                                                </template>
 
-                                            <!--                                            <v-chip>-->
-<!--                                                user-->
-<!--                                            </v-chip>-->
-                                        <br>
+                                            </div>
+                                            </v-col>
+                                            <v-col cols="12">
+                                                <div class="align-center d-flex">
+                                                <div class="d-flex align-center justify-start w-100">
+                                                    <Link :href="route('roles.show', role.id)">View</Link>
+                                                </div> <div class="d-flex align-center justify-end w-100">
+                                                    <v-btn class=" hover-effect" rounded elevation="0" v-if="usePage().props.auth.userRole.includes('role-delete')" methods="delete" @click="roleDelete(role.id)">
+                                                        <i class="fas fa-minus-circle"></i>
+                                                    </v-btn>
+                                                </div>
+                                                </div>
+                                            </v-col>
                                         </v-row>
-                                        <Link :href="route('roles.show', role.id)">View</Link>
-                                        <a
-                                            style="padding: 20px 60px; float: right"
-                                            v-if="usePage().props.auth.userRole.includes('role-delete')"
-                                            methods="delete"
-                                            @click="roleDelete(role.id)"
-                                        >
-                                            <i class="fas fa-minus-circle hover-effect"></i>
-                                        </a>
+
                                     </v-expansion-panel-text>
                                 </v-expansion-panel>
                             </v-expansion-panels>
@@ -117,6 +91,7 @@ export default {
         AuthenticatedLayout
     },
     props: {
+        rolesUsers: Object,
         roles: Object
     },
     methods: {
@@ -146,6 +121,14 @@ export default {
             const usernames = this.roles.data.map((role) => role.user_name);
             return [...new Set(usernames)];
         },
+        rolesValidation(roleName) {
+            for (let role in this.rolesUsers) {
+                if (this.rolesUsers[role][roleName].users.length > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
 }

@@ -5,8 +5,8 @@ html {
 /*    display: none;*/
 /*}*/
 :root {
-    /*3d5ee1 0a53be --secondary-color FBFAFB EDEBEF*/
-    --primary-color: #ff9900;
+    /*3d5ee1 0a53be ff9900 --secondary-color FBFAFB EDEBEF*/
+    --primary-color: #3d5ee1;
     --secondary-color: #FBFAFB;
     --secondary-color-2:#EDEBEF;
     --white-color: #fff	;
@@ -81,7 +81,32 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
     -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
     box-shadow: 0 0 0 1000px #fff inset !important
 }
+.auth-img-background {
+    background-image: url("/images/logo/cutcal-login.png");
+    width: 100%;
+background-position: center;
+    height: 100vh;
+    object-fit: cover;
+}
+.auth-banner {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    /*border-radius: 0px 50% 50% 0px;*/
 
+}
+.auth-banner .auth-banner-image {
+    margin-left: auto;
+    right: -15%;
+    position: relative;
+    max-width: 540px;
+}
+@media(max-width: 1199.98px){
+    .auth-banner .auth-banner-image {
+
+        max-width: 440px;
+    }
+}
 .form-control {
     border: 1px solid #ddd;
     box-shadow: none;
@@ -112,7 +137,12 @@ a {
     color:  var(--primary-color);
     text-decoration: none
 }
-
+.input-auth .v-input__control{
+    width: 100%;
+    border: 1px solid #EDEBEF;
+    border-radius: 9px;
+    max-height: 300px;
+}
 input, button, a {
     transition: all .4s ease;
     -moz-transition: all .4s ease;
@@ -4186,9 +4216,8 @@ table.table-inbox tbody tr.checked {
 }
 
 .profile-header img {
-    height: auto;
-    max-width: 120px;
-    /*width: 120px;*/
+    height: 120px;
+    width: 120px;
     object-fit: cover !important;
 }
 
@@ -11129,7 +11158,7 @@ body[data-layout-mode=dark] .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-o
 @media (max-width: 500px) {
     .fc .fc-toolbar.fc-header-toolbar {
         margin-bottom: 1.5em;
-        font-size: 4px;
+        font-size: 9px;
     }
     body{
         overflow-y: visible;
@@ -11290,7 +11319,7 @@ transform: rotate(90deg);
 }
 
 .fc-header-toolbar .fc-toolbar .fc-toolbar-ltr .fc-toolbar-chunk{
-    font-size: 10px;
+    font-size: 14px;
     width: 30px;
 }
 
@@ -11307,7 +11336,7 @@ transform: rotate(90deg);
 /*        font-size: 10px;*/
 /*    }*/
     .fc .fc-toolbar-title {
-        font-size: 2.75em !important;
+        font-size: 1.2em !important;
         white-space: nowrap;
     }
 /*    .fc-direction-ltr .fc-daygrid-event.fc-event-end, .fc-direction-rtl .fc-daygrid-event.fc-event-start {*/

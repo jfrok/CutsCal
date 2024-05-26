@@ -1,43 +1,19 @@
-<script setup>
-import InputError from '@/Components/InputError.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import Checkbox from "@/Components/Checkbox.vue";
-
-const form = useForm({
-    name: '',
-    email: '',
-    lang: '',
-    password: '',
-    password_confirmation: '',
-    terms: false,
-});
-
-const submit = () => {
-    form.post(route('account.store'), {
-        // onFinish: () => alert('success'),
-    });
-};
-</script>
-<script>
-import GuestLayout from "@/Layouts/GuestLayout.vue";
-
-export default {
-    layout:GuestLayout,
-}
-</script>
-
 <template>
     <!--    <GuestLayout>-->
-    <Head title="Register" />
+    <Head title="Register"/>
 
-    <div class="main-wrapper login-body">
+    <!--    <div class="main-wrapper login-body">-->
 
-        <div class="login-wrapper">
+    <!--        <div class="login-wrapper">-->
 
-            <div class="container">
+    <!--            <div class="container">-->
+    <v-row class="pa-7 pa-md-0 ma-0 h-100" align="center" align-content="center">
+        <v-col cols="12" md="5" class="h-100 auth-banner auth-img-background fireaxered d-none d-md-flex">
+            <!--            <img src="/images/logo/cutcal-login.png" alt="Background Image" class="auth-banner-image align-self-center" />-->
+        </v-col>
+        <v-row justify="center" class="pa-md-10 pb-md-15">
 
+            <v-col cols="12" md="7" align-self="center" style="max-width: 500px;">
                 <v-alert
                     v-if="$page.props.ziggy.flash.error"
                     variant="outlined"
@@ -47,88 +23,104 @@ export default {
                 >
                     {{ $page.props.ziggy.flash.error }}
                 </v-alert>
-                <div class="loginbox">
-                    <div class="login-left">
-                        <img class="img-fluid" style="height: 680px" src="/images/logo/cutcal-login.png" alt="Logo">
-                    </div>
-                    <div class="login-right">
-                        <div class="login-right-wrap">
-                            <h1>Welcome to JfrO</h1>
-                            <!--                                <p class="account-subtitle">Need an account? <a href="register.html">Sign Up</a></p>-->
-                            <h2>Sign up</h2>
+                <!--                <div class="loginbox">-->
+                <!--                    <div class="login-left">-->
+                <!--                        <img class="img-fluid" style="height: 680px" src="/images/logo/cutcal-login.png" alt="Logo">-->
+                <!--                    </div>-->
+                <div class="login-right">
+                    <div class="login-right-wrap">
 
-                            <form @submit.prevent="submit">
-                                <div class="form-group">
-                                    <label>Username <span class="login-danger">*</span></label>
-                                    <TextInput
-                                        id="name"
-                                        type="text"
-                                        class="form-control"
-                                        v-model="form.name"
+                        <h1>Welcome to JfrO </h1>
+                        <!--                                <p class="account-subtitle">Need an account? <a href="register.html">Sign Up</a></p>-->
+                        <h2>Enter you'r E-malil to start</h2>
 
-                                        autofocus
-                                        autocomplete="name"
-                                    />
+<!--                        <v-form @submit.prevent="submit">-->
+                        <auth-otp v-if="step == 2"></auth-otp>
+                            <div class="form-group" v-if="step == 3">
+                                <label>Username <span class="login-danger">*</span></label>
+                                <v-text-field
+                                    id="name"
+                                    type="text"
+                                    variant="text"
+                                    class="input-auth"
+                                    v-model="form.name"
+                                    hide-details="auto"
+                                    :rules="config.validationRules.required"
+                                    autocomplete="name"
+                                />
 
-                                    <InputError class="mt-2" :message="form.errors.name" />
-                                    <span class="profile-views"><i class="fas fa-user-circle"></i></span>
-                                </div>
-                                <div class="form-group">
-                                    <label>Email <span class="login-danger">*</span></label>
-                                    <TextInput
-                                        id="email"
-                                        type="email"
-                                        class="form-control"
-                                        v-model="form.email"
+                                <InputError class="mt-2" :message="form.errors.name"/>
+                                <!--                                    <span class="profile-views"><i class="fas fa-user-circle"></i></span>-->
+                            </div>
+                            <div class="form-group" v-if="step == 1">
+                                <label>Email <span class="login-danger">*</span></label>
+                                <v-text-field
+                                    id="email"
+                                    type="email"
+                                    variant="text"
+                                    class="input-auth"
+                                    v-model="form.email"
+                                    hide-details="auto"
+                                    :rules="config.validationRules.email"
+                                    autocomplete="username"
+                                />
+                                <InputError class="mt-2" :message="form.errors.email"/>
+                                <!--                                    <span class="profile-views"><i class="fas fa-mail-bulk"></i></span>-->
+                            </div>
+                            <div class="form-group" v-if="step == 3">
+                                <label>Password <span class="login-danger">*</span></label>
+                                <!--                                        <input class="form-control pass-input" type="text">-->
+                                <v-text-field
+                                    id="password"
+                                    type="password"
+                                    variant="text"
+                                    class="input-auth"
+                                    v-model="form.password"
+                                    hide-details="auto"
+                                    :rules="config.validationRules.required"
 
-                                        autocomplete="username"
-                                    />
-                                    <InputError class="mt-2" :message="form.errors.email" />
-                                    <span class="profile-views"><i class="fas fa-mail-bulk"></i></span>
-                                </div>
-                                <div class="form-group">
-                                    <label>Password <span class="login-danger">*</span></label>
-                                    <!--                                        <input class="form-control pass-input" type="text">-->
-                                    <TextInput
-                                        id="password"
-                                        type="password"
-                                        class="form-control pass-input"
-                                        v-model="form.password"
+                                    autocomplete="new-password"/>
+                                <!--                                        <span class="profile-views feather-eye toggle-password"></span>-->
+                                <InputError class="mt-2" :message="form.errors.password"/>
+                                <!--                                    <span class="profile-views"><i class="fas fa-lock"></i></span>-->
+                            </div>
+                            <div class="form-group" v-if="step == 3">
+                                <label>Conform Password <span class="login-danger">*</span></label>
 
-                                        autocomplete="new-password"                                        />
-                                    <!--                                        <span class="profile-views feather-eye toggle-password"></span>-->
-                                    <InputError class="mt-2" :message="form.errors.password" />
-                                    <span class="profile-views"><i class="fas fa-lock"></i></span>
-                                </div>
-                                <div class="form-group">
-                                    <label>Conform Password <span class="login-danger">*</span></label>
+                                <v-text-field
+                                    id="password_confirmation"
+                                    type="password"
+                                    variant="text"
+                                    class="input-auth"
+                                    hide-details="auto"
+                                    v-model="form.password_confirmation"
+                                    :rules="config.validationRules.required"
 
-                                    <TextInput
-                                        id="password_confirmation"
-                                        type="password"
-                                        class="form-control pass-input"
-                                        v-model="form.password_confirmation"
-                                        autocomplete="new-password"
-                                    />
-                                    <span class="profile-views"><i class="fas fa-lock"></i></span>
-                                </div>
-                                <div>
-                                    <h7>By creating an account, you agree with our <a :href="route('PrivacyPolicy')" target="_blank">Privacy and Policy</a>.</h7>
-<!--                                <v-checkbox label="" aria-required="true"/>-->
-                                </div>
-                                <div class="forgotpass">
-                                    <Link
-                                        :href="route('login')"
-                                        class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                    >
-                                        Already registered?
-                                    </Link>
-                                    <!--                                        <a href="forgot-password.html">Forgot Password?</a>-->
-                                </div>
-                                <v-radio-group
-                                    v-model="form.lang"
-                                    column
+                                    autocomplete="new-password"
+                                />
+                                <!--                                    <span class="profile-views"><i class="fas fa-lock"></i></span>-->
+                            </div>
+                            <div>
+                                <h7>By creating an account, you agree with our <a :href="route('PrivacyPolicy')"
+                                                                                  target="_blank">Privacy and Policy</a>.
+                                </h7>
+                                <!--                                <v-checkbox label="" aria-required="true"/>-->
+                            </div>
+                            <div class="forgotpass">
+                                <Link
+                                    :href="route('login')"
+                                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
+                                    Already registered?
+                                </Link>
+                                <!--                                        <a href="forgot-password.html">Forgot Password?</a>-->
+                            </div>
+                            <v-radio-group v-if="step == 1"
+                                v-model="form.lang"
+                                :rules="config.validationRules.required"
+
+                                column
+                            >
                                 <v-radio
                                     label="English"
                                     color="red-darken-3"
@@ -139,19 +131,64 @@ export default {
                                     color="indigo"
                                     value="arabic"
                                 ></v-radio>
-                                </v-radio-group>
-                                <div class="form-group">
-                                    <PrimaryButton style="background-color: #0a53be" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                        Register
-                                    </PrimaryButton>
-                                    <!--                                        <button class="btn btn-primary btn-block" type="submit">Login</button>&ndash;&gt;-->
-                                </div>
-                            </form>
-
-                        </div>
+                            </v-radio-group>
+                            <div class="form-group">
+                                <v-btn @click="submit" style="background-color: #0a53be" :class="{ 'opacity-25': form.processing }"
+                                       :disabled="form.processing">
+                                    Register
+                                </v-btn>
+                                <!--                                        <button class="btn btn-primary btn-block" type="submit">Login</button>&ndash;&gt;-->
+                            </div>
+<!--                        </v-form>-->
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                <!--                </div>-->
+            </v-col>
+        </v-row>
+    </v-row>
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </template>
+<script>
+import InputError from '@/Components/InputError.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import {Head, Link, useForm} from '@inertiajs/vue3';
+
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import config from "@/config";
+import AuthOtp from "@/Components/auth/auth-otp.vue";
+
+export default {
+    computed: {
+        config() {
+            return config
+        }
+    },
+    components: {AuthOtp, InputError},
+    layout: GuestLayout,
+    data() {
+        return {
+            valid:false,
+            step: 1,
+            form: useForm({
+                name: '',
+                email: '',
+                lang: '',
+                password: '',
+                password_confirmation: '',
+                terms: false,
+            })
+        }
+    },
+    methods: {
+        submit() {
+            this.step++
+            // this.form.post(route('account.store'), {
+            //     // onFinish: () => alert('success'),
+            // });
+        }
+    }
+}
+</script>

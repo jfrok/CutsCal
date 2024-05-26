@@ -1,16 +1,20 @@
 <template>
     <Head title="Profile"/>
 
-    <div class="row" >
+    <div class="row">
         <div class="col-md-12">
             <div class="profile-header">
                 <div class="row align-items-center">
                     <div class="col-auto profile-image">
                         <a href="#" @click="openDialog">
+                            <v-avatar v-if="$page.props.auth.user.avatar" alt="User Image"
+                                      size="100"
+                                      :image="$page.props.auth.user.avatar ?? 'img/non-user-add.png'">
 
-                            <img class="rounded-circle" v-if="$page.props.auth.user.avatar" alt="User Image"
-                                 style="height: 100px"
-                                 :src="$page.props.auth.user.avatar ?? 'img/non-user-add.png'"/>
+                            </v-avatar>
+                            <!--                            <img class="rounded-circle" v-if="$page.props.auth.user.avatar" alt="User Image"-->
+
+                            <!--                                 :src="$page.props.auth.user.avatar ?? 'img/non-user-add.png'"/>-->
                             <div id="imageAvatar" v-else>{{ initials }}</div>
                         </a>
                     </div>
@@ -53,7 +57,7 @@
                 <div class="tab-pane fade show active" id="per_details_tab">
 
                     <div class="row">
-                        <div class="col-lg-9" >
+                        <div class="col-lg-9">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title d-flex justify-content-between">
@@ -103,44 +107,42 @@
                             <!--                                </div>-->
 
 
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title d-flex justify-content-between">
-                                        <span>Skills </span>
+                            <!--                            <div class="card">-->
+                            <!--                                <div class="card-body">-->
+                            <!--                                    <h5 class="card-title d-flex justify-content-between">-->
+                            <!--                                        <span>Skills </span>-->
 
-                                        <!--                                            <a class="edit-link" href="#"><i class="far fa-edit me-1"></i> Edit</a>-->
+                            <!--                                        &lt;!&ndash;                                            <a class="edit-link" href="#"><i class="far fa-edit me-1"></i> Edit</a>&ndash;&gt;-->
 
-                                    </h5>
-                                    <div style="margin-bottom: 55px">
-                                        <Chip/>
-                                    </div>
-                                    <div class="skill-tags">
-    <span
-        v-for="skill in skills.data"
-        :key="skill.id"
-        class="skill-tag"
-    >
-<v-chip>
-  {{ skill.name }}
-</v-chip>
-        <!--      <v-icon-->
-        <!--          v-if="hoveredSkill === skill.id"-->
-        <!--          class="remove-icon"-->
-        <!--          @click="removeSkill(skill)"-->
-        <!--      >-->
-          <i @click="removeSkill(skill.id)" class="feather-trash remove-icon"></i>
-        <!--      </v-icon>-->
-    </span>
-                                    </div>
-                                </div>
-                            </div>
+                            <!--                                    </h5>-->
+                            <!--                                    <div style="margin-bottom: 55px">-->
+                            <!--                                        <Chip/>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div class="skill-tags">-->
+                            <!--    <span-->
+                            <!--        v-for="skill in skills.data"-->
+                            <!--        :key="skill.id"-->
+                            <!--        class="skill-tag"-->
+                            <!--    >-->
+                            <!--<v-chip>-->
+                            <!--  {{ skill.name }}-->
+                            <!--</v-chip>-->
+                            <!--        &lt;!&ndash;      <v-icon&ndash;&gt;-->
+                            <!--        &lt;!&ndash;          v-if="hoveredSkill === skill.id"&ndash;&gt;-->
+                            <!--        &lt;!&ndash;          class="remove-icon"&ndash;&gt;-->
+                            <!--        &lt;!&ndash;          @click="removeSkill(skill)"&ndash;&gt;-->
+                            <!--        &lt;!&ndash;      >&ndash;&gt;-->
+                            <!--          <i @click="removeSkill(skill.id)" class="feather-trash remove-icon"></i>-->
+                            <!--        &lt;!&ndash;      </v-icon>&ndash;&gt;-->
+                            <!--    </span>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
 
                         </div>
                     </div>
 
                 </div>
-
-
                 <div id="password_tab" class="tab-pane fade">
                     <div class="card">
                         <div class="card-body">
@@ -209,8 +211,8 @@ export default {
         }
     },
     data: () => ({
-        show:false,
-        avatarDialog:false,
+        show: false,
+        avatarDialog: false,
         numberOfInputs: 0,
         fullName: usePage().props.auth.user.name,
         initials: '',
@@ -221,10 +223,10 @@ export default {
         this.setInitials();
     },
     methods: {
-         openDialog () {
+        openDialog() {
             this.avatarDialog = true
         },
-        closeDialog () {
+        closeDialog() {
             this.avatarDialog = false
         },
         setInitials() {

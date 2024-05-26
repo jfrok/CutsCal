@@ -241,9 +241,7 @@ export default defineComponent({
             const {props} = usePage();
             const date = props.date ?? new Date();
             this.refs.calendar.getApi().gotoDate(date);
-            console.log(this.refs.calendar.getApi())
-            // Update the windowHeight data property with the initial window height
-            // You can also add an event listener to update the height when the window is resized
+            // console.log(this.refs.calendar.getApi())
 
         });
         // let width = ref()
@@ -295,7 +293,8 @@ export default defineComponent({
                 },
                 buttonText: this.customButtonsName(),
                 //  locale: esLocale,
-                initialView: windowWidth <= 400 ? 'timeGridWeek' : 'dayGridMonth',
+                initialView: 'dayGridMonth',
+                // initialView: windowWidth <= 400 ? 'timeGridWeek' : 'dayGridMonth',
 
                 // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
                 editable: true,

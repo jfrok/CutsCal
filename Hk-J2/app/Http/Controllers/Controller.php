@@ -26,12 +26,10 @@ class Controller extends BaseController
     public function dashboard(Request $request)
     {
         $mainUserId = User::findTheMainUser()->id;
-
         $clients = Client::where('userId', $mainUserId)->orderBy('created_at', 'DESC')->paginate(10);
         $projects = Project::where('userId', $mainUserId)->orderBy('created_at', 'DESC')->paginate(10);
         $notes = DB::table('notes')->where('userId', $mainUserId)->get();
         $orders = User::ordersFormated();//User::getMainUserOrders()->paginate(20);
-
         $filter = $request->filter;
 
         $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
@@ -62,16 +60,14 @@ class Controller extends BaseController
                 });
             })
             ->skip($showMore ? $showMore : 10)->take($showMore ? $showMore : 10)->get()->count();
-
 //        $eventCounter = count(Event::where('userId',Auth::id())->where('dateFrom','>=',Carbon::now())->get());
-
-        $events = Event::orderBy('dateFrom', 'DESC')
-            ->where('userId', $mainUserId)
+        $events = Event::
+            where('userId', $mainUserId)
             ->when(!$filter, function ($query) {
                 return $query->where('dateFrom', '>=', Carbon::now()->format('Y-m-d'));
             })
             ->when($filter == 'past', function ($query) {
-                return $query->where('dateFrom', '<', Carbon::now()->format('Y-m-d'));
+                return $query->where('dateFrom', '<', Carbon::now()->format('Y-m-d'))->orderBy('dateFrom', 'DESC');
             })
             ->when($filter == 'upcoming', function ($query) {
                 return $query->where('dateFrom', '>=', Carbon::now()->addWeek()->format('Y-m-d'));
@@ -167,7 +163,6 @@ class Controller extends BaseController
             'totalUsers' => $totalUsers,
             'totalEvents' => $totalEvents,
             'totalProjects' => $totalProjects,
-
         ]);
     }
 
