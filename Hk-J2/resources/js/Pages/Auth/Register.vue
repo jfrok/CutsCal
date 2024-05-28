@@ -26,12 +26,13 @@
                     <div class="login-right">
                         <div class="login-right-wrap">
 
-                            <h1>Welcome to JfrO </h1>
+                            <h1>Welcome to CutCal </h1>
                             <!--                                <p class="account-subtitle">Need an account? <a href="register.html">Sign Up</a></p>-->
                             <!--                        <h2>Enter you'r E-malil to start</h2>-->
 
                             <!--                        <v-form @submit.prevent="submit">-->
-                            <auth-otp v-if="step == 2" @otp="(data)=>{code = data}" :email="form.email"></auth-otp>
+                            <auth-otp v-if="step == 2" @otp="(data)=>{code = data}" :message="message"
+                                      :email="form.email"></auth-otp>
                             <div class="form-group" v-if="step == 3">
                                 <label>Username <span class="login-danger">*</span></label>
                                 <v-text-field
@@ -58,9 +59,9 @@
                                     v-model="form.email"
                                     hide-details="auto"
                                     :rules="config.validationRules.email"
-                                    autocomplete="username"
+                                    autocomplete="email"
                                 />
-                                <InputError class="mt-2" :message="form.errors.email"/>
+                                <InputError class="mt-2" :message="message"/>
                                 <!--                                    <span class="profile-views"><i class="fas fa-mail-bulk"></i></span>-->
                             </div>
                             <div class="form-group" v-if="step == 3">
@@ -141,7 +142,7 @@
                                 </v-btn>
                                 <v-btn @click="verifyOtp" v-if="step == 2" style="background-color: #0a53be"
                                        :class="{ 'opacity-25': form.processing }"
-                                       :disabled="form.email == null&&form.lang == null">
+                                       :disabled="code.length != 4?true:false">
                                     Next
                                 </v-btn>
                                 <v-btn @click="isOtpVerified" v-if="step == 1" style="background-color: #0a53be"
@@ -184,13 +185,17 @@ export default {
             return config
         }
     },
+    props: {
+        errors: Object,
+    },
     components: {GuestLayout, AuthOtp, InputError},
     layout: GuestLayout,
     data() {
         return {
             valid: false,
             step: 1,
-            code:null,
+            code: '',
+            message: null,
             form: useForm({
                 name: '',
                 email: null,
@@ -202,23 +207,34 @@ export default {
             })
         }
     },
+    watch: {
+        step(val) {
+            this.message = null
+        }
+    },
     methods: {
-        isOtpVerified(){
+        isOtpVerified() {
             axios.post(route('otp.check'), {
                 email: this.form.email,
             }).then((res) => {
                 console.log(res.data)
-                if (res.data.verified){
+                if (res.data.verified) {
                     this.step = 3
-                }else if (res.data.verified == false) {
+                } else if (res.data.verified == false) {
                     this.step = 2
+                } else if (res.data.status == 201) {
+                    this.step = 3
+                } else {
+                    this.message = res.data.message
                 }
-                }).catch((err) => {
-                    if (err.response.data.status == 909) {
-                        this.step = 2
-                    }else {
-
-                    }
+            }).catch((err) => {
+                if (err.response.data.status == 909) {
+                    this.step = 2
+                }else if (err.response.data.status == 201) {
+                    this.step = 3
+                } else {
+                    this.message = err.response.data.message
+                }
             })
         },
         verifyOtp() {
@@ -226,9 +242,10 @@ export default {
                 email: this.form.email,
                 otp: this.code,
             }).then((res) => {
-                if (res.data.status == 200){
+                if (res.data.status == 200) {
                     this.step = 3
                 }
+                this.message = res.data.message
                 console.log(res.data)
             })
         },

@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Mail\OtpMail;
 use App\Models\Employer;
 use App\Models\Notifications;
+use App\Models\OtpCode;
 use App\Models\ScheduledTask;
 use App\Models\Setting;
 use App\Models\Skill;
@@ -31,41 +32,71 @@ class UserController extends Controller
         $this->middleware('permission:user-edit', ['only' => ['update', 'updateProfileSkills']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy', 'groupDelete', 'removeSkill']]);
     }
-    public function resendOtp(Request $request)
-    {
-        $otp = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
-        Mail::to($request->email)->send(new OtpMail($otp));
 
-        \Illuminate\Support\Facades\DB::table('otp_codes')
-            ->updateOrInsert(
-                ['email' => $request->email],
-                ['otp_code' => $otp, 'created_at' => now()]
-            );
-        return response()->json(['message' => 'OTP code sent successfully'],200);
-    }
-    public function isOtpVerified(Request $request)
+    public function checkUserExists(Request $request)
     {
         // Validate the request input
         $request->validate([
             'email' => 'required|email',
         ]);
 
-        // Use Eloquent to retrieve the OTP code record
-        $otpCode = \App\Models\OtpCode::where('email', $request->email)
-            ->first();
+        // Check if the user exists in the users table
+        $userExists = \App\Models\User::where('email', $request->email)->exists();
 
-        // Check if the OTP exists and if it is verified
-        if ($otpCode) {
+        if ($userExists) {
+            return response()->json(['status' => 200, 'exists' => true]);
+        }
+
+        return response()->json(['status' => 200, 'exists' => false]);
+    }
+
+    public function resendOtp(Request $request)
+    {
+        $otp = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        Mail::to($request->email)->send(new OtpMail($otp));
+        $expiresAt = now()->addMinutes(1); // Set expiration time to 10 minutes from now
+
+        \Illuminate\Support\Facades\DB::table('otp_codes')
+            ->updateOrInsert(
+                ['email' => $request->email],
+                ['otp_code' => $otp, 'created_at' => now(), 'expired_at' => $expiresAt]
+            );
+        return response()->json(['message' => 'OTP code sent successfully'], 200);
+    }
+
+    public function isOtpVerified(Request $request)
+    {
+        // Validate the request input
+        $request->validate([
+            'email' => 'required|email|unique:users|max:148',
+        ]);
+
+        // Use Eloquent to retrieve the OTP code record
+        $otpCode = OtpCode::where('email', $request->email);
+
+        // Check if the OTP exists
+        if ($otpCode->where('expired_at', '<', now())->exists()) {
+            OtpCode::where('id', $otpCode->first()->id)->delete();
+            return response()->json(['status' => 909, 'message' => 'OTP expired'], 400);
+        }
+
+        // Check if the OTP is verified
+
+        if ($otpCode->where('expired_at', '>', now())->first()) {
             if (is_null($otpCode->verified_at)) {
-                return response()->json(['status' => 200, 'verified' => false]);
+                return response()->json(['status' => 909, 'verified' => false]);
             } else {
                 return response()->json(['status' => 200, 'verified' => true]);
             }
-        }
+        }else if (OtpCode::where('email', $request->email)->where('expired_at', '>', now())->whereNotNull('verified_at')->first()){
+            return response()->json(['status' => 201, 'message' => 'Wait a minute'], 400);
+        }else{
+//            dd(OtpCode::where('email', $request->email)->first());
+            return response()->json(['status' => 909, 'verified' => false]);
 
-        // Return an error response if the OTP is not found
-        return response()->json(['status' => 909], 400);
+        }
     }
+
     public function verifyOtp(Request $request)
     {
         $request->validate([
@@ -73,17 +104,22 @@ class UserController extends Controller
             'email' => 'required|email',
         ]);
 
-        $otpCode = \App\Models\OtpCode::where('email', $request->email)
+        $otpCode = OtpCode::where('email', $request->email)
             ->where('otp_code', $request->otp)
+            ->where('expired_at', '>', now()) // Check if OTP code is not expired
             ->first();
 
+        if ($otpCode) {
+            if (is_null($otpCode->verified_at)) {
 
-        if ($otpCode && is_null($otpCode->verified_at)) {
-            $otpCode->verified_at = now();
-            $otpCode->save();
-//            \Illuminate\Support\Facades\DB::table('otp_codes')->where('id', $otpCode->id)->delete();
+                $otpCode->verified_at = now();
+                $otpCode->save();
 
-            return response()->json(['status' => 200]);
+                return response()->json(['status' => 200]);
+            } else {
+
+                OtpCode::where('id', $otpCode->id)->delete();
+            }
         }
 
         return response()->json(['message' => 'Invalid OTP code']);
@@ -118,7 +154,7 @@ class UserController extends Controller
         $addedPermissions = \App\Models\Role::getDirectPermission($uId);
 
         $userRole = $user->roles->pluck('name', 'name')->all();//dd($userRole->name);
-        return \inertia('Accounts/Edit', ['user' => $user, 'userRole' => $userRole, 'roles' => $roles, 'allPermissions' => $allPermissions,'addedPermissions' => $addedPermissions, 'userPermissions' => $user->getAllPermissions()]);
+        return \inertia('Accounts/Edit', ['user' => $user, 'userRole' => $userRole, 'roles' => $roles, 'allPermissions' => $allPermissions, 'addedPermissions' => $addedPermissions, 'userPermissions' => $user->getAllPermissions()]);
     }
 
     public function store(Request $request)
@@ -171,7 +207,7 @@ class UserController extends Controller
             $setting = new Setting();
             $setting->userId = $user->id;
             $setting->api_token = $shuffled;
-            $setting->frame_token = Setting::generateUniqueToken(Setting::class,'frame_token',60);
+            $setting->frame_token = Setting::generateUniqueToken(Setting::class, 'frame_token', 60);
             $setting->save();
             $task = new ScheduledTask();
             $task->userId = $user->id;
@@ -298,10 +334,10 @@ class UserController extends Controller
         $selectedRoles = $request->role;
         $role = '';
 // dd($request->all());
-        if ($selectedRoles){
-        foreach ($selectedRoles as $roleName) {
-            $role = Role::where('name', $roleName)->first();
-        }
+        if ($selectedRoles) {
+            foreach ($selectedRoles as $roleName) {
+                $role = Role::where('name', $roleName)->first();
+            }
         }
         $imageName = null;
         if ($request->img !== null) {
@@ -325,7 +361,7 @@ class UserController extends Controller
 //            $user->assignRole(10);
             if ($role) {
                 $user->assignRole($role);
-            }else{
+            } else {
                 $user->assignRole('User');
             }
 
@@ -334,7 +370,7 @@ class UserController extends Controller
             $setting = new Setting();
             $setting->userId = $user->id;
             $setting->api_token = $shuffled;
-            $setting->frame_token = Setting::generateUniqueToken(Setting::class,'frame_token',60);
+            $setting->frame_token = Setting::generateUniqueToken(Setting::class, 'frame_token', 60);
             $setting->save();
             $task = new ScheduledTask();
             $task->userId = $user->id;

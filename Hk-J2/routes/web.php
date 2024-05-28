@@ -52,6 +52,7 @@ Route::post('/account/create', [UserController::class, 'createAccount'])->name('
 Route::post('/resend-otp', [UserController::class, 'resendOtp'])->name('otp.resend');
 Route::post('/verify-otp', [UserController::class, 'verifyOtp'])->name('otp.verify');
 Route::post('/check-otp', [UserController::class, 'isOtpVerified'])->name('otp.check');
+Route::post('/check-email', [UserController::class, 'checkUserExists'])->name('email.check');
 
 
 Route::middleware(['auth', 'check.subscription'])->group(function () {

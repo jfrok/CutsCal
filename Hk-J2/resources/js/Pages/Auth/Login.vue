@@ -1,6 +1,6 @@
 <template>
     <guest-layout>
-    <v-row class="pa-7 pa-md-0 ma-0 h-100" align="center" align-content="center">
+    <v-row class="pa-7 pa-md-0 ma-0 h-100 overflow-hidden" align="center" align-content="center">
         <v-col cols="12" md="5" class="h-100 auth-banner auth-img-background fireaxered d-none d-md-flex">
 <!--            <img src="/images/logo/cutcal-login.png" alt="Background Image" class="auth-banner-image align-self-center" />-->
         </v-col>

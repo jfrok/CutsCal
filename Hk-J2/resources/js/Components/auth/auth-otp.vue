@@ -1,7 +1,7 @@
 <template>
-        <div class="text-body-2 font-weight-light">
-            {{status}}
+    <div class="text-body-2 font-weight-light">
             Enter the code we just sent to your E-mail <span class="font-weight-black text-primary">{{ email }}</span></div>
+    <div class="d-flex gap-8 flex-column align-center">
         <v-otp-input
             class="mt-3 ms-n2"
             length="4"
@@ -9,6 +9,11 @@
             variant="underlined"
             v-model="code"
         ></v-otp-input>
+
+        <div class="text-danger" v-if="code.length == 4 && message">
+            {{message}}
+        </div>
+    </div>
 
         <v-divider class="mt-3 mb-6"></v-divider>
 
@@ -30,11 +35,12 @@
 import axios from "axios";
 export default {
     props:{
-        email:String
+        email:String,
+        message:String,
     },
     data(){
         return{
-            code:null,
+            code:'',
             status:false,
         }
     },
@@ -75,7 +81,8 @@ export default {
         },
     },
     mounted() {
-        this.isOtpVerified()
+        // this.isOtpVerified()
+        this.resendOtp()
     }
 }
 </script>
