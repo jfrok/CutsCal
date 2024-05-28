@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Mail\OtpMail;
 use App\Models\Employer;
 use App\Models\Notifications;
 use App\Models\ScheduledTask;
@@ -13,6 +14,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Psy\Util\Str;
 use Spatie\Permission\Models\Permission;
@@ -28,6 +30,63 @@ class UserController extends Controller
         $this->middleware('permission:user-create', ['only' => ['store', 'create']]);
         $this->middleware('permission:user-edit', ['only' => ['update', 'updateProfileSkills']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy', 'groupDelete', 'removeSkill']]);
+    }
+    public function resendOtp(Request $request)
+    {
+        $otp = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        Mail::to($request->email)->send(new OtpMail($otp));
+
+        \Illuminate\Support\Facades\DB::table('otp_codes')
+            ->updateOrInsert(
+                ['email' => $request->email],
+                ['otp_code' => $otp, 'created_at' => now()]
+            );
+        return response()->json(['message' => 'OTP code sent successfully'],200);
+    }
+    public function isOtpVerified(Request $request)
+    {
+        // Validate the request input
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        // Use Eloquent to retrieve the OTP code record
+        $otpCode = \App\Models\OtpCode::where('email', $request->email)
+            ->first();
+
+        // Check if the OTP exists and if it is verified
+        if ($otpCode) {
+            if (is_null($otpCode->verified_at)) {
+                return response()->json(['status' => 200, 'verified' => false]);
+            } else {
+                return response()->json(['status' => 200, 'verified' => true]);
+            }
+        }
+
+        // Return an error response if the OTP is not found
+        return response()->json(['status' => 909], 400);
+    }
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required',
+            'email' => 'required|email',
+        ]);
+
+        $otpCode = \App\Models\OtpCode::where('email', $request->email)
+            ->where('otp_code', $request->otp)
+            ->first();
+
+
+        if ($otpCode && is_null($otpCode->verified_at)) {
+            $otpCode->verified_at = now();
+            $otpCode->save();
+//            \Illuminate\Support\Facades\DB::table('otp_codes')->where('id', $otpCode->id)->delete();
+
+            return response()->json(['status' => 200]);
+        }
+
+        return response()->json(['message' => 'Invalid OTP code']);
     }
 
     public function index(Request $request)
@@ -239,10 +298,11 @@ class UserController extends Controller
         $selectedRoles = $request->role;
         $role = '';
 // dd($request->all());
+        if ($selectedRoles){
         foreach ($selectedRoles as $roleName) {
             $role = Role::where('name', $roleName)->first();
         }
-
+        }
         $imageName = null;
         if ($request->img !== null) {
             $imageName = $request->img->getClientOriginalName();
@@ -265,6 +325,8 @@ class UserController extends Controller
 //            $user->assignRole(10);
             if ($role) {
                 $user->assignRole($role);
+            }else{
+                $user->assignRole('User');
             }
 
             $string = 'xSf1pvnMobVx15mjcCKS';

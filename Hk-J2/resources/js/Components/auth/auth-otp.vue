@@ -1,21 +1,13 @@
 <template>
-    <v-sheet
-        class="pt-8 pb-12 px-6 ma-4 mx-auto"
-        max-width="350"
-        width="100%"
-        border
-    >
-        <h3 class="text-h6 mb-1">Mobile phone verification</h3>
-
         <div class="text-body-2 font-weight-light">
-            Enter the code we just sent to your mobile phone <span class="font-weight-black text-primary">+1 408 555 1212</span>
-        </div>
-
+            {{status}}
+            Enter the code we just sent to your E-mail <span class="font-weight-black text-primary">{{ email }}</span></div>
         <v-otp-input
             class="mt-3 ms-n2"
             length="4"
             placeholder="0"
             variant="underlined"
+            v-model="code"
         ></v-otp-input>
 
         <v-divider class="mt-3 mb-6"></v-divider>
@@ -25,11 +17,65 @@
         </div>
 
         <v-btn
+            @click="resendOtp"
             color="primary"
             size="small"
             text="Re-send Email"
             variant="tonal"
 
         ></v-btn>
-    </v-sheet>
+
 </template>
+<script>
+import axios from "axios";
+export default {
+    props:{
+        email:String
+    },
+    data(){
+        return{
+            code:null,
+            status:false,
+        }
+    },
+    watch:{
+      code(val){
+          this.$emit('otp',val)
+      },
+        // status(val){
+        //     if (val.verified == true){
+        //         this.$emit('status',true)
+        //     }
+        //   if (val.verified == false){
+        //       this.resendOtp()
+        //   }
+        // }
+    },
+    methods:{
+        isOtpVerified(){
+            axios.post(route('otp.check'), {
+                email: this.email
+            }).then((res) => {
+                if (res.data.verified == false){
+                    this.resendOtp()
+                }
+                this.status = res.data
+            }).catch((err) => {
+                if (err.response.data.status == 909) {
+                        this.resendOtp()
+                }
+            })
+        },
+        resendOtp() {
+            axios.post(route('otp.resend'), {
+                email: this.email
+            }).then((res) => {
+                // this.status = res.data.message
+            })
+        },
+    },
+    mounted() {
+        this.isOtpVerified()
+    }
+}
+</script>

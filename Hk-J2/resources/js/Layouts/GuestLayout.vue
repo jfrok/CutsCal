@@ -6,7 +6,7 @@
 
 <!--                    <v-img class="h-100 " src="/images/logo/cutcal-login.png" alt="Logo"></v-img>-->
 
-                    <slot />
+                    <slot class="overflow-hidden"/>
 
 <!--        </v-container>-->
     </v-main>

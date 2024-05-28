@@ -1,41 +1,37 @@
 <template>
-    <!--    <GuestLayout>-->
-    <Head title="Register"/>
+    <GuestLayout>
+        <Head title="Register"/>
+        <!--    <div class="main-wrapper login-body">-->
+        <!--        <div class="login-wrapper">-->
+        <!--            <div class="container">-->
+        <v-row class="pa-7 pa-md-0 ma-0 h-100" align="center" align-content="center">
+            <v-col cols="12" md="5" class="h-100 auth-banner auth-img-background fireaxered d-none d-md-flex">
+                <!--            <img src="/images/logo/cutcal-login.png" alt="Background Image" class="auth-banner-image align-self-center" />-->
+            </v-col>
+            <v-row justify="center" class="pa-md-10 pb-md-15">
 
-    <!--    <div class="main-wrapper login-body">-->
+                <v-col cols="12" md="7" align-self="center" style="max-width: 500px;">
+                    <v-alert
+                        v-if="$page.props.ziggy.flash.error"
+                        variant="outlined"
+                        type="warning"
+                        prominent
+                        border="top"
+                    >
+                    </v-alert>
+                    <!--                <div class="loginbox">-->
+                    <!--                    <div class="login-left">-->
+                    <!--                        <img class="img-fluid" style="height: 680px" src="/images/logo/cutcal-login.png" alt="Logo">-->
+                    <!--                    </div>-->
+                    <div class="login-right">
+                        <div class="login-right-wrap">
 
-    <!--        <div class="login-wrapper">-->
+                            <h1>Welcome to JfrO </h1>
+                            <!--                                <p class="account-subtitle">Need an account? <a href="register.html">Sign Up</a></p>-->
+                            <!--                        <h2>Enter you'r E-malil to start</h2>-->
 
-    <!--            <div class="container">-->
-    <v-row class="pa-7 pa-md-0 ma-0 h-100" align="center" align-content="center">
-        <v-col cols="12" md="5" class="h-100 auth-banner auth-img-background fireaxered d-none d-md-flex">
-            <!--            <img src="/images/logo/cutcal-login.png" alt="Background Image" class="auth-banner-image align-self-center" />-->
-        </v-col>
-        <v-row justify="center" class="pa-md-10 pb-md-15">
-
-            <v-col cols="12" md="7" align-self="center" style="max-width: 500px;">
-                <v-alert
-                    v-if="$page.props.ziggy.flash.error"
-                    variant="outlined"
-                    type="warning"
-                    prominent
-                    border="top"
-                >
-                    {{ $page.props.ziggy.flash.error }}
-                </v-alert>
-                <!--                <div class="loginbox">-->
-                <!--                    <div class="login-left">-->
-                <!--                        <img class="img-fluid" style="height: 680px" src="/images/logo/cutcal-login.png" alt="Logo">-->
-                <!--                    </div>-->
-                <div class="login-right">
-                    <div class="login-right-wrap">
-
-                        <h1>Welcome to JfrO </h1>
-                        <!--                                <p class="account-subtitle">Need an account? <a href="register.html">Sign Up</a></p>-->
-                        <h2>Enter you'r E-malil to start</h2>
-
-<!--                        <v-form @submit.prevent="submit">-->
-                        <auth-otp v-if="step == 2"></auth-otp>
+                            <!--                        <v-form @submit.prevent="submit">-->
+                            <auth-otp v-if="step == 2" @otp="(data)=>{code = data}" :email="form.email"></auth-otp>
                             <div class="form-group" v-if="step == 3">
                                 <label>Username <span class="login-danger">*</span></label>
                                 <v-text-field
@@ -116,10 +112,10 @@
                                 <!--                                        <a href="forgot-password.html">Forgot Password?</a>-->
                             </div>
                             <v-radio-group v-if="step == 1"
-                                v-model="form.lang"
-                                :rules="config.validationRules.required"
+                                           v-model="form.lang"
+                                           :rules="config.validationRules.required"
 
-                                column
+                                           column
                             >
                                 <v-radio
                                     label="English"
@@ -132,30 +128,52 @@
                                     value="arabic"
                                 ></v-radio>
                             </v-radio-group>
-                            <div class="form-group">
-                                <v-btn @click="submit" style="background-color: #0a53be" :class="{ 'opacity-25': form.processing }"
+                            <div class="d-flex justify-space-between w-100 mt-10">
+                                <v-btn @click="step = 1" v-if="step == 3" style="background-color: #0a53be"
+                                       :class="{ 'opacity-25': form.processing }"
                                        :disabled="form.processing">
-                                    Register
+                                    Back
+                                </v-btn>
+                                <v-btn @click="step = 1" v-if="step == 2" style="background-color: #0a53be"
+                                       :class="{ 'opacity-25': form.processing }"
+                                       :disabled="form.processing">
+                                    Back
+                                </v-btn>
+                                <v-btn @click="verifyOtp" v-if="step == 2" style="background-color: #0a53be"
+                                       :class="{ 'opacity-25': form.processing }"
+                                       :disabled="form.email == null&&form.lang == null">
+                                    Next
+                                </v-btn>
+                                <v-btn @click="isOtpVerified" v-if="step == 1" style="background-color: #0a53be"
+                                       :class="{ 'opacity-25': form.processing }"
+                                       :disabled="form.email == null&&form.lang == null">
+                                    Next
+                                </v-btn>
+                                <v-btn v-if="step == 3" @click="submit" style="background-color: #0a53be"
+                                       :class="{ 'opacity-25': form.processing }"
+                                       :disabled="form.processing">
+                                    Submit
                                 </v-btn>
                                 <!--                                        <button class="btn btn-primary btn-block" type="submit">Login</button>&ndash;&gt;-->
                             </div>
-<!--                        </v-form>-->
+                            <!--                        </v-form>-->
+                        </div>
+
                     </div>
-                </div>
-                <!--                </div>-->
-            </v-col>
+
+                    <!--                </div>-->
+                </v-col>
+            </v-row>
         </v-row>
-    </v-row>
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+    </GuestLayout>
 </template>
 <script>
 import InputError from '@/Components/InputError.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import {Head, Link, useForm} from '@inertiajs/vue3';
-
+import axios from "axios";
+import {Head, Link, router, useForm} from '@inertiajs/vue3';
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import config from "@/config";
 import AuthOtp from "@/Components/auth/auth-otp.vue";
@@ -166,28 +184,58 @@ export default {
             return config
         }
     },
-    components: {AuthOtp, InputError},
+    components: {GuestLayout, AuthOtp, InputError},
     layout: GuestLayout,
     data() {
         return {
-            valid:false,
+            valid: false,
             step: 1,
+            code:null,
             form: useForm({
                 name: '',
-                email: '',
-                lang: '',
+                email: null,
+                lang: null,
                 password: '',
                 password_confirmation: '',
                 terms: false,
+                otp_status: false
             })
         }
     },
     methods: {
+        isOtpVerified(){
+            axios.post(route('otp.check'), {
+                email: this.form.email,
+            }).then((res) => {
+                console.log(res.data)
+                if (res.data.verified){
+                    this.step = 3
+                }else if (res.data.verified == false) {
+                    this.step = 2
+                }
+                }).catch((err) => {
+                    if (err.response.data.status == 909) {
+                        this.step = 2
+                    }else {
+
+                    }
+            })
+        },
+        verifyOtp() {
+            axios.post(route('otp.verify'), {
+                email: this.form.email,
+                otp: this.code,
+            }).then((res) => {
+                if (res.data.status == 200){
+                    this.step = 3
+                }
+                console.log(res.data)
+            })
+        },
         submit() {
-            this.step++
-            // this.form.post(route('account.store'), {
-            //     // onFinish: () => alert('success'),
-            // });
+            this.form.post(route('account.store'), {
+                // onFinish: () => alert('success'),
+            });
         }
     }
 }

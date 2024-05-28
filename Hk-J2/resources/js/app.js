@@ -9,7 +9,7 @@ import {router} from "@inertiajs/vue3";
 import FullCalendar from "@fullcalendar/vue3";
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-import Vue3Apexcharts from "vue3-apexcharts/src/vue3-apexcharts";
+import VueApexCharts from "vue3-apexcharts";
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import '@mdi/font/css/materialdesignicons.css'
@@ -17,18 +17,18 @@ import 'vuetify/dist/vuetify.css'
 import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 import DayJsAdapter from '@date-io/dayjs'
-import { VStepper } from 'vuetify/labs/VStepper'
+// import { VStepper } from 'vuetify/labs/VStepper'
 import Toast from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
 import * as vuetifyComponents from 'vuetify/components';
-import {VDataTable} from "vuetify/labs/components";
+// import {VDataTable} from "vuetify/labs/components";
 import VueCookies from 'vue-cookies'
 
 const vuetify = createVuetify({
     components: {
-        VStepper,
-        VDataTable,
+        // VStepper,
+        // VDataTable,
         ...vuetifyComponents,
     },
     directives,
@@ -66,7 +66,7 @@ createInertiaApp({
            // .use(Sortable)
            //  .use( cookies)
 
-            .component('apexchart', Vue3Apexcharts)
+            .component('apexchart', VueApexCharts)
             //.component('Sortable', Sortable)
             .component('FullCalendar', FullCalendar)
             .mount(el);

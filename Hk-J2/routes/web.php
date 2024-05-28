@@ -49,11 +49,14 @@ Route::get('translate', function () {
 
 
 Route::post('/account/create', [UserController::class, 'createAccount'])->name('account.store');
+Route::post('/resend-otp', [UserController::class, 'resendOtp'])->name('otp.resend');
+Route::post('/verify-otp', [UserController::class, 'verifyOtp'])->name('otp.verify');
+Route::post('/check-otp', [UserController::class, 'isOtpVerified'])->name('otp.check');
 
 
 Route::middleware(['auth', 'check.subscription'])->group(function () {
     Route::resource('roles', \App\Http\Controllers\RoleController::class);
-    Route::post('getRoleUsers/{roleName}',[\App\Http\Controllers\RoleController::class,'getRoleUsers'])->name('getRoleUsers');
+    Route::post('getRoleUsers/{roleName}', [\App\Http\Controllers\RoleController::class, 'getRoleUsers'])->name('getRoleUsers');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -91,13 +94,13 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
         Route::post('/update/{eId}', [EmployersController::class, 'update'])->name('employer.update');
         Route::post('/set-mark/', [EmployersController::class, 'setMark'])->name('employer.setMark');
     });
-    Route::prefix('clients')->group(function (){
-       Route::get('/overview',[ClientController::class,'index'])->name('client.overview');
-       Route::post('/create',[ClientController::class,'store'])->name('client.store');
-       Route::post('/update/{cId}',[ClientController::class,'update'])->name('client.update');
+    Route::prefix('clients')->group(function () {
+        Route::get('/overview', [ClientController::class, 'index'])->name('client.overview');
+        Route::post('/create', [ClientController::class, 'store'])->name('client.store');
+        Route::post('/update/{cId}', [ClientController::class, 'update'])->name('client.update');
 //       Route::post('/group-destroy/{cId}',[ClientController::class,'destroy'])->name('client.gro.destroy');
         // testing route
-        Route::post('/destroy/{cId}',[ClientController::class,'destroy'])->name('client.destroy');
+        Route::post('/destroy/{cId}', [ClientController::class, 'destroy'])->name('client.destroy');
     });
     /// Projects
     Route::prefix('projects')->group(function () {
@@ -130,8 +133,8 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
         Route::get('events', [EventController::class, 'getEvents'])->name('calendar.get');
     });
     //// Notes
-    Route::post('/make-note',[Controller::class,'makeNote'])->name('note.make');
-    Route::post('/remove-note/{nId}',[Controller::class,'removeNote'])->name('note.remove');
+    Route::post('/make-note', [Controller::class, 'makeNote'])->name('note.make');
+    Route::post('/remove-note/{nId}', [Controller::class, 'removeNote'])->name('note.remove');
 
     Route::get('/trash', [Controller::class, 'trash'])->name('trash');
     Route::post('/groupDelete', [Controller::class, 'groupDelete'])->name('trash.groupDelete');
@@ -149,19 +152,19 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     Route::post('settings/update-token', [SettingsController::class, 'changeToken'])->name('settings.updateToken');
     //});
     Route::prefix('frame')->group(function () {
-        Route::get('overview',[FrameController::class, 'index'])->name('frame.overview');
-        Route::post('create-services',[FrameController::class, 'createServices'])->name('services.create');
-        Route::post('delete-services/{sId}',[FrameController::class, 'deleteService'])->name('services.delete');
+        Route::get('overview', [FrameController::class, 'index'])->name('frame.overview');
+        Route::post('create-services', [FrameController::class, 'createServices'])->name('services.create');
+        Route::post('delete-services/{sId}', [FrameController::class, 'deleteService'])->name('services.delete');
 
     });
     /// Schedule
-     Route::post('/schedule', [ScheduleController::class, 'store'])->name('store.schedule');
-     Route::post('/schedule-employer', [ScheduleController::class, 'storeEmployerSchedule'])->name('store.employer-schedule');
-     Route::fallback(function () {
+    Route::post('/schedule', [ScheduleController::class, 'store'])->name('store.schedule');
+    Route::post('/schedule-employer', [ScheduleController::class, 'storeEmployerSchedule'])->name('store.employer-schedule');
+    Route::fallback(function () {
         return to_route('dashboard');
-     });
+    });
 });
-Route::get('/make-a-reservation/{token}',[FrameController::class, 'edit'])->name('frame.view');
+Route::get('/make-a-reservation/{token}', [FrameController::class, 'edit'])->name('frame.view');
 /// Order
 Route::post('/order-store', [OrderController::class, 'store'])->name('store.order');
 
