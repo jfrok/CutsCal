@@ -10,16 +10,21 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\UserController;
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
 
 //    Route::post('register', [RegisteredUserController::class, 'store'])->name('account.store');
-    Route::post('register', [\App\Http\Controllers\UserController::class, 'createAccount'])->name('account.store');
+    Route::post('register', [UserController::class, 'createAccount'])->name('account.store');
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
+    Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])
+                ->name('google-auth');
+    Route::get('auth/google/call-back', [GoogleController::class, 'handleGoogleCallback'])
+                ->name('google-callback');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
