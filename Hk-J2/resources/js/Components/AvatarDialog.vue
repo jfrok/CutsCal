@@ -80,9 +80,9 @@ watch(isDragActive, () => {
 });
 
 function onDrop(acceptFiles, rejectReasons) {
-
-    form.img = acceptFiles[0];
-    state.files = acceptFiles;
+console.log('acceptFiles', acceptFiles);
+    // form.img = acceptFiles[0];
+    // state.files = acceptFiles;
 }
 
 function handleClickDeleteFile(index) {

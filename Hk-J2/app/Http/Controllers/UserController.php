@@ -81,7 +81,6 @@ class UserController extends Controller
         }
 
         // Check if the OTP is verified
-
         if ($otpCode->where('expired_at', '>', now())->first()) {
             if (is_null($otpCode->verified_at)) {
                 return response()->json(['status' => 909, 'verified' => false]);
@@ -91,7 +90,6 @@ class UserController extends Controller
         }else if (OtpCode::where('email', $request->email)->where('expired_at', '>', now())->whereNotNull('verified_at')->first()){
             return response()->json(['status' => 201, 'message' => 'Wait a minute'], 400);
         }else{
-//            dd(OtpCode::where('email', $request->email)->first());
             return response()->json(['status' => 909, 'verified' => false]);
 
         }

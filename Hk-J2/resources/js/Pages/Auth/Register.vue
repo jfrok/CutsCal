@@ -130,27 +130,27 @@
                                 ></v-radio>
                             </v-radio-group>
                             <div class="d-flex justify-space-between w-100 mt-10">
-                                <v-btn @click="step = 1" v-if="step == 3" style="background-color: #0a53be"
+                                <v-btn class="text-white" @click="step = 1" v-if="step == 3" style="background-color: #0a53be"
                                        :class="{ 'opacity-25': form.processing }"
                                        :disabled="form.processing">
                                     Back
                                 </v-btn>
-                                <v-btn @click="step = 1" v-if="step == 2" style="background-color: #0a53be"
+                                <v-btn class="text-white" @click="step = 1" v-if="step == 2" style="background-color: #0a53be"
                                        :class="{ 'opacity-25': form.processing }"
                                        :disabled="form.processing">
                                     Back
                                 </v-btn>
-                                <v-btn @click="verifyOtp" v-if="step == 2" style="background-color: #0a53be"
+                                <v-btn class="text-white" @click="verifyOtp" v-if="step == 2" style="background-color: #0a53be"
                                        :class="{ 'opacity-25': form.processing }"
                                        :disabled="code.length != 4?true:false">
                                     Next
                                 </v-btn>
-                                <v-btn @click="isOtpVerified" v-if="step == 1" style="background-color: #0a53be"
+                                <v-btn class="text-white" @click="isOtpVerified" v-if="step == 1" style="background-color: #0a53be"
                                        :class="{ 'opacity-25': form.processing }"
-                                       :disabled="form.email == null&&form.lang == null">
+                                       :disabled="form.email == null||form.lang == null">
                                     Next
                                 </v-btn>
-                                <v-btn v-if="step == 3" @click="submit" style="background-color: #0a53be"
+                                <v-btn class="text-white" v-if="step == 3" @click="submit" style="background-color: #0a53be"
                                        :class="{ 'opacity-25': form.processing }"
                                        :disabled="form.processing">
                                     Submit
