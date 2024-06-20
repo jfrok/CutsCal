@@ -9,6 +9,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {orderData} from "@/Pages/Ref/OrderData";
 import OrderDetails from "@/Components/OrderDetails.vue";
 import AnylticChart from "@/Components/anylticChart.vue";
+
 function arabicDay(dateFrom) {
     const englishDay = moment(dateFrom).format('dddd');
     const arabicDays = {
@@ -115,10 +116,12 @@ watch(filteringEvents, (value) => {
 // let dialog = false
 // Call updateMonthsByYear initially with the events data
 let orderDialog = ref(false)
-function openOrderDialog (item) {
+
+function openOrderDialog(item) {
     orderDialog.value = true;
     orderData.value = item;
 }
+
 updateMonthsByYear(props.events);
 
 
@@ -141,9 +144,11 @@ const noteForm = useForm({
     note: '',
     color: '',
 })
+
 function closeDialog() {
     orderDialog.value = false
 }
+
 function makeNote() {
     if (noteForm.note || noteForm.color) {
         noteForm.post(route('note.make'), {
@@ -154,6 +159,7 @@ function makeNote() {
         })
     }
 }
+
 const notValidNote = v => {
     if (!v) {
         return false
@@ -294,13 +300,16 @@ function removeNote(nId) {
             </v-dialog>
 
             <v-sheet
-                     max-width="1156"
-                     class="mx-auto mt-8 bg-official-secondary border-r-20"
-                     elevation="12"
-                     height="128"
-                     width="100%"
-                     border
+                max-width="2000"
+                class="mx-auto pa-3 mt-8 bg-official-secondary border-r-20"
+                elevation="12"
+                height="128"
+                width="100%"
+                border
             >
+                <h5 class="text-normal">
+                    {{ $page.props.auth.user.lang == 'arabic' ? 'الملاحضات' : 'Notes Board' }}
+                </h5>
                 <v-row align="center" justify="center" class="mt-1">
                     <v-col cols="auto">
                         <v-btn density="compact" @click="noteDialog = true" icon="mdi-plus"/>
@@ -333,7 +342,8 @@ function removeNote(nId) {
 
                 <div class="row">
                     <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                        <div class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2 border-secondary-color-2">
+                        <div
+                            class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2 border-secondary-color-2">
                             <div class="card-header d-flex align-items-center bg-official-secondary ">
                                 <h5 class="card-title">
                                     {{
@@ -381,10 +391,14 @@ function removeNote(nId) {
                                         <td>{{ item.phone }}</td>
                                         <td>{{ item.email }}</td>
                                         <td>{{ moment(item.date).format('YYYY MMM D') }}</td>
-                                        <td>{{ moment(item.time,"HH:mm:ss").format("hh:mm A") }}</td>
+                                        <td>{{ moment(item.time, "HH:mm:ss").format("hh:mm A") }}</td>
                                         <!--                                        <td>{{ item.time }}</td>-->
                                         <td>{{ item.price }}</td>
-                                        <td class="text-center"><v-btn variant="plain" @click="openOrderDialog(item)" color="primary">Details</v-btn></td>
+                                        <td class="text-center">
+                                            <v-btn variant="plain" @click="openOrderDialog(item)" color="primary">
+                                                Details
+                                            </v-btn>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </v-table>
@@ -420,9 +434,10 @@ function removeNote(nId) {
                             <div class="card-body">
                                 <!--                                <div id="school-area"></div>-->
                                 <anyltic-chart :p="$page.props.p" :count="$page.props.count"
-                                       :eventCount="$page.props.eventCount" :clientCount="$page.props.clientCount"/>
-<!--                                <Chart :p="$page.props.p" :count="$page.props.count"-->
-<!--                                       :eventCount="$page.props.eventCount"/>-->
+                                               :eventCount="$page.props.eventCount"
+                                               :clientCount="$page.props.clientCount"/>
+                                <!--                                <Chart :p="$page.props.p" :count="$page.props.count"-->
+                                <!--                                       :eventCount="$page.props.eventCount"/>-->
                             </div>
                         </div>
                     </div>
@@ -543,7 +558,8 @@ function removeNote(nId) {
                                     {{
                                         usePage().props.auth.user.lang == 'arabic' ? 'المواعيد القادمة' : 'Upcoming Events'
                                     }}</h2>
-                                <span v-if="$page.props.auth.userRole.includes('event-create')"><Link :href="route('calendar.overview')"><i
+                                <span v-if="$page.props.auth.userRole.includes('event-create')"><Link
+                                    :href="route('calendar.overview')"><i
                                     class="feather-plus"></i></Link></span>
                             </div>
                             <div class="up-come-header position-relative float-right mt-1">
@@ -593,14 +609,14 @@ function removeNote(nId) {
                             <!--                        <div v-if="showEvents" id="events-wrapper">-->
                             <div v-if="events.length > 0">
 
-                                <div id="events-wrapper" v-for="year in uniqueYears" :key="year" >
+                                <div id="events-wrapper" v-for="year in uniqueYears" :key="year">
 
                                     <div class="upcome-event-date d-flex justify-center mt-16">
                                         <h3 class="bg-official-secondary">{{ year }}</h3>
                                     </div>
                                     <!--{{// events}}-->
                                     <div v-for="month in monthsByYear[year]" class="mt-14" :key="month">
-                                        <div class="upcome-event-date" >
+                                        <div class="upcome-event-date">
                                             <h3 class="bg-official-secondary">{{ moment(month).format('MMMM') }}</h3>
                                         </div>
 
@@ -608,7 +624,8 @@ function removeNote(nId) {
                                              :key="event.id">
                                             <div class="calendar-details"
                                                  v-if="month == moment(event.dateFrom).format('MM') && year == moment(event.dateFrom).format('YYYY')">
-                                                <p class="font-size-14 bg-official-secondary" v-if="event.timeFrom !== null" >{{
+                                                <p class="font-size-14 bg-official-secondary"
+                                                   v-if="event.timeFrom !== null">{{
                                                         event.timeFrom
                                                     }}
                                                     {{ event.timeTo }}</p>

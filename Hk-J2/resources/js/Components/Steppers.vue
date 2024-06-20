@@ -112,9 +112,11 @@
             <h3 class="text-h6">Preview</h3>
             <br>
             <div class="col-auto text-center ms-auto download-grp">
-                <a href="javascript:void(0)" v-if="$page.props.auth.schedule != null" @click="openNewWindow"
-                   class="btn btn-primary p-20"><i
-                    class="fas fa-eye"></i></a>
+                <v-btn v-if="$page.props.auth.schedule != null" @click="openNewWindow">
+                    <div class="pa-20">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </v-btn>
             </div>
             <hr>
             <h3>Embed Code</h3>
@@ -214,6 +216,7 @@ import {Link} from "@inertiajs/vue3";
 import {isMobile} from "@/Pages/Ref/isMobile";
 import {scheduleDialog} from "@/Pages/Ref/scheduleDialog";
 import {useToast} from "vue-toastification";
+import config from "@/config";
 
 export default {
     name: 'Steppers',
@@ -235,7 +238,7 @@ export default {
             max: 1000,
             slider: 500,
         },
-        url: 'http://localhost:8080/'+props.frameToken,//route('frame.view', props.frameToken),
+        url: config.frame.urls.local+props.frameToken,//route('frame.view', props.frameToken),
         frameUI: [],
         selectedEmployee: props.markedEmployees ?? null,
         servicesDialog: false,

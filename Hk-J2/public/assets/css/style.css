@@ -10037,7 +10037,7 @@ body[data-layout-mode=dark] .alertify .ajs-footer .ajs-buttons .ajs-button.ajs-o
     }
 
     .mobile_btn {
-        color: #ff7300 !important;
+        color: #3d5ee1 !important;
         cursor: pointer;
         display: block;
         font-size: 24px;
@@ -11367,6 +11367,13 @@ transform: rotate(90deg);
 /*        width: 100%;*/
 /*    }*/
 
+}
+.text-normal{
+    margin-bottom: 0;
+    font-weight: revert-layer;
+    font-size: 17px;
+    color: #000;
+    font-family: 'Comfortaa', sans-serif;
 }
 .v-bottom-navigation{
     display: flex !important;

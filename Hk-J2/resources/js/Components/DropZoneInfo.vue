@@ -9,7 +9,7 @@
 
 <script>
 // @ is an alias to /src
-import DropZone from "@/components/DropZone.vue";
+import DropZone from "@/Components/DropZone-old.vue";
 import { ref } from "vue";
 
 export default {

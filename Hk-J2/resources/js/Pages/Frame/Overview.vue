@@ -1,3 +1,33 @@
+<template>
+    <AuthenticatedLayout>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-table border-r-20 border-secondary-color-2 bg-official-secondary">
+                    <div class="card-body">
+                        <div class="page-header">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h3 class="page-title">
+                                        {{
+                                            $page.props.auth.user.lang == 'arabic' ? 'إدارة الايطار' : 'Frame Management'
+                                        }}</h3>
+                                </div>
+                                <div class="col-auto text-end float-end ms-auto download-grp">
+                                    <a href="javascript:void(0)" v-if="$page.props.auth.schedule != null" @click="openNewWindow" class="btn btn-primary"><i
+                                        class="fas fa-eye"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                      <Steppers v-if="$page.props.auth.userRole.includes('schedule-edit')" :frame-token="frameToken" :employers="employers.data" :services="services" :markedEmployees="markedEmployers.data"/>
+                </div>
+                </div>
+            </div>
+
+        </div>
+
+    </AuthenticatedLayout>
+
+</template>
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {Link} from "@inertiajs/vue3";
@@ -36,41 +66,9 @@ export default {
         }
     },
     mounted() {
-this.setCookie()    }
+        this.setCookie()    }
 }
 </script>
-<template>
-    <AuthenticatedLayout>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-table border-r-20 border-secondary-color-2 bg-official-secondary">
-                    <div class="card-body">
-                        <div class="page-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h3 class="page-title">
-<!--                                        {{// cookies.set('r-token', frameToken)}}-->
-                                        {{
-                                            $page.props.auth.user.lang == 'arabic' ? 'إدارة الايطار' : 'Frame Management'
-                                        }}</h3>
-                                </div>
-                                <div class="col-auto text-end float-end ms-auto download-grp">
-                                    <a href="javascript:void(0)" v-if="$page.props.auth.schedule != null" @click="openNewWindow" class="btn btn-primary"><i
-                                        class="fas fa-eye"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                      <Steppers v-if="$page.props.auth.userRole.includes('schedule-edit')" :frame-token="frameToken" :employers="employers.data" :services="services" :markedEmployees="markedEmployers.data"/>
-                </div>
-                </div>
-            </div>
-
-        </div>
-
-    </AuthenticatedLayout>
-
-</template>
-
 <style lang="css">
 :root {
     --prm-color: #0381ff;

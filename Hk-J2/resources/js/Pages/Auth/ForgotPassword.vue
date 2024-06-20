@@ -4,7 +4,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import {Head, useForm,Link} from '@inertiajs/vue3';
+import {Head, useForm, Link} from '@inertiajs/vue3';
 
 defineProps({
     status: {
@@ -22,58 +22,57 @@ const submit = () => {
 </script>
 
 <template>
-        <Head title="Forgot Password"/>
-        <div class="main-wrapper login-body">
-            <div class="login-wrapper">
-                <div class="container">
-                    <div class="loginbox">
-                        <div class="login-left">
-                            <img class="img-fluid" src="/images/logo/cutcal-login.png" alt="Logo">
-                        </div>
-                        <div class="login-right">
-                            <div class="login-right-wrap">
+    <Head title="Forgot Password"/>
+    <guest-layout>
+        <v-row class="pa-7 pa-md-0 ma-0 h-100 overflow-x-hidden" align="center" align-content="center">
+            <v-col cols="12" md="5" class="h-100 auth-banner auth-img-background fireaxered d-none d-md-flex">
+            </v-col>
+            <v-row justify="center">
+                <v-col cols="12" md="7" align-self="center" style="max-width: 500px;">
+                    <div class="login-right-wrap">
+
+                                <h1>Welcome to CutCal </h1>
+                        <p class="account-subtitle">Do you want to? <Link :href="route('login')">Sign In</Link></p>
+
                                 <h6>
-                                    Forgot your password? No problem. Just let us know your email address.
+                            Forgot your password? No problem. Just let us know your email address.
 
-                                </h6>
+                        </h6>
 
-                                    <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-                                        {{ status }}
-                                    </div>
-
-                                    <form @submit.prevent="submit">
-                                        <div>
-                                            <InputLabel for="email" value="Email"/>
-
-                                            <TextInput
-                                                id="email"
-                                                type="email"
-                                                class="form-control"                                                v-model="form.email"
-                                                required
-                                                autofocus
-                                                autocomplete="username"
-                                            />
-
-                                            <InputError class="mt-2" :message="form.errors.email"/>
-                                        </div>
-                                        <Link :href="route('login')" style="margin: 10px; position: relative; float: right">
-                                            Return to sign page?
-                                        </Link>
-                                        <div class="flex items-center justify-end mt-4">
-
-                                        </div>
-                                        <div class="flex items-center justify-end mt-4">
-                                            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" style="background-color: #0a53be">
-                                                Email Password Reset Link
-                                            </PrimaryButton>
-                                        </div>
-                                </form>
-                            </div>
+                        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+                            {{ status }}
                         </div>
+
+                        <form @submit.prevent="submit">
+                            <div>
+                                <InputLabel for="email" value="Email"/>
+                                <v-text-field
+                                    class="input-auth"
+                                    id="email"
+                                    type="email"
+                                    required
+                                    autofocus
+                                    v-model="form.email"
+                                    autocomplete="username"
+                                    variant="text"
+                                ></v-text-field>
+                                <InputError class="mt-2" :message="form.errors.email"/>
+                            </div>
+                            <div class="flex items-center justify-end mt-4">
+
+                            </div>
+                            <div class="flex items-center justify-end mt-4">
+                                <v-btn :class="{ 'opacity-25': form.processing }" type="submit" :disabled="form.processing"
+                                       class="bg-official text-white">
+                                    Email Password Reset Link
+                                </v-btn>
+                            </div>
+                        </form>
                     </div>
-                </div>
-            </div>
-        </div>
+                </v-col>
+            </v-row>
+        </v-row>
+    </guest-layout>
 
 </template>
 <script>

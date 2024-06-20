@@ -1,12 +1,8 @@
 <template>
     <GuestLayout>
-        <Head title="Register"/>
-        <!--    <div class="main-wrapper login-body">-->
-        <!--        <div class="login-wrapper">-->
-        <!--            <div class="container">-->
+        <Head title="Sign Up"/>
         <v-row class="pa-7 pa-md-0 ma-0 h-100" align="center" align-content="center">
             <v-col cols="12" md="5" class="h-100 auth-banner auth-img-background fireaxered d-none d-md-flex">
-                <!--            <img src="/images/logo/cutcal-login.png" alt="Background Image" class="auth-banner-image align-self-center" />-->
             </v-col>
             <v-row justify="center" class="pa-md-10 pb-md-15">
 
@@ -19,18 +15,13 @@
                         border="top"
                     >
                     </v-alert>
-                    <!--                <div class="loginbox">-->
-                    <!--                    <div class="login-left">-->
-                    <!--                        <img class="img-fluid" style="height: 680px" src="/images/logo/cutcal-login.png" alt="Logo">-->
-                    <!--                    </div>-->
+
                     <div class="login-right">
                         <div class="login-right-wrap">
 
                             <h1>Welcome to CutCal </h1>
-                            <!--                                <p class="account-subtitle">Need an account? <a href="register.html">Sign Up</a></p>-->
-                            <!--                        <h2>Enter you'r E-malil to start</h2>-->
+                            <p class="account-subtitle">Already have an account? <Link :href="route('login')">Sign In</Link></p>
 
-                            <!--                        <v-form @submit.prevent="submit">-->
                             <auth-otp v-if="step == 2" @otp="(data)=>{code = data}" :message="message"
                                       :email="form.email"></auth-otp>
                             <div class="form-group" v-if="step == 3">
@@ -47,9 +38,9 @@
                                 />
 
                                 <InputError class="mt-2" :message="form.errors.name"/>
-                                <!--                                    <span class="profile-views"><i class="fas fa-user-circle"></i></span>-->
                             </div>
                             <div class="form-group" v-if="step == 1">
+                                <google-auth/>
                                 <label>Email <span class="login-danger">*</span></label>
                                 <v-text-field
                                     id="email"
@@ -62,11 +53,9 @@
                                     autocomplete="email"
                                 />
                                 <InputError class="mt-2" :message="message"/>
-                                <!--                                    <span class="profile-views"><i class="fas fa-mail-bulk"></i></span>-->
                             </div>
                             <div class="form-group" v-if="step == 3">
                                 <label>Password <span class="login-danger">*</span></label>
-                                <!--                                        <input class="form-control pass-input" type="text">-->
                                 <v-text-field
                                     id="password"
                                     type="password"
@@ -101,17 +90,8 @@
                                 <h7>By creating an account, you agree with our <a :href="route('PrivacyPolicy')"
                                                                                   target="_blank">Privacy and Policy</a>.
                                 </h7>
-                                <!--                                <v-checkbox label="" aria-required="true"/>-->
                             </div>
-                            <div class="forgotpass">
-                                <Link
-                                    :href="route('login')"
-                                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                    Already registered?
-                                </Link>
-                                <!--                                        <a href="forgot-password.html">Forgot Password?</a>-->
-                            </div>
+
                             <v-radio-group v-if="step == 1"
                                            v-model="form.lang"
                                            :rules="config.validationRules.required"
@@ -178,6 +158,7 @@ import {Head, Link, router, useForm} from '@inertiajs/vue3';
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import config from "@/config";
 import AuthOtp from "@/Components/auth/auth-otp.vue";
+import GoogleAuth from "@/Components/google-auth.vue";
 
 export default {
     computed: {
@@ -188,7 +169,7 @@ export default {
     props: {
         errors: Object,
     },
-    components: {GuestLayout, AuthOtp, InputError},
+    components: {GoogleAuth, GuestLayout, AuthOtp, InputError,Link,Head},
     layout: GuestLayout,
     data() {
         return {

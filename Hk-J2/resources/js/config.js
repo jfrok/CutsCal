@@ -6,6 +6,12 @@ const config = {
             phonenumber: [(v) => !!v || 'Phone number is not valid!', (v) => /^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/g.test(v) || 'Invalid phone number!'],
 
         },
+    frame:{
+            urls:{
+                live: 'https://jhdevelopers.com/',
+                local: 'http://localhost:8080/',
+            }
+    }
 };
 
 export default config;

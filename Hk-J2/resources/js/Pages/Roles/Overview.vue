@@ -21,7 +21,7 @@
                             <div v-for="uniqueUserName in uniqueUserNames" :key="uniqueUserName">
                                <h4 class="p-10 mt-5"> {{ uniqueUserName }} </h4>
                                 <hr>
-                            <v-expansion-panels >
+                            <v-expansion-panels>
                                     <v-expansion-panel v-for="role in roles.data"
                                                        :key="role.id">
                                         <v-expansion-panel-title>{{ role.name }}</v-expansion-panel-title>

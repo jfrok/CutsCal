@@ -22,7 +22,7 @@
                         <v-dialog
                             v-model="avatarDialog"
                             activator="parent"
-                            width="auto"
+                            width="800"
                         >
                             <AvatarDialog @close-dialog="closeDialog"/>
                         </v-dialog>

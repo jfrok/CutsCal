@@ -442,7 +442,7 @@ const color = computed(() => {
 
             </div>
         </div>
-        <v-layout class="overflow-visible h-auto" v-if="isMobile">
+        <v-layout class="overflow-visible h-auto" v-if="$vuetify.display.mobile">
             <v-bottom-navigation
 
                 v-model="bottomBar"

@@ -356,10 +356,11 @@ class UserController extends Controller
             $user->avatar = '/img/avatar/' . $imageName;
         }
         if ($user->save()) {
-//            $user->assignRole(10);
+            $user->assignRole(10);
             if ($role) {
                 $user->assignRole($role);
             } else {
+//                dd('no role');
                 $user->assignRole('User');
             }
 

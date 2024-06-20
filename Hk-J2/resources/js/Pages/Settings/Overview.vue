@@ -154,7 +154,6 @@ import {defineComponent, onMounted, reactive, ref, watch} from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {router, useForm, usePage} from "@inertiajs/vue3";
 
-import format from "@popperjs/core/lib/utils/format";
 import moment from "moment";
 import InputError from "@/Components/InputError.vue";
 import {useToast} from "vue-toastification";
@@ -276,7 +275,6 @@ export default defineComponent({
     },
 
     methods: {
-        format,
         moment,
         generateToken() {
             let result = "";

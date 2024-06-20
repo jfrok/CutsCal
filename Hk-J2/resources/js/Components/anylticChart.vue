@@ -15,7 +15,7 @@ export default {
         return {
             series: [
                 {
-                    color:'#ff9900',
+                    color:'#3d5ee1',
                     name: 'Planed Orders',
                     data: this.eventCount,
                 },

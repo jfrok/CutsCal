@@ -1,6 +1,8 @@
 <template>
     <guest-layout>
-    <v-row class="pa-7 pa-md-0 ma-0 h-100 overflow-x-hidden" align="center" align-content="center">
+        <Head title="Login"/>
+
+        <v-row class="pa-7 pa-md-0 ma-0 h-100 overflow-x-hidden" align="center" align-content="center">
         <v-col cols="12" md="5" class="h-100 auth-banner auth-img-background fireaxered d-none d-md-flex">
 <!--            <img src="/images/logo/cutcal-login.png" alt="Background Image" class="auth-banner-image align-self-center" />-->
         </v-col>
@@ -13,16 +15,7 @@
                 <v-alert v-if="$page.props.ziggy.flash.error" variant="outlined" type="warning" prominent border="top">
                     {{ $page.props.ziggy.flash.error }}
                 </v-alert>
-<v-card elevation="0" class="border mb-5" color="#000" @click="navigateToGoogleAuth">
-    <div class="d-flex justify-space-between align-center pa-4">
-        <svg fill="#090d8b" height="24" width="24" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 210 210" xml:space="preserve" data-darkreader-inline-fill="" style="--darkreader-inline-fill: #181a1b; --darkreader-inline-stroke: #e8e6e3;" stroke="#090d8b" data-darkreader-inline-stroke="">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-            <g id="SVGRepo_iconCarrier"> <path d="M0,105C0,47.103,47.103,0,105,0c23.383,0,45.515,7.523,64.004,21.756l-24.4,31.696C133.172,44.652,119.477,40,105,40 c-35.841,0-65,29.159-65,65s29.159,65,65,65c28.867,0,53.398-18.913,61.852-45H105V85h105v20c0,57.897-47.103,105-105,105 S0,162.897,0,105z"/> </g>
-</svg>
-        <span>Continue with Google</span>
-    </div>
-</v-card>
+                <google-auth />
                 <v-form @submit.prevent="submit">
                     <div class="form-group">
                         <label>Email <span class="login-danger"></span></label>
@@ -107,6 +100,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import {Head, Link, router, useForm} from '@inertiajs/vue3';
+import GoogleAuth from "@/Components/google-auth.vue";
 // import logo from '../../images/logo/cutcal-login.png';
 
 export default {
@@ -135,9 +129,7 @@ export default {
     //     }
     // },
     methods: {
-        navigateToGoogleAuth() {
-            window.location.href = route('google-auth');
-        },
+
         logo(){
           return require('../../images/logo/cutcal-login.png')
         },
@@ -168,6 +160,6 @@ export default {
             passwordField.setSelectionRange(length, length);
         }
     },
-    components:{GuestLayout, Checkbox,InputError,InputLabel,PrimaryButton,TextInput,Head,Link},
+    components:{GoogleAuth, GuestLayout, Checkbox,InputError,InputLabel,PrimaryButton,TextInput,Head,Link},
 }
 </script>

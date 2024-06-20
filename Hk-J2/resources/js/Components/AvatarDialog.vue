@@ -1,106 +1,112 @@
 <template>
 
-        <v-card>
-            <v-card-text>
-                <div class="bank-inner-details">
-                    <div v-if="state.files.length > 0" class="files">
-                        <div class="file-item" v-for="(file, index) in state.files"
-                             :key="index">
-                            <span>{{ file.name }}</span>
-                            <span class="delete-file" @click="handleClickDeleteFile(index)"
-                            >Delete</span
-                            >
-                        </div>
-                    </div>
-                    <div v-else class="dropzone" v-bind="getRootProps()">
-                        <div
-                            class="border"
-                            :class="{
-          isDragActive,
-        }"
-                        >
-                            <input type="file"
-                                   accept=".jpeg,.png,.jpg,.gif"
-                                   @input="submit"
-                                   formenctype="multipart/form-data"
-                                   v-bind="getInputProps()"/>
-                            <p v-if="isDragActive">Drop the files here ...</p>
-                            <p v-else>Drag and drop files here, or Click to select files</p>
-                        </div>
+    <v-card class="pt-10">
+        {{preview}}
+<!--        @acceptFiles="submit"-->
+            <drop-zone
+                :class="preview.length > 0?'d-none':''"
+                :accepted-types="acceptedTypes"
+                @previews="(data)=>{preview = data}"
+                @acceptFiles="(file)=>{form.img = file}"
+               >
+                <div class="dropzone pa-10">
+                    <div class="align-self-center">
+                        <svg class="mx-auto d-block mb-3" xmlns="http://www.w3.org/2000/svg" width="37" height="36" viewBox="0 0 37 36" fill="none">
+                            <path
+                                d="M4.49951 35.999C3.39951 35.999 2.45785 35.6074 1.67451 34.824C0.891178 34.0407 0.499512 33.099 0.499512 31.999V3.99902C0.499512 2.89902 0.891178 1.95736 1.67451 1.17402C2.45785 0.39069 3.39951 -0.000976562 4.49951 -0.000976562H32.4995C33.5995 -0.000976562 34.5412 0.39069 35.3245 1.17402C36.1078 1.95736 36.4995 2.89902 36.4995 3.99902V31.999C36.4995 33.099 36.1078 34.0407 35.3245 34.824C34.5412 35.6074 33.5995 35.999 32.4995 35.999H4.49951ZM4.49951 31.999H32.4995V3.99902H4.49951V31.999ZM6.49951 27.999H30.4995L22.9995 17.999L16.9995 25.999L12.4995 19.999L6.49951 27.999Z"
+                                fill="#DFDFDF"
+                            />
+                        </svg>
+                        <p class="text-center">Choose file, drag and place</p>
                     </div>
                 </div>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" block @click="$emit('close-dialog',false)">Close Dialog</v-btn>
-            </v-card-actions>
-        </v-card>
+                <template #dragActive>
+
+                </template>
+            </drop-zone>
+        <cropper
+            v-if="preview.length > 0"
+            class="cropper"
+            :src="preview[0].preview"
+            ref="cropper"
+            image-restriction="stencil"
+            :stencil-props="{
+					aspectRatio: 9 / 9,
+					movable: true,
+					resizable: true,
+					round: true,
+				}"
+            @change="change"
+        />
+        <div v-if="preview.length > 0 " class="w-100">
+                   <v-img :src="preview[0].preview"></v-img>
+                </div>
+
+            <v-btn  block @click="$emit('close-dialog',false)">Close Dialog</v-btn>
+    </v-card>
 </template>
-<script setup>
-import { useForm, usePage } from '@inertiajs/vue3';
-import {reactive, ref, watch} from "vue";
-import {useDropzone} from "vue3-dropzone";
-
-const props = defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
+<script>
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
+import {useForm, usePage} from '@inertiajs/vue3';
+import DropZone from "@/Components/DropZone.vue";
+export default {
+    components: {DropZone,Cropper},
+    props: {
+        mustVerifyEmail: {
+            type: Boolean,
+        },
+        status: {
+            type: String,
+        },
     },
-    status: {
-        type: String,
-    },
-});
-
-const user = usePage().props.auth.user;
-
-const form = useForm({
-    name: user.name,
-    email: user.email,
-    job: user.job,
-    city: user.city,
-    address: user.address,
-    description: user.description,
-    img:''
-});
-
-const state = reactive({
-    files: [],
-});
-
-const {getRootProps, getInputProps, isDragActive, ...rest} = useDropzone({
-    onDrop,
-});
-
-watch(state, () => {
-    submit(state.files[0])
-
-    console.log('state', state.files[0]);
-});
-
-watch(isDragActive, () => {
-    // console.log('isDragActive', isDragActive.value, rest);
-});
-
-function onDrop(acceptFiles, rejectReasons) {
-console.log('acceptFiles', acceptFiles);
-    // form.img = acceptFiles[0];
-    // state.files = acceptFiles;
-}
-
-function handleClickDeleteFile(index) {
-    state.files.splice(index, 1);
-}
-
-let submit = (e) => {
-    form.img =  state.files ? e :e.target.files[0]
-    form.post(route('updateProfile'),{
-        onSuccess: () =>{
-            emit('close-dialog',false)
-            handleClickDeleteFile(0)
+    data() {
+        return {
+            preview: [],
+            user: usePage().props.auth.user,
+            form: useForm({
+                name: null,
+                email: null,
+                job: null,
+                city: null,
+                address: null,
+                description: null,
+                img: null
+            }),
+            acceptedTypes: ['image/png', 'image/jpeg', 'image/jpg'],
         }
-    })
+    },
+    methods: {
+        submit(e) {
+            this.form.img = this.state.files ? e : e.target.files[0]
+            this.form.post(route('updateProfile'), {
+                onSuccess: () => {
+                    this.$emit('close-dialog', false)
+                }
+            })
+        }
+    },
+    watch: {
+        'state.files': function () {
+            this.submit(this.state.files[0])
+            console.log('state', this.state.files[0]);
+        },
+        'dropzone.isDragActive': function () {
+            // console.log('isDragActive', this.dropzone.isDragActive.value, this.dropzone.rest);
+        }
+    },
+    emits: ['close-dialog'],
+    mounted() {
+        this.user = usePage().props.auth.user;
+        this.form.name = this.user.name;
+        this.form.email = this.user.email;
+        this.form.job = this.user.job;
+        this.form.city = this.user.city;
+        this.form.address = this.user.address;
+        this.form.description = this.user.description;
+        this.form.img = '';
+    }
 }
-
-
-const emit = defineEmits(['close-dialog']);
 </script>
 <style lang="scss" scoped>
 .dropzone {
