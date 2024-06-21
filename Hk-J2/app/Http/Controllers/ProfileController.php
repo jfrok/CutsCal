@@ -22,6 +22,7 @@ class ProfileController extends Controller
         $skills = Skill::latest()->where('userId',Auth::id())->paginate(10);
         return \inertia('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'authUser' => Auth::user(),
             'status' => session('status'),
             'skills' => $skills
         ]);

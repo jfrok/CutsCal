@@ -6,7 +6,7 @@
             <div class="profile-header">
                 <div class="row align-items-center">
                     <div class="col-auto profile-image">
-                        <a href="#" @click="openDialog">
+                        <a href="#" @click="avatarDialog = true">
                             <v-avatar v-if="$page.props.auth.user.avatar" alt="User Image"
                                       size="100"
                                       :image="$page.props.auth.user.avatar ?? 'img/non-user-add.png'">
@@ -22,9 +22,9 @@
                         <v-dialog
                             v-model="avatarDialog"
                             activator="parent"
-                            width="800"
+                            width="600"
                         >
-                            <AvatarDialog @close-dialog="closeDialog"/>
+                            <AvatarDialog @close-dialog="avatarDialog = false"/>
                         </v-dialog>
                     </div>
                     <div class="col ms-md-n2 profile-user-info">
@@ -187,6 +187,7 @@ export default {
         Chip
     },
     props: {
+        authUser: Object,
         skills: Array,
         mustVerifyEmail: {
             type: Boolean,
@@ -223,12 +224,6 @@ export default {
         this.setInitials();
     },
     methods: {
-        openDialog() {
-            this.avatarDialog = true
-        },
-        closeDialog() {
-            this.avatarDialog = false
-        },
         setInitials() {
             const initials = this.fullName
                 .split(' ')

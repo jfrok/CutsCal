@@ -62,11 +62,12 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/updateAvatar', [UserController::class, 'updateAvatar'])->name('updateAvatar');
     Route::post('/updateProfile', [UserController::class, 'updateProfile'])->name('updateProfile');
     Route::post('removeSkill/{skillId}', [UserController::class, 'removeSkill'])->name('removeSkill');
     Route::post('/clearNotifications', [UserController::class, 'clearNotifications'])->name('clearNotifications');
 //    Route::post('/account/create', [UserController::class, 'createAccount'])->name('account.create');
-    Route::get('/account/overview', [UserController::class, 'index'])->name('users.index');
+    Route::get('/account', [UserController::class, 'index'])->name('users.index');
     Route::get('/dashboard', [\App\Http\Controllers\Controller::class, 'dashboard'])->name('dashboard');
 
     Route::post('/change-language', [UserController::class, 'changeLanguage']);
@@ -74,7 +75,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     Route::prefix('accounts')->group(function () {
         Route::get('/create', [UserController::class, 'create'])->name('account.create');
         Route::post('/store', [UserController::class, 'store'])->name('account.make');
-        Route::get('/overview', [UserController::class, 'index'])->name('account.overview');
+        Route::get('', [UserController::class, 'index'])->name('account.overview');
         Route::get('/edit/{uId}', [UserController::class, 'edit'])->name('account.edit');
 //        Route::post('/store', [UserController::class, 'createAccount'])->name('account.make');
         Route::post('/destroy/{uId}', [UserController::class, 'destroy'])->name('account.destroy');
@@ -88,7 +89,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
         Route::post('/clearNotifications', [UserController::class, 'clearNotifications'])->name('clearNotifications');
     });
     Route::prefix('employers')->group(function () {
-        Route::get('/overview', [EmployersController::class, 'index'])->name('employer.overview');
+        Route::get('', [EmployersController::class, 'index'])->name('employer.overview');
         Route::get('/create', [EmployersController::class, 'create'])->name('employer.create');
         Route::post('/create', [EmployersController::class, 'createEmployer'])->name('employer.store');
         Route::get('/edit/{eId}', [EmployersController::class, 'edit'])->name('employer.edit');
@@ -96,7 +97,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
         Route::post('/set-mark/', [EmployersController::class, 'setMark'])->name('employer.setMark');
     });
     Route::prefix('clients')->group(function () {
-        Route::get('/overview', [ClientController::class, 'index'])->name('client.overview');
+        Route::get('', [ClientController::class, 'index'])->name('client.overview');
         Route::post('/create', [ClientController::class, 'store'])->name('client.store');
         Route::post('/update/{cId}', [ClientController::class, 'update'])->name('client.update');
 //       Route::post('/group-destroy/{cId}',[ClientController::class,'destroy'])->name('client.gro.destroy');
@@ -105,7 +106,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     });
     /// Projects
     Route::prefix('projects')->group(function () {
-        Route::get('overview', [ProjectController::class, 'index'])->name('project.overview');
+        Route::get('', [ProjectController::class, 'index'])->name('project.overview');
         Route::get('add/{uId}', [ProjectController::class, 'create'])->name('project.add');
         //add
         Route::post('add', [ProjectController::class, 'add'])->name('project.addOne');
@@ -127,7 +128,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     });
     /// Calendar
     Route::prefix('calendar')->group(function () {
-        Route::get('overview', [EventController::class, 'index'])->name('calendar.overview');
+        Route::get('', [EventController::class, 'index'])->name('calendar.overview');
         Route::post('add', [EventController::class, 'add'])->name('calendar.add');
         Route::post('update/{eId}', [EventController::class, 'update'])->name('calendar.update');
         Route::post('remove/{eId}', [EventController::class, 'remove'])->name('calendar.remove');
@@ -153,7 +154,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
     Route::post('settings/update-token', [SettingsController::class, 'changeToken'])->name('settings.updateToken');
     //});
     Route::prefix('frame')->group(function () {
-        Route::get('overview', [FrameController::class, 'index'])->name('frame.overview');
+        Route::get('', [FrameController::class, 'index'])->name('frame.overview');
         Route::post('create-services', [FrameController::class, 'createServices'])->name('services.create');
         Route::post('delete-services/{sId}', [FrameController::class, 'deleteService'])->name('services.delete');
 

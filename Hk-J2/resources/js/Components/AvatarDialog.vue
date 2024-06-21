@@ -1,13 +1,12 @@
 <template>
 
-    <v-card class="pt-10">
-        {{preview}}
+    <v-card class="pt-10" max-height="500">
 <!--        @acceptFiles="submit"-->
             <drop-zone
                 :class="preview.length > 0?'d-none':''"
                 :accepted-types="acceptedTypes"
                 @previews="(data)=>{preview = data}"
-                @acceptFiles="(file)=>{form.img = file}"
+                @acceptFiles="(img)=>{file = img}"
                >
                 <div class="dropzone pa-10">
                     <div class="align-self-center">
@@ -27,6 +26,7 @@
         <cropper
             v-if="preview.length > 0"
             class="cropper"
+            :stencil-component="$options.components.CircleStencil"
             :src="preview[0].preview"
             ref="cropper"
             image-restriction="stencil"
@@ -38,20 +38,23 @@
 				}"
             @change="change"
         />
-        <div v-if="preview.length > 0 " class="w-100">
-                   <v-img :src="preview[0].preview"></v-img>
-                </div>
+        <div class="d-flex justify-space-between align-center pa-20">
+            <v-btn @click="submit">Save</v-btn>
+            <v-btn @click="$emit('close-dialog',false)">Cancel</v-btn>
+        </div>
+        <v-progress-linear indeterminate v-if="loading" />
+        <v-btn elevation="0" v-if="preview.length > 0" class="btn btn-sm" variant="outlined" color="var(--tertiary)" @click="file = null"> Change </v-btn>
+        <k-spacing y="5"></k-spacing>
 
-            <v-btn  block @click="$emit('close-dialog',false)">Close Dialog</v-btn>
     </v-card>
 </template>
 <script>
-import { Cropper } from 'vue-advanced-cropper';
+import { Cropper, CircleStencil } from "vue-advanced-cropper";
 import 'vue-advanced-cropper/dist/style.css';
-import {useForm, usePage} from '@inertiajs/vue3';
+import {router, useForm, usePage} from '@inertiajs/vue3';
 import DropZone from "@/Components/DropZone.vue";
 export default {
-    components: {DropZone,Cropper},
+    components: {DropZone,Cropper,CircleStencil},
     props: {
         mustVerifyEmail: {
             type: Boolean,
@@ -63,52 +66,60 @@ export default {
     data() {
         return {
             preview: [],
+            loading: false,
             user: usePage().props.auth.user,
-            form: useForm({
-                name: null,
-                email: null,
-                job: null,
-                city: null,
-                address: null,
-                description: null,
-                img: null
-            }),
+            file: [],
             acceptedTypes: ['image/png', 'image/jpeg', 'image/jpg'],
         }
     },
     methods: {
-        submit(e) {
-            this.form.img = this.state.files ? e : e.target.files[0]
-            this.form.post(route('updateProfile'), {
-                onSuccess: () => {
-                    this.$emit('close-dialog', false)
-                }
-            })
-        }
-    },
-    watch: {
-        'state.files': function () {
-            this.submit(this.state.files[0])
-            console.log('state', this.state.files[0]);
+        async getBlob(canvas) {
+            console .log('canvas',canvas)
+            const blob = await new Promise((resolve) => canvas.toBlob(resolve));
+            return blob;
         },
-        'dropzone.isDragActive': function () {
-            // console.log('isDragActive', this.dropzone.isDragActive.value, this.dropzone.rest);
+        submit() {
+            this.loading = true;
+            const { canvas } = this.$refs.cropper.getResult();
+            if (canvas) {
+                this.getBlob(canvas).then((blob) => {
+                    this.file = blob;
+                    router.post(
+                        route('updateAvatar'),
+                        {
+                            img: blob,
+                        },
+                        {
+                            onSuccess: () => {
+                                this.loading = false;
+                                this.$emit('close-dialog', false);
+                            },
+                        }
+                    );
+                    console.log('blob', blob);
+                }).catch((error) => {
+                    this.loading = false;
+                    console.log('Error getting blob:', error);
+                });
+
+            } else {
+                this.loading = false;
+                console.log('No canvas result available.');
+            }
         }
     },
     emits: ['close-dialog'],
     mounted() {
         this.user = usePage().props.auth.user;
-        this.form.name = this.user.name;
-        this.form.email = this.user.email;
-        this.form.job = this.user.job;
-        this.form.city = this.user.city;
-        this.form.address = this.user.address;
-        this.form.description = this.user.description;
-        this.form.img = '';
+        this.file = '';
     }
 }
 </script>
 <style lang="scss" scoped>
+.cropper  .vue-advanced-cropper__stretcher{
+    max-width: 500px !important;
+    max-height: 500px !important;
+}
 .dropzone {
     width: 400px;
     height: 200px;
@@ -143,6 +154,7 @@ export default {
         color: #3d5ee1;
     }
 }
+
 
 .dropzone,
 .files {
