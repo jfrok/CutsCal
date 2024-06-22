@@ -217,22 +217,28 @@ class UserController extends Controller
         return redirect()->route('account.overview')->with('error', 'Ops something wrong.');
     }
 
-    public function updateAvatar(Request $request)
-    {
-        $this->validate($request, [
-            'img' => 'image|mimes:jpeg,png,jpg|max:2048|required',
-        ]);
-        $user = Auth::user();
-            $imageName = $request->file('img')->getClientOriginalName();
+   public function updateAvatar(Request $request)
+{
+    $this->validate($request, [
+        'img' => 'image|mimes:jpeg,png,jpg|max:2048|required',
+    ]);
+    $user = Auth::user();
 
-            $user->avatar = '/img/avatar/' . $imageName . '_' . time();
+    $oldAvatarPath = public_path() . $user->avatar;
 
-        $user->save();
-        $request->img->move(public_path('/img/avatar'), $imageName. '_' . time());
-
-            return redirect()->back()->with('message', 'Profile updated successfully.');
-
+    if (file_exists($oldAvatarPath)) {
+        unlink($oldAvatarPath);
     }
+
+    $imageName = $request->file('img')->getClientOriginalName();
+    $newAvatarPath = '/img/avatar/' . $imageName . '_' . time();
+    $user->avatar = $newAvatarPath;
+
+    $user->save();
+    $request->img->move(public_path('/img/avatar'), $imageName. '_' . time());
+
+    return redirect()->back()->with('message', 'Profile updated successfully.');
+}
 
 public
 function updateProfile(ProfileUpdateRequest $request)

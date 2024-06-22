@@ -40,7 +40,7 @@
     "vue3-draggable": "^2.0.9",
     "vue3-dropzone": "^2.0.1",
     "vuedraggable": "^2.24.3",
-    "vuetify": "^3.4.0",
+    "vuetify": "^3.5.12",
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {

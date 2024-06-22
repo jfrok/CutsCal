@@ -100,27 +100,27 @@
                                     <v-text-field maxlength="50" type="time"
                                                   :label="$page.props.auth.user.lang == 'arabic'? 'الوقت من' : 'Time from'"
                                                   v-model="form.timeFrom" required/>
-<!--                                    <v-text-field-->
-<!--                                        v-model="form.timeFrom" required-->
-<!--                                        :active="menu2"-->
-<!--                                        :focus="menu2"-->
-<!--                                        label="Picker in menu"-->
-<!--                                        prepend-icon="mdi-clock-time-four-outline"-->
-<!--                                        readonly-->
-<!--                                    >-->
-<!--                                        <v-menu-->
-<!--                                            v-model="menu2"-->
-<!--                                            :close-on-content-click="false"-->
-<!--                                            activator="parent"-->
-<!--                                            transition="scale-transition"-->
-<!--                                        >-->
-<!--                                            <v-time-picker-->
-<!--                                                v-if="menu2"-->
-<!--                                                v-model="form.timeFrom"-->
-<!--                                                full-width-->
-<!--                                            ></v-time-picker>-->
-<!--                                        </v-menu>-->
-<!--                                    </v-text-field>-->
+                                    <v-text-field
+                                        v-model="form.timeFrom" required
+                                        :active="menu2"
+                                        :focus="menu2"
+                                        label="Picker in menu"
+                                        prepend-icon="mdi-clock-time-four-outline"
+                                        readonly
+                                    >
+                                        <v-menu
+                                            v-model="menu2"
+                                            :close-on-content-click="false"
+                                            activator="parent"
+                                            transition="scale-transition"
+                                        >
+                                            <v-time-picker
+                                                v-if="menu2"
+                                                v-model="form.timeFrom"
+                                                full-width
+                                            ></v-time-picker>
+                                        </v-menu>
+                                    </v-text-field>
                                     <InputError :message="form.errors.timeFrom"/>
                                 </v-col>
                                 <v-col cols="6">
