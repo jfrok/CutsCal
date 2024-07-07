@@ -3,7 +3,7 @@
 return [
     'name' => 'LaravelPWA',
     'manifest' => [
-        'name' => env('APP_NAME', 'CutCal'),
+        'name' => env('APP_NAME', 'CutsCal'),
         'short_name' => 'JHD',
         'start_url' => '/',
         'background_color' => '#ffffff',

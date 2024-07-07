@@ -47,7 +47,7 @@ const submit = () => {
                         </div>
                         <div class="login-right">
                             <div class="login-right-wrap">
-                                <h1>Welcome to CutCal </h1>
+                                <h1>Welcome to CutsCal </h1>
                                 <p class="account-subtitle">Do you want to <Link :href="route('login')">Sign In</Link>?</p>
                                   <h3>
                                         Reset your password

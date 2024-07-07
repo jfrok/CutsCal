@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'CutCal') }}</title>
+        <title inertia>{{ config('app.name', 'CutsCal') }}</title>
         <link rel="manifest" href="{{asset('../manifest.json')}}">
         <!-- Chrome for Android theme color -->
         <meta name="theme-color" content="#000000">

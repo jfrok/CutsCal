@@ -9,7 +9,7 @@
         <v-row justify="center" >
         <v-col cols="12" md="7" align-self="center" style="max-width: 500px;">
             <div class="pa-3 pa-md-0 justify-center d-flex flex-column w-100">
-                <h1>Welcome to CutCal</h1>
+                <h1>Welcome to CutsCal</h1>
                 <p class="account-subtitle">Need an account? <Link :href="route('register')">Sign Up</Link></p>
                 <h2>Sign in</h2>
                 <v-alert v-if="$page.props.ziggy.flash.error" variant="outlined" type="warning" prominent border="top">

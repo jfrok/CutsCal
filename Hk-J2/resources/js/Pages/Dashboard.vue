@@ -24,7 +24,14 @@ function arabicDay(dateFrom) {
     return arabicDays[englishDay] || '';
 }
 
-
+const resHeaders = [
+    { text: 'Name', value: 'name', align: 'start' },
+    { text: 'Phone', value: 'phone', align: 'start' },
+    { text: 'Email', value: 'email', align: 'start' },
+    { text: 'Date', value: 'date', align: 'start' },
+    { text: 'Time', value: 'time', align: 'start' },
+    { text: 'Details', value: 'details', align: 'center', sortable: false },
+]
 const currentDate = new Date();
 const formattedDate = currentDate;
 
@@ -169,6 +176,32 @@ const validNote = computed(() => notValidNote)
 
 function removeNote(nId) {
     router.post(route('note.remove', nId))
+}
+function exportToCSV() {
+    // Convert the orders data to CSV
+    const headers = resHeaders.map(header => header.text).join(',');
+    const rows = props.orders.map(order => {
+        return [
+            order.name,
+            order.phone,
+            order.email,
+            moment(order.date).format('YYYY MMM D'),
+            moment(order.time, "HH:mm:ss").format("hh:mm A")
+        ].join(',');
+    });
+    const csvContent = [headers, ...rows].join('\n');
+
+    // Create a Blob from the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element to trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'orders.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 </script>
 <template>
@@ -345,63 +378,54 @@ function removeNote(nId) {
                         <div
                             class="card flex-fill comman-shadow bg-official-secondary border-secondary-color-2 border-secondary-color-2">
                             <div class="card-header d-flex align-items-center bg-official-secondary ">
-                                <h5 class="card-title">
-                                    {{
-                                        $page.props.auth.user.lang == 'arabic' ? 'تاريخ الحجوزات' : 'Reservations History'
-                                    }}</h5>
+                                <h5 class="card-title w-100">
+                                    <div class="d-flex justify-space-between align-center w-100">
+                                        {{ $page.props.auth.user.lang == 'arabic' ? 'تاريخ الحجوزات' : 'Reservations History' }}
+                                        <v-btn variant="text" @click="exportToCSV">Export to CSV</v-btn>
+                                    </div>
+                                    </h5>
 
                             </div>
                             <div class="card-body">
-                                <v-table
-                                    style="border-radius: 20px"
+
+                                <v-data-table
+                                    :headers="resHeaders"
+                                    :items="orders"
+                                    :items-per-page="5"
+                                    class="elevation-1"
                                     fixed-header
                                     v-if="orders.length > 0"
                                 >
-                                    <thead>
-                                    <tr>
-                                        <th class="text-left">
-                                            Name
-                                        </th>
-                                        <th class="text-left">
-                                            Phone
-                                        </th>
-                                        <th class="text-left">
-                                            Email
-                                        </th>
-                                        <th class="text-left">
-                                            Date
-                                        </th>
-                                        <th class="text-left">
-                                            Time
-                                        </th>
-                                        <th class="text-left">
-                                            Total
-                                        </th>
-                                        <th class="text-center">
+<!--                                    <template v-slot:top>-->
+
+<!--                                        <v-toolbar rounded elevation="0">-->
+<!--                                            <v-toolbar-title>Orders</v-toolbar-title>-->
+<!--                                            <v-divider-->
+<!--                                                class="mx-4"-->
+<!--                                                inset-->
+<!--                                                vertical-->
+<!--                                            ></v-divider>-->
+<!--                                            <v-spacer></v-spacer>-->
+<!--                                            <v-btn-->
+<!--                                                color="primary"-->
+<!--                                                @click="exportToCSV"-->
+<!--                                            >-->
+<!--                                                Export to CSV-->
+<!--                                            </v-btn>-->
+<!--                                        </v-toolbar>-->
+<!--                                    </template>-->
+                                    <template v-slot:item.date="{ item }">
+                                        {{ moment(item.date).format('YYYY MMM D') }}
+                                    </template>
+                                    <template v-slot:item.time="{ item }">
+                                        {{ moment(item.time, "HH:mm:ss").format("hh:mm A") }}
+                                    </template>
+                                    <template v-slot:item.details="{ item }">
+                                        <v-btn variant="plain" @click="openOrderDialog(item)" color="primary">
                                             Details
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr
-                                        v-for="item in orders"
-                                        :key="item.id"
-                                    >
-                                        <td>{{ item.name }}</td>
-                                        <td>{{ item.phone }}</td>
-                                        <td>{{ item.email }}</td>
-                                        <td>{{ moment(item.date).format('YYYY MMM D') }}</td>
-                                        <td>{{ moment(item.time, "HH:mm:ss").format("hh:mm A") }}</td>
-                                        <!--                                        <td>{{ item.time }}</td>-->
-                                        <td>{{ item.price }}</td>
-                                        <td class="text-center">
-                                            <v-btn variant="plain" @click="openOrderDialog(item)" color="primary">
-                                                Details
-                                            </v-btn>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </v-table>
+                                        </v-btn>
+                                    </template>
+                                </v-data-table>
                                 <v-alert v-else class="mt-16"
                                          type="info"
                                          variant="tonal"

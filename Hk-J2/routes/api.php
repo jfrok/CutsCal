@@ -24,4 +24,4 @@ Route::get('hk/projects/{token}',[\App\Http\Controllers\ApiController::class,'pr
 Route::get('hk/projects/{slug}/{token}',[\App\Http\Controllers\ApiController::class,'content']);
 Route::get('hk/personalDetails/{token}',[\App\Http\Controllers\ApiController::class,'personalDetails']);
 Route::get('cutcal/reservation-data/{token}',[\App\Http\Controllers\ApiController::class,'reservationData']);
-Route::post('cutcal/reservation-data-store/',[\App\Http\Controllers\ApiController::class,'storeReservation']);
+Route::post('cutcal/reservation-data-store/{token}/',[\App\Http\Controllers\ApiController::class,'storeReservation']);

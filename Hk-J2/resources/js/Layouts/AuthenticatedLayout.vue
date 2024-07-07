@@ -83,11 +83,11 @@ bottomBar.value = trackPage.calendar ? 1 : trackPage.account ? 2 : 0;
 const color = computed(() => {
     switch (bottomBar.value) {
         case 0:
-            return 'red-accent-1';
+            return '#096dd9';
         case 1:
-            return 'orange-darken-4';
+            return '#096dd9';
         default:
-            return 'deep-orange-lighten-2';
+            return '#096dd9';
     }
 });
 </script>
@@ -109,7 +109,7 @@ const color = computed(() => {
                     <Link v-if="$page.props.auth.user"
                           :href="route('dashboard')" class="logo">
                         <div class="logo mt-4">
-<h2>CutCal</h2>
+<h2>CutsCal</h2>
 <!--                            <img src="/images/logo/fulllogo.png" alt="Logo" class="logo">-->
                         </div>
                         <!--                        <h6><img src="/images/logo/fulllogo.png" alt="Logo" class="logo"  ></h6>-->

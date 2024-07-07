@@ -97,25 +97,26 @@
                                 </v-col>
 
                                 <v-col cols="6">
-                                    <v-text-field maxlength="50" type="time"
-                                                  :label="$page.props.auth.user.lang == 'arabic'? 'الوقت من' : 'Time from'"
-                                                  v-model="form.timeFrom" required/>
                                     <v-text-field
                                         v-model="form.timeFrom" required
-                                        :active="menu2"
-                                        :focus="menu2"
-                                        label="Picker in menu"
-                                        prepend-icon="mdi-clock-time-four-outline"
+                                        :active="menu1"
+                                        :focus="menu1"
+                                        label="Time From"
                                         readonly
+                                        maxlength="50" type="time"
+                                        :label="$page.props.auth.user.lang == 'arabic'? 'الوقت من' : 'Time from'"
                                     >
                                         <v-menu
-                                            v-model="menu2"
+                                            v-model="menu1"
+                                            :active="menu1"
+                                            :focus="menu1"
+                                            readonly
                                             :close-on-content-click="false"
                                             activator="parent"
                                             transition="scale-transition"
                                         >
                                             <v-time-picker
-                                                v-if="menu2"
+                                                v-if="menu1"
                                                 v-model="form.timeFrom"
                                                 full-width
                                             ></v-time-picker>
@@ -126,7 +127,20 @@
                                 <v-col cols="6">
                                     <v-text-field  maxlength="50" type="time"
                                                   :label="$page.props.auth.user.lang == 'arabic'? 'الوقت الئ' : 'Time to'"
-                                                  v-model="form.timeTo" required/>
+                                                  v-model="form.timeTo" required>
+                                        <v-menu
+                                            v-model="menu2"
+                                            :close-on-content-click="false"
+                                            activator="parent"
+                                            transition="scale-transition"
+                                        >
+                                            <v-time-picker
+                                                v-if="menu2"
+                                                v-model="form.timeTo"
+                                                full-width
+                                            ></v-time-picker>
+                                        </v-menu>
+                                    </v-text-field>
                                     <InputError :message="form.errors.timeTo"/>
                                 </v-col>
                                 <v-col md="6">
@@ -286,7 +300,9 @@ export default defineComponent({
             'Submit',
         ]
         return {
+            menu1: false,
             menu2: false,
+            modal1: false,
             modal2: false,
             selectedView: 'Month',
             currentDate: '',

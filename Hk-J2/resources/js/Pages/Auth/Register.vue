@@ -19,7 +19,7 @@
                     <div class="login-right">
                         <div class="login-right-wrap">
 
-                            <h1>Welcome to CutCal </h1>
+                            <h1>Welcome to CutsCal </h1>
                             <p class="account-subtitle">Already have an account? <Link :href="route('login')">Sign In</Link></p>
 
                             <auth-otp v-if="step == 2" @otp="(data)=>{code = data}" :message="message"

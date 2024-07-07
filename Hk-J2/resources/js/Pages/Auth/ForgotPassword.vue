@@ -31,7 +31,7 @@ const submit = () => {
                 <v-col cols="12" md="7" align-self="center" style="max-width: 500px;">
                     <div class="login-right-wrap">
 
-                                <h1>Welcome to CutCal </h1>
+                                <h1>Welcome to CutsCal </h1>
                         <p class="account-subtitle">Do you want to? <Link :href="route('login')">Sign In</Link></p>
 
                                 <h6>

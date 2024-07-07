@@ -24,12 +24,14 @@ import "vue-toastification/dist/index.css";
 import * as vuetifyComponents from 'vuetify/components';
 // import {VDataTable} from "vuetify/labs/components";
 import VueCookies from 'vue-cookies'
+import { VTimePicker } from 'vuetify/labs/VTimePicker'
 
 const vuetify = createVuetify({
     components: {
         // VStepper,
         // VDataTable,
         ...vuetifyComponents,
+        VTimePicker
     },
     directives,
     date: {

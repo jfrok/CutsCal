@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Content;
+use App\Models\Event;
 use App\Models\Order;
 use App\Models\Project;
 use App\Models\Setting;
@@ -124,7 +125,7 @@ class ApiController extends Controller
         return response()->json(['error' => 'Invalid token'], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
-    public function storeReservation($token,Request $request)
+    public function storeReservation($token, Request $request)
     {
         if (User::verifyToken($token)) {
             try {
@@ -132,7 +133,6 @@ class ApiController extends Controller
                     'name' => 'required|max:100',
                     'date' => 'required',
                     'email' => 'nullable|email|max:100',
-                    'phone' => 'required|integer|digits_between:1,20',
                     'time' => 'date_format:H:i',
                     'barber' => 'required',
                     'service' => 'required|array|min:1',
@@ -153,12 +153,11 @@ class ApiController extends Controller
                 return response()->json(['error' => 'Order already exists for the given date and time'], 422);
             }
 
-
             $jS = json_encode($request->service);
             $strFirstO = str_replace('[', '', $jS);
             $strSecO = str_replace(']', '', $strFirstO);
 
-            $orders = Order::create([
+            $order = Order::create([
                 'employer_id' => $request->barber,
                 'service_id' => $strSecO,
                 'main_user_id' => $userId,
@@ -171,7 +170,21 @@ class ApiController extends Controller
                 'status' => 'open',
             ]);
 
-            if ($orders) {
+            if ($order) {
+                // Create the event
+                $eventRequest = new Request([
+                    'title' => 'Reservation for ' . $request->name,
+                    'color' => '#ff0000', // You can set a default color or get it from the request
+                    'description' => 'Reservation with barber ' . $request->barber,
+                    'dateFrom' => $request->date,
+//                    'dateTo' => $request->date,
+                    'timeFrom' => $request->time,
+                    'timeTo' => Carbon::parse($request->time)->addHour()->format('H:i:s'),
+                    'res_id' => $order->id
+                ]);
+
+                Event::addEvent($eventRequest,$userId);
+
                 return response()->json(['message' => 'Successfully reserved', 'status' => 200], 200);
             } else {
                 return response()->json(['error' => 'Failed to reserve'], 500);
