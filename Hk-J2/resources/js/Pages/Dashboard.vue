@@ -9,6 +9,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {orderData} from "@/Pages/Ref/OrderData";
 import OrderDetails from "@/Components/OrderDetails.vue";
 import AnylticChart from "@/Components/anylticChart.vue";
+import {useToast} from "vue-toastification";
 
 function arabicDay(dateFrom) {
     const englishDay = moment(dateFrom).format('dddd');
@@ -202,6 +203,24 @@ function exportToCSV() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+const toast = useToast()
+function archiveOrder(rId){
+    router.delete(route('archive.order',rId),{
+        preserveScroll:true,
+        preserveState:true,
+        onSuccess:() =>{
+            toast.success('The reservation successfully archived')
+    }
+    })
+}function deleteOrder(rId){
+    router.delete(route('destroy.order',rId),{
+        preserveScroll:true,
+        preserveState:true,
+        onSuccess:() =>{
+            toast.success('The reservation successfully deleted')
+    }
+    })
 }
 </script>
 <template>
@@ -421,9 +440,46 @@ function exportToCSV() {
                                         {{ moment(item.time, "HH:mm:ss").format("hh:mm A") }}
                                     </template>
                                     <template v-slot:item.details="{ item }">
-                                        <v-btn variant="plain" @click="openOrderDialog(item)" color="primary">
-                                            Details
-                                        </v-btn>
+                                        <v-menu>
+                                            <template v-slot:activator="{ props }">
+                                                <v-btn variant="text" class="px-1 py-1 icon-dense v-btn-text ml-auto d-block" size="small" v-bind="props">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            clip-rule="evenodd"
+                                                            d="M6.66602 8.50033C6.66602 7.76395 7.26297 7.16699 7.99935 7.16699C8.73573 7.16699 9.33268 7.76395 9.33268 8.50033C9.33268 9.23671 8.73573 9.83366 7.99935 9.83366C7.26297 9.83366 6.66602 9.23671 6.66602 8.50033Z"
+                                                            fill="#8C8B91"
+                                                        />
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            clip-rule="evenodd"
+                                                            d="M6.66602 3.83333C6.66602 3.09695 7.26297 2.5 7.99935 2.5C8.73573 2.5 9.33268 3.09695 9.33268 3.83333C9.33268 4.56971 8.73573 5.16667 7.99935 5.16667C7.26297 5.16667 6.66602 4.56971 6.66602 3.83333Z"
+                                                            fill="#8C8B91"
+                                                        />
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            clip-rule="evenodd"
+                                                            d="M6.66602 13.1663C6.66602 12.43 7.26297 11.833 7.99935 11.833C8.73573 11.833 9.33268 12.43 9.33268 13.1663C9.33268 13.9027 8.73573 14.4997 7.99935 14.4997C7.26297 14.4997 6.66602 13.9027 6.66602 13.1663Z"
+                                                            fill="#8C8B91"
+                                                        />
+                                                    </svg>
+                                                </v-btn>
+                                            </template>
+                                            <div class="card-light d-flex flex-column px-1 py-1">
+                                                <v-btn size="small" variant="plain" @click="openOrderDialog(item)" color="primary">
+                                                    view
+                                                </v-btn>
+                                                <v-btn size="small" variant="plain" @click="archiveOrder(item.order_id)" color="primary">
+                                                    Archive
+                                                </v-btn>
+                                                <v-btn size="small" variant="plain" @click="deleteOrder(item.order_id)" color="primary">
+                                                    Delete
+                                                </v-btn>
+                                            </div>
+                                        </v-menu>
+<!--                                        <v-btn variant="plain" @click="openOrderDialog(item)" color="primary">-->
+<!--                                            Details-->
+<!--                                        </v-btn>-->
                                     </template>
                                 </v-data-table>
                                 <v-alert v-else class="mt-16"

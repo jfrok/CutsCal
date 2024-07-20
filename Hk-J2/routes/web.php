@@ -169,6 +169,8 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
 Route::get('/make-a-reservation/{token}', [FrameController::class, 'edit'])->name('frame.view');
 /// Order
 Route::post('/order-store', [OrderController::class, 'store'])->name('store.order');
+Route::delete('/order-archive/{rId}', [OrderController::class, 'archive'])->name('archive.order');
+Route::delete('/order-destroy/{rId}', [OrderController::class, 'destroy'])->name('destroy.order');
 
 Route::get('/test', function () {
     $endOfTheMonth = Carbon::now()->format('m');
