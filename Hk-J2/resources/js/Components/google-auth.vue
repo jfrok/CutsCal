@@ -12,10 +12,12 @@
     </v-card>
 </template>
 <script>
+import {router} from "@inertiajs/vue3";
     export default {
         methods: {
             navigateToGoogleAuth() {
-                window.location.href = '/login/google';
+                window.location = route('google-auth')
+                // router.visit(route('redirectToGoogle'));
             }
         }
     }

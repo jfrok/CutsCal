@@ -167,45 +167,6 @@
             <span><pre ref="embed">{{ embedFrameC }}</pre> </span>
             </div>
         </template>
-        <!--        <template v-slot:item.4>-->
-        <!--            <h3 class="text-h6">Confirm</h3>-->
-
-        <!--            <br>-->
-
-        <!--            <v-sheet border>-->
-        <!--                <v-table>-->
-        <!--                    <thead>-->
-        <!--                    <tr>-->
-        <!--                        <th>Description</th>-->
-        <!--                        <th class="text-end">Quantity</th>-->
-        <!--                        <th class="text-end">Price</th>-->
-        <!--                    </tr>-->
-        <!--                    </thead>-->
-
-        <!--                    <tbody>-->
-        <!--                    <tr v-for="(product, index) in products" :key="index">-->
-        <!--                        <td v-text="product.name"></td>-->
-        <!--                        <td class="text-end" v-text="product.quantity"></td>-->
-        <!--                        <td class="text-end" v-text="product.quantity * product.price"></td>-->
-        <!--                    </tr>-->
-
-        <!--                    <tr>-->
-        <!--                        <td>Shipping</td>-->
-        <!--                        <td></td>-->
-        <!--                        <td class="text-end" v-text="shipping"></td>-->
-        <!--                    </tr>-->
-
-        <!--                    <tr>-->
-        <!--                        <th>Total</th>-->
-        <!--                        <th></th>-->
-        <!--                        <th class="text-end">-->
-        <!--                            ${{ total }}-->
-        <!--                        </th>-->
-        <!--                    </tr>-->
-        <!--                    </tbody>-->
-        <!--                </v-table>-->
-        <!--            </v-sheet>-->
-        <!--        </template>-->
     </v-stepper>
 </template>
 <script>
@@ -238,7 +199,7 @@ export default {
             max: 1000,
             slider: 500,
         },
-        url: config.frame.urls.local+props.frameToken,//route('frame.view', props.frameToken),
+        url: config.frame.urls.live+props.frameToken,//route('frame.view', props.frameToken),
         frameUI: [],
         selectedEmployee: props.markedEmployees ?? null,
         servicesDialog: false,
