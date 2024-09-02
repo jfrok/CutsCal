@@ -1,228 +1,3 @@
-<script setup>
-import {Head, router, useForm, usePage} from '@inertiajs/vue3';
-import Chart from "@/Components/Chart.vue";
-import {Link} from "@inertiajs/vue3";
-import {onMounted, ref} from 'vue'
-import {computed, defineComponent, onActivated, reactive, watch} from "vue";
-import moment from 'moment';
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import {orderData} from "@/Pages/Ref/OrderData";
-import OrderDetails from "@/Components/OrderDetails.vue";
-import AnylticChart from "@/Components/anylticChart.vue";
-import {useToast} from "vue-toastification";
-
-function arabicDay(dateFrom) {
-    const englishDay = moment(dateFrom).format('dddd');
-    const arabicDays = {
-        Sunday: 'الأحد',
-        Monday: 'الاثنين',
-        Tuesday: 'الثلاثاء',
-        Wednesday: 'الأربعاء',
-        Thursday: 'الخميس',
-        Friday: 'الجمعة',
-        Saturday: 'السبت',
-    };
-    return arabicDays[englishDay] || '';
-}
-
-const resHeaders = [
-    { text: 'Name', value: 'name', align: 'start' },
-    { text: 'Phone', value: 'phone', align: 'start' },
-    { text: 'Email', value: 'email', align: 'start' },
-    { text: 'Date', value: 'date', align: 'start' },
-    { text: 'Time', value: 'time', align: 'start' },
-    { text: 'Details', value: 'details', align: 'center', sortable: false },
-]
-const currentDate = new Date();
-const formattedDate = currentDate;
-
-function goToCalendar(dateFrom) {
-    router.visit(route('calendar.overview', {date: dateFrom}));
-}
-
-
-let props = defineProps({
-    notes: Array,
-    projects: Object,
-    orders: Object,
-    clients: Object,
-    errors: Object,
-    events: Array,
-    p: Array,
-    eventCount: Array,
-    count: Array,
-    counterTrueOrFalse: Number,
-    countNextEvent: Number,
-    totalUsers: Number,
-    totalEvents: Number,
-    totalProjects: Number,
-})
-
-function getRemainingDays(dateFrom, dateTo) {
-    const start = moment(dateFrom);
-    const end = moment(dateTo);
-    const duration = moment.duration(end.diff(start));
-    const days = duration.asDays();
-    return Math.ceil(days);
-}
-
-// const selectedFilter = ref('');
-
-let filteringEvents = reactive({
-    filter: '',
-    showMore: 10,
-})
-let months = [
-    'January', 'February', 'March', 'April', 'May',
-    'June', 'July', 'August', 'September',
-    'October', 'November', 'December'
-];
-
-let uniqueYears = []; // Initialize uniqueYears array
-let monthsByYear = {}; // Initialize months object with years as keys
-
-const updateMonthsByYear = (events) => {
-    events.forEach((event) => {
-        const year = event.dateFrom.substring(0, 4);
-        const month = event.dateFrom.substring(5, 7);
-
-        if (!monthsByYear.hasOwnProperty(year)) {
-            monthsByYear[year] = [];
-        }
-
-        if (!monthsByYear[year].includes(month)) {
-            monthsByYear[year].push(month);
-        }
-    });
-
-    uniqueYears = Object.keys(monthsByYear); // Update uniqueYears array
-};
-
-watch(filteringEvents, (value) => {
-    router.get(route('dashboard'), {...filteringEvents}, {
-            preserveScroll: true,
-            preserveState: true,
-        }
-    );
-    if (filteringEvents.filter == 'past') {
-        uniqueYears = [];
-        monthsByYear = {};
-
-    } else if (filteringEvents.filter == 'upcoming') {
-        uniqueYears = [];
-        monthsByYear = {};
-
-    } else if (filteringEvents.filter == 'closest') {
-        uniqueYears = [];
-        monthsByYear = {};
-
-    } else {
-        uniqueYears = [];
-        monthsByYear = {};
-    }
-});
-// let dialog = false
-// Call updateMonthsByYear initially with the events data
-let orderDialog = ref(false)
-
-function openOrderDialog(item) {
-    orderDialog.value = true;
-    orderData.value = item;
-}
-
-updateMonthsByYear(props.events);
-
-
-watch(() => props.events, (newEvents) => {
-    // console.log(newEvents.data)
-    updateMonthsByYear(newEvents);
-});
-
-function showMore() {
-    filteringEvents.showMore += 2;
-    router.get(route('dashboard'), {...filteringEvents}, {
-        preserveScroll: true, preserveState: true,
-    },)
-}
-
-let dialog = ref(false);
-let noteDialog = ref(false);
-
-const noteForm = useForm({
-    note: '',
-    color: '',
-})
-
-function closeDialog() {
-    orderDialog.value = false
-}
-
-function makeNote() {
-    if (noteForm.note || noteForm.color) {
-        noteForm.post(route('note.make'), {
-            onSuccess: () => {
-                noteDialog.value = false;
-                noteForm.reset()
-            }
-        })
-    }
-}
-
-const notValidNote = v => {
-    if (!v) {
-        return false
-    }
-}
-const validNote = computed(() => notValidNote)
-
-function removeNote(nId) {
-    router.post(route('note.remove', nId))
-}
-function exportToCSV() {
-    // Convert the orders data to CSV
-    const headers = resHeaders.map(header => header.text).join(',');
-    const rows = props.orders.map(order => {
-        return [
-            order.name,
-            order.phone,
-            order.email,
-            moment(order.date).format('YYYY MMM D'),
-            moment(order.time, "HH:mm:ss").format("hh:mm A")
-        ].join(',');
-    });
-    const csvContent = [headers, ...rows].join('\n');
-
-    // Create a Blob from the CSV content
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-
-    // Create a link element to trigger the download
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'orders.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-const toast = useToast()
-function archiveOrder(rId){
-    router.delete(route('archive.order',rId),{
-        preserveScroll:true,
-        preserveState:true,
-        onSuccess:() =>{
-            toast.success('The reservation successfully archived')
-    }
-    })
-}function deleteOrder(rId){
-    router.delete(route('destroy.order',rId),{
-        preserveScroll:true,
-        preserveState:true,
-        onSuccess:() =>{
-            toast.success('The reservation successfully deleted')
-    }
-    })
-}
-</script>
 <template>
     <AuthenticatedLayout>
         <Head title="Dashboard"/>
@@ -399,10 +174,12 @@ function archiveOrder(rId){
                             <div class="card-header d-flex align-items-center bg-official-secondary ">
                                 <h5 class="card-title w-100">
                                     <div class="d-flex justify-space-between align-center w-100">
-                                        {{ $page.props.auth.user.lang == 'arabic' ? 'تاريخ الحجوزات' : 'Reservations History' }}
+                                        {{
+                                            $page.props.auth.user.lang == 'arabic' ? 'تاريخ الحجوزات' : 'Reservations History'
+                                        }}
                                         <v-btn variant="text" @click="exportToCSV">Export to CSV</v-btn>
                                     </div>
-                                    </h5>
+                                </h5>
 
                             </div>
                             <div class="card-body">
@@ -415,24 +192,24 @@ function archiveOrder(rId){
                                     fixed-header
                                     v-if="orders.length > 0"
                                 >
-<!--                                    <template v-slot:top>-->
+                                    <!--                                    <template v-slot:top>-->
 
-<!--                                        <v-toolbar rounded elevation="0">-->
-<!--                                            <v-toolbar-title>Orders</v-toolbar-title>-->
-<!--                                            <v-divider-->
-<!--                                                class="mx-4"-->
-<!--                                                inset-->
-<!--                                                vertical-->
-<!--                                            ></v-divider>-->
-<!--                                            <v-spacer></v-spacer>-->
-<!--                                            <v-btn-->
-<!--                                                color="primary"-->
-<!--                                                @click="exportToCSV"-->
-<!--                                            >-->
-<!--                                                Export to CSV-->
-<!--                                            </v-btn>-->
-<!--                                        </v-toolbar>-->
-<!--                                    </template>-->
+                                    <!--                                        <v-toolbar rounded elevation="0">-->
+                                    <!--                                            <v-toolbar-title>Orders</v-toolbar-title>-->
+                                    <!--                                            <v-divider-->
+                                    <!--                                                class="mx-4"-->
+                                    <!--                                                inset-->
+                                    <!--                                                vertical-->
+                                    <!--                                            ></v-divider>-->
+                                    <!--                                            <v-spacer></v-spacer>-->
+                                    <!--                                            <v-btn-->
+                                    <!--                                                color="primary"-->
+                                    <!--                                                @click="exportToCSV"-->
+                                    <!--                                            >-->
+                                    <!--                                                Export to CSV-->
+                                    <!--                                            </v-btn>-->
+                                    <!--                                        </v-toolbar>-->
+                                    <!--                                    </template>-->
                                     <template v-slot:item.date="{ item }">
                                         {{ moment(item.date).format('YYYY MMM D') }}
                                     </template>
@@ -442,8 +219,11 @@ function archiveOrder(rId){
                                     <template v-slot:item.details="{ item }">
                                         <v-menu>
                                             <template v-slot:activator="{ props }">
-                                                <v-btn variant="text" class="px-1 py-1 icon-dense v-btn-text ml-auto d-block" size="small" v-bind="props">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                                                <v-btn variant="text"
+                                                       class="px-1 py-1 icon-dense v-btn-text ml-auto d-block"
+                                                       size="small" v-bind="props">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17"
+                                                         viewBox="0 0 16 17" fill="none">
                                                         <path
                                                             fill-rule="evenodd"
                                                             clip-rule="evenodd"
@@ -466,20 +246,23 @@ function archiveOrder(rId){
                                                 </v-btn>
                                             </template>
                                             <div class="card-light d-flex flex-column px-1 py-1">
-                                                <v-btn size="small" variant="plain" @click="openOrderDialog(item)" color="primary">
+                                                <v-btn size="small" variant="plain" @click="openOrderDialog(item)"
+                                                       color="primary">
                                                     view
                                                 </v-btn>
-                                                <v-btn size="small" variant="plain" @click="archiveOrder(item.order_id)" color="primary">
+                                                <v-btn size="small" variant="plain" @click="archiveOrder(item.order_id)"
+                                                       color="primary">
                                                     Archive
                                                 </v-btn>
-                                                <v-btn size="small" variant="plain" @click="deleteOrder(item.order_id)" color="primary">
+                                                <v-btn size="small" variant="plain" @click="deleteOrder(item.order_id)"
+                                                       color="primary">
                                                     Delete
                                                 </v-btn>
                                             </div>
                                         </v-menu>
-<!--                                        <v-btn variant="plain" @click="openOrderDialog(item)" color="primary">-->
-<!--                                            Details-->
-<!--                                        </v-btn>-->
+                                        <!--                                        <v-btn variant="plain" @click="openOrderDialog(item)" color="primary">-->
+                                        <!--                                            Details-->
+                                        <!--                                        </v-btn>-->
                                     </template>
                                 </v-data-table>
                                 <v-alert v-else class="mt-16"
@@ -722,9 +505,23 @@ function archiveOrder(rId){
                                                                 getRemainingDays(formattedDate, event.dateTo ?? event.dateFrom) === 0 ? usePage().props.auth.user.lang === 'arabic' ? 'اليوم' : 'Today' : getRemainingDays(formattedDate, event.dateTo ?? event.dateFrom)
                                                             }}
                                                         </div>
-                                                        <h4 style="cursor: pointer"
+                                                        <h4 class="cursor-pointer"
                                                             @click="goToCalendar(event.dateFrom)">
                                                             {{ event.title }}</h4>
+                                                        <v-btn v-if="event.description"
+                                                               @click="selectedNote = event.description;eventNoteDialog = true"
+                                                               icon size="x-small" elevation="0" color="transparent"
+                                                               class="pl-0 ml-0">
+                                                            <svg fill="none" height="17" viewBox="0 0 24 24" width="17"
+                                                                 xmlns="http://www.w3.org/2000/svg">
+                                                                <g stroke="#000" stroke-linecap="round"
+                                                                   stroke-width="2">
+                                                                    <path d="m4 18h6"/>
+                                                                    <path d="m4 12h12"/>
+                                                                    <path d="m4 6h16"/>
+                                                                </g>
+                                                            </svg>
+                                                        </v-btn>
                                                         <h5>{{
                                                                 usePage().props.auth.user.lang == 'arabic' ? ' يصادف يوم ' + arabicDay(event.dateFrom) : 'It falls on ' + moment(event.dateFrom).format('dddd')
                                                             }}</h5>
@@ -759,6 +556,247 @@ function archiveOrder(rId){
             </div>
 
         </div>
+        <v-dialog max-width="500" v-model="eventNoteDialog">
+
+            <v-card>
+                <v-card-text>
+                    {{ selectedNote }}
+                </v-card-text>
+
+            </v-card>
+        </v-dialog>
         <!--    </div>-->
     </AuthenticatedLayout>
 </template>
+<script setup>
+import {Head, router, useForm, usePage} from '@inertiajs/vue3';
+import Chart from "@/Components/Chart.vue";
+import {Link} from "@inertiajs/vue3";
+import {onMounted, ref} from 'vue'
+import {computed, defineComponent, onActivated, reactive, watch} from "vue";
+import moment from 'moment';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import {orderData} from "@/Pages/Ref/OrderData";
+import OrderDetails from "@/Components/OrderDetails.vue";
+import AnylticChart from "@/Components/anylticChart.vue";
+import {useToast} from "vue-toastification";
+
+function arabicDay(dateFrom) {
+    const englishDay = moment(dateFrom).format('dddd');
+    const arabicDays = {
+        Sunday: 'الأحد',
+        Monday: 'الاثنين',
+        Tuesday: 'الثلاثاء',
+        Wednesday: 'الأربعاء',
+        Thursday: 'الخميس',
+        Friday: 'الجمعة',
+        Saturday: 'السبت',
+    };
+    return arabicDays[englishDay] || '';
+}
+
+const resHeaders = [
+    {text: 'Name', value: 'name', align: 'start'},
+    {text: 'Phone', value: 'phone', align: 'start'},
+    {text: 'Email', value: 'email', align: 'start'},
+    {text: 'Date', value: 'date', align: 'start'},
+    {text: 'Time', value: 'time', align: 'start'},
+    {text: 'Details', value: 'details', align: 'center', sortable: false},
+]
+const currentDate = new Date();
+const formattedDate = currentDate;
+
+function goToCalendar(dateFrom) {
+    router.visit(route('calendar.overview', {date: dateFrom}));
+}
+
+let selectedNote = ref(false)
+let eventNoteDialog = ref(null)
+
+let props = defineProps({
+    notes: Array,
+    projects: Object,
+    orders: Object,
+    clients: Object,
+    errors: Object,
+    events: Array,
+    p: Array,
+    eventCount: Array,
+    count: Array,
+    counterTrueOrFalse: Number,
+    countNextEvent: Number,
+    totalUsers: Number,
+    totalEvents: Number,
+    totalProjects: Number,
+})
+
+function getRemainingDays(dateFrom, dateTo) {
+    const start = moment(dateFrom);
+    const end = moment(dateTo);
+    const duration = moment.duration(end.diff(start));
+    const days = duration.asDays();
+    return Math.ceil(days);
+}
+
+// const selectedFilter = ref('');
+
+let filteringEvents = reactive({
+    filter: '',
+    showMore: 10,
+})
+let months = [
+    'January', 'February', 'March', 'April', 'May',
+    'June', 'July', 'August', 'September',
+    'October', 'November', 'December'
+];
+
+let uniqueYears = []; // Initialize uniqueYears array
+let monthsByYear = {}; // Initialize months object with years as keys
+
+const updateMonthsByYear = (events) => {
+    events.forEach((event) => {
+        const year = event.dateFrom.substring(0, 4);
+        const month = event.dateFrom.substring(5, 7);
+
+        if (!monthsByYear.hasOwnProperty(year)) {
+            monthsByYear[year] = [];
+        }
+
+        if (!monthsByYear[year].includes(month)) {
+            monthsByYear[year].push(month);
+        }
+    });
+
+    uniqueYears = Object.keys(monthsByYear); // Update uniqueYears array
+};
+
+watch(filteringEvents, (value) => {
+    router.get(route('dashboard'), {...filteringEvents}, {
+            preserveScroll: true,
+            preserveState: true,
+        }
+    );
+    if (filteringEvents.filter == 'past') {
+        uniqueYears = [];
+        monthsByYear = {};
+
+    } else if (filteringEvents.filter == 'upcoming') {
+        uniqueYears = [];
+        monthsByYear = {};
+
+    } else if (filteringEvents.filter == 'closest') {
+        uniqueYears = [];
+        monthsByYear = {};
+
+    } else {
+        uniqueYears = [];
+        monthsByYear = {};
+    }
+});
+// let dialog = false
+// Call updateMonthsByYear initially with the events data
+let orderDialog = ref(false)
+
+function openOrderDialog(item) {
+    orderDialog.value = true;
+    orderData.value = item;
+}
+
+updateMonthsByYear(props.events);
+
+
+watch(() => props.events, (newEvents) => {
+    // console.log(newEvents.data)
+    updateMonthsByYear(newEvents);
+});
+
+function showMore() {
+    filteringEvents.showMore += 2;
+    router.get(route('dashboard'), {...filteringEvents}, {
+        preserveScroll: true, preserveState: true,
+    },)
+}
+
+let dialog = ref(false);
+let noteDialog = ref(false);
+
+const noteForm = useForm({
+    note: '',
+    color: '',
+})
+
+function closeDialog() {
+    orderDialog.value = false
+}
+
+function makeNote() {
+    if (noteForm.note || noteForm.color) {
+        noteForm.post(route('note.make'), {
+            onSuccess: () => {
+                noteDialog.value = false;
+                noteForm.reset()
+            }
+        })
+    }
+}
+
+const notValidNote = v => {
+    if (!v) {
+        return false
+    }
+}
+const validNote = computed(() => notValidNote)
+
+function removeNote(nId) {
+    router.post(route('note.remove', nId))
+}
+
+function exportToCSV() {
+    // Convert the orders data to CSV
+    const headers = resHeaders.map(header => header.text).join(',');
+    const rows = props.orders.map(order => {
+        return [
+            order.name,
+            order.phone,
+            order.email,
+            moment(order.date).format('YYYY MMM D'),
+            moment(order.time, "HH:mm:ss").format("hh:mm A")
+        ].join(',');
+    });
+    const csvContent = [headers, ...rows].join('\n');
+
+    // Create a Blob from the CSV content
+    const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element to trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'orders.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+const toast = useToast()
+
+function archiveOrder(rId) {
+    router.delete(route('archive.order', rId), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            toast.success('The reservation successfully archived')
+        }
+    })
+}
+
+function deleteOrder(rId) {
+    router.delete(route('destroy.order', rId), {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            toast.success('The reservation successfully deleted')
+        }
+    })
+}
+</script>
