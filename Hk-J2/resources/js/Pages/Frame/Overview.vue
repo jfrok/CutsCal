@@ -33,6 +33,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import {Link} from "@inertiajs/vue3";
 import ReservationTemp from "@/Components/ReservationTemp.vue";
 import Steppers from "@/Components/Steppers.vue";
+import config from "@/config";
 
 export default {
     components: {
@@ -60,7 +61,7 @@ export default {
         },
         openNewWindow() {
 
-            const url = route('frame.view',this.frameToken);
+            const url = `${config.frame.urls.live}${this.frameToken}`;
             const windowFeatures = 'width=800,height=600,menubar=yes,toolbar=yes';
             window.open(url, '_blank', windowFeatures);
         }
