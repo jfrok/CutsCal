@@ -28,7 +28,7 @@
                     <v-btn color="blue-darken-1" variant="text" @click="$emit('close-dialog',false)">
                         Close
                     </v-btn>
-                    <v-btn color="blue-darken-1" @click="saveUser" variant="text">
+                    <v-btn color="blue-darken-1" @click="$emit('update',form);" variant="text">
                         {{ editMode ? 'Update' : 'Save' }}
                     </v-btn>
                 </v-card-actions>
@@ -59,29 +59,13 @@ export default {
             duration: '',
         });
 
-        function saveUser() {
-            form.post(route('services.create'),form, {
-                preserveScroll: true,
-                preserveState: true,
-                onSuccess: () => {
-                    showToastSuccess('Successfully added')
-                        form.name = '';
-                    form.price = '';
-                    form.duration = '';
-                    this.$emit('close-dialog',false)
-                    // form.editMode ? form.editMode = false : form.editMode = true;
-                    // form.editMode ? showToastSuccess('Successfully updated') : showToastSuccess('Successfully added')
-                    form.reset()
-                    // form.dialog = false;
-                },
-            });
-        }
+
 
         function showToastSuccess(message) {
             toast.success(message);
         }
 
-        return {form,saveUser};
+        return {form};
     },
     data: () =>{
         return{

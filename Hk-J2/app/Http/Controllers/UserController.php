@@ -143,7 +143,13 @@ class UserController extends Controller
 
         return \inertia('Accounts/Create', ['allRoles' => $allRoles, 'allPermissions' => $allPermissions]);
     }
+    public function setup()
+    {
+        $allRoles = Role::pluck('name', 'name')->all();
+        $allPermissions = Permission::orderBy('name', 'DESC')->pluck('name', 'name')->all();
 
+        return \inertia('Accounts/Setup', ['allRoles' => $allRoles, 'allPermissions' => $allPermissions]);
+    }
     public function edit($uId)
     {
         $user = User::findOrFail($uId);

@@ -74,6 +74,7 @@ Route::middleware(['auth', 'check.subscription'])->group(function () {
 
     Route::prefix('accounts')->group(function () {
         Route::get('/create', [UserController::class, 'create'])->name('account.create');
+        Route::get('/setup', [UserController::class, 'setup'])->name('account.setup');
         Route::post('/store', [UserController::class, 'store'])->name('account.make');
         Route::get('', [UserController::class, 'index'])->name('account.overview');
         Route::get('/edit/{uId}', [UserController::class, 'edit'])->name('account.edit');

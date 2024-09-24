@@ -9,6 +9,7 @@ const config = {
     frame:{
             urls:{
                 live: 'https://reservation.cutscal.com/',
+                // live: 'https://reservation.cutscal.com/',
                 local: 'http://localhost:8080/',
             }
     }

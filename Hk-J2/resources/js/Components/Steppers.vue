@@ -23,7 +23,7 @@
             <br>
 
             <v-dialog v-model="servicesDialog" persistent width="524">
-                <AddServices @close-dialog="servicesDialog = false"/>
+                <AddServices @update="addService" @close-dialog="(val)=>{servicesDialog = false}"/>
             </v-dialog>
 
                 <v-table>
@@ -241,6 +241,30 @@ export default {
     },
 
     methods: {
+        showToastSuccess(message) {
+            const toast = useToast();
+            toast.success(message);
+        },
+        addService(data) {
+            console.log(data)
+            data.post(route('services.create'),data, {
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => {
+                    // this.showToastSuccess('Successfully added')
+                    // data.name = '';
+                    // data.price = '';
+                    // data.duration = '';
+                    this.servicesDialog = false
+                    // form.editMode ? form.editMode = false : form.editMode = true;
+                    // form.editMode ? showToastSuccess('Successfully updated') : showToastSuccess('Successfully added')
+                    data.reset()
+                    // form.dialog = false;
+                },
+
+            });
+            this.servicesDialog = false
+        },
         copy() {
             const textToCopy = this.$refs.embed.textContent;
             navigator.clipboard.writeText(textToCopy)
